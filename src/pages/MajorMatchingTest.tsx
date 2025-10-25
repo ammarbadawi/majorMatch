@@ -32,6 +32,7 @@ import {
     AlertTitle
 } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 import {
     ArrowBack,
     School,
@@ -86,6 +87,7 @@ const glowAnimation = keyframes`
 const MajorMatchingTest: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [currentPage, setCurrentPage] = useState(0);
     const [answers, setAnswers] = useState<{ [key: number]: string }>({});
     const [showPaymentPrompt, setShowPaymentPrompt] = useState(true);
@@ -749,13 +751,20 @@ const MajorMatchingTest: React.FC = () => {
                     boxShadow: `0 8px 32px ${alpha(categoryColor, 0.1)}`
                 }}
             >
-                <Toolbar sx={{ py: { xs: 1, md: 2 } }}>
+                <Toolbar sx={{
+                    py: { xs: 1, md: 2 },
+                    flexWrap: 'wrap',
+                    justifyContent: { xs: 'center', md: 'flex-start' },
+                    rowGap: 1,
+                    columnGap: 2
+                }}>
                     <IconButton
                         edge="start"
                         color="inherit"
                         onClick={() => navigate('/')}
                         sx={{
-                            mr: 3,
+                            mr: { xs: 0, md: 3 },
+                            mb: { xs: 1, md: 0 },
                             '&:hover': {
                                 transform: 'scale(1.1)',
                                 transition: 'transform 0.2s ease-in-out'
@@ -767,7 +776,8 @@ const MajorMatchingTest: React.FC = () => {
 
                     <Avatar
                         sx={{
-                            mr: 2,
+                            mr: { xs: 0, md: 2 },
+                            mb: { xs: 1, md: 0 },
                             background: `linear-gradient(135deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
                             animation: `${pulseAnimation} 3s ease-in-out infinite`
                         }}
@@ -775,16 +785,16 @@ const MajorMatchingTest: React.FC = () => {
                         <School />
                     </Avatar>
 
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h5" component="h1" sx={{ fontWeight: 800, mb: 0.5 }}>
+                    <Box sx={{ flexGrow: 1, width: { xs: '100%', md: 'auto' }, textAlign: { xs: 'center', md: 'left' } }}>
+                        <Typography variant="h5" component="h1" sx={{ fontWeight: 800, mb: 0.5, fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' } }}>
                             Major Discovery
                         </Typography>
-                        <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                        <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: { xs: '0.8rem', sm: '0.9rem' } }}>
                             Find your perfect academic path
                         </Typography>
                     </Box>
 
-                    <Stack direction="row" spacing={2} alignItems="center">
+                    <Stack direction="row" spacing={2} alignItems="center" sx={{ flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'flex-end' }, rowGap: 1 }}>
                         <Tooltip title="Time Spent">
                             <Chip
                                 icon={<Timer />}
@@ -796,6 +806,7 @@ const MajorMatchingTest: React.FC = () => {
                                     backdropFilter: 'blur(10px)',
                                     border: '1px solid rgba(255,255,255,0.3)'
                                 }}
+                                size={isXs ? 'small' : 'medium'}
                             />
                         </Tooltip>
 
@@ -809,6 +820,7 @@ const MajorMatchingTest: React.FC = () => {
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(255,255,255,0.3)'
                             }}
+                            size={isXs ? 'small' : 'medium'}
                         />
 
                         <IconButton
@@ -821,8 +833,16 @@ const MajorMatchingTest: React.FC = () => {
                 </Toolbar>
 
                 {/* Enhanced Progress Bar */}
-                <Box sx={{ px: 3, pb: 2 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Box sx={{ px: { xs: 2, sm: 3 }, pb: 2 }}>
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: { xs: 'center', md: 'space-between' },
+                        alignItems: 'center',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        textAlign: 'center',
+                        gap: { xs: 0.5, md: 0 },
+                        mb: 1
+                    }}>
                         <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
                             {Math.round(progress)}% Complete
                         </Typography>
@@ -847,7 +867,7 @@ const MajorMatchingTest: React.FC = () => {
                 </Box>
             </AppBar>
 
-            <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+            <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
                 {/* Error Alert */}
                 {error && (
                     <Slide direction="down" in={!!error} timeout={500}>
@@ -964,7 +984,7 @@ const MajorMatchingTest: React.FC = () => {
                             <Paper
                                 elevation={2}
                                 sx={{
-                                    p: 3,
+                                    p: { xs: 2, sm: 3 },
                                     mb: 4,
                                     background: `linear-gradient(135deg, ${alpha(theme.palette.grey[50], 0.8)} 0%, ${alpha(theme.palette.grey[100], 0.8)} 100%)`,
                                     borderRadius: 3
@@ -1091,14 +1111,15 @@ const MajorMatchingTest: React.FC = () => {
                                                             fontWeight: 600,
                                                             mb: 3,
                                                             lineHeight: 1.6,
-                                                            color: theme.palette.text.primary
+                                                            color: theme.palette.text.primary,
+                                                            wordBreak: 'break-word'
                                                         }}
                                                     >
                                                         {q.question}
                                                     </Typography>
 
                                                     {/* Answer Options */}
-                                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+                                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: { xs: 1.5, sm: 2 }, flexWrap: 'wrap' }}>
                                                         {likertOptions.map((option, index) => {
                                                             const selected = qAnswer === option.value;
                                                             const color = getLikertColor(option.value);
@@ -1107,8 +1128,8 @@ const MajorMatchingTest: React.FC = () => {
                                                                     <Box
                                                                         onClick={() => handleAnswerChangeFor(q.id, option.value)}
                                                                         sx={{
-                                                                            width: 50,
-                                                                            height: 50,
+                                                                            width: { xs: 44, sm: 50 },
+                                                                            height: { xs: 44, sm: 50 },
                                                                             borderRadius: '50%',
                                                                             border: `3px solid ${color}`,
                                                                             backgroundColor: selected
@@ -1119,7 +1140,7 @@ const MajorMatchingTest: React.FC = () => {
                                                                             display: 'flex',
                                                                             alignItems: 'center',
                                                                             justifyContent: 'center',
-                                                                            fontSize: '1.2rem',
+                                                                            fontSize: { xs: '1rem', sm: '1.2rem' },
                                                                             fontWeight: 700,
                                                                             color: color,
                                                                             position: 'relative',
@@ -1141,14 +1162,14 @@ const MajorMatchingTest: React.FC = () => {
                                                                                     position: 'absolute',
                                                                                     top: -5,
                                                                                     right: -5,
-                                                                                    width: 20,
-                                                                                    height: 20,
+                                                                                    width: { xs: 18, sm: 20 },
+                                                                                    height: { xs: 18, sm: 20 },
                                                                                     borderRadius: '50%',
                                                                                     backgroundColor: theme.palette.success.main,
                                                                                     display: 'flex',
                                                                                     alignItems: 'center',
                                                                                     justifyContent: 'center',
-                                                                                    fontSize: '0.8rem',
+                                                                                    fontSize: { xs: '0.7rem', sm: '0.8rem' },
                                                                                     color: 'white',
                                                                                     animation: `${pulseAnimation} 1s ease-in-out infinite`
                                                                                 }}

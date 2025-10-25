@@ -18,6 +18,7 @@ import {
     Paper,
     Stack,
     useTheme,
+    useMediaQuery,
     Grid,
     Fade,
     Slide,
@@ -88,6 +89,7 @@ const glowAnimation = keyframes`
 const PersonalityTest: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [answers, setAnswers] = useState<Answer[]>([]);
@@ -325,7 +327,7 @@ const PersonalityTest: React.FC = () => {
                     }
                 }}
             >
-                <Container maxWidth="md">
+                <Container maxWidth="md" sx={{ px: { xs: 2, sm: 3 } }}>
                     <Fade in={true} timeout={1000}>
                         <Paper
                             elevation={24}
@@ -437,7 +439,7 @@ const PersonalityTest: React.FC = () => {
                     position: 'relative'
                 }}
             >
-                <Container maxWidth="md">
+                <Container maxWidth="md" sx={{ px: { xs: 2, sm: 3 } }}>
                     <Fade in={true} timeout={1000}>
                         <Alert
                             severity="error"
@@ -507,13 +509,20 @@ const PersonalityTest: React.FC = () => {
                     boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.1)}`
                 }}
             >
-                <Toolbar sx={{ py: { xs: 1, md: 2 } }}>
+                <Toolbar sx={{
+                    py: { xs: 1, md: 2 },
+                    flexWrap: 'wrap',
+                    justifyContent: { xs: 'center', md: 'flex-start' },
+                    rowGap: 1,
+                    columnGap: 2
+                }}>
                     <IconButton
                         edge="start"
                         color="inherit"
                         onClick={() => navigate('/')}
                         sx={{
-                            mr: 3,
+                            mr: { xs: 0, md: 3 },
+                            mb: { xs: 1, md: 0 },
                             '&:hover': {
                                 transform: 'scale(1.1)',
                                 transition: 'transform 0.2s ease-in-out'
@@ -525,7 +534,8 @@ const PersonalityTest: React.FC = () => {
 
                     <Avatar
                         sx={{
-                            mr: 2,
+                            mr: { xs: 0, md: 2 },
+                            mb: { xs: 1, md: 0 },
                             background: `linear-gradient(135deg, ${theme.palette.tertiary?.main || theme.palette.primary.light}, ${theme.palette.secondary.light})`,
                             animation: `${pulseAnimation} 3s ease-in-out infinite`
                         }}
@@ -533,16 +543,16 @@ const PersonalityTest: React.FC = () => {
                         <Psychology />
                     </Avatar>
 
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h5" component="h1" sx={{ fontWeight: 800, mb: 0.5 }}>
+                    <Box sx={{ flexGrow: 1, width: { xs: '100%', md: 'auto' }, textAlign: { xs: 'center', md: 'left' } }}>
+                        <Typography variant="h5" component="h1" sx={{ fontWeight: 800, mb: 0.5, fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' } }}>
                             Personality Discovery
                         </Typography>
-                        <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500 }}>
+                        <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: { xs: '0.8rem', sm: '0.9rem' } }}>
                             Uncover your unique personality blueprint
                         </Typography>
                     </Box>
 
-                    <Stack direction="row" spacing={2} alignItems="center">
+                    <Stack direction="row" spacing={2} alignItems="center" sx={{ flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'flex-end' }, rowGap: 1 }}>
                         <Tooltip title="Time Spent">
                             <Chip
                                 icon={<Timer />}
@@ -554,6 +564,7 @@ const PersonalityTest: React.FC = () => {
                                     backdropFilter: 'blur(10px)',
                                     border: '1px solid rgba(255,255,255,0.3)'
                                 }}
+                                size={isXs ? 'small' : 'medium'}
                             />
                         </Tooltip>
 
@@ -567,6 +578,7 @@ const PersonalityTest: React.FC = () => {
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(255,255,255,0.3)'
                             }}
+                            size={isXs ? 'small' : 'medium'}
                         />
 
                         <IconButton
@@ -579,8 +591,16 @@ const PersonalityTest: React.FC = () => {
                 </Toolbar>
 
                 {/* Enhanced Progress Bar */}
-                <Box sx={{ px: 3, pb: 2 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Box sx={{ px: { xs: 2, sm: 3 }, pb: 2 }}>
+                    <Box sx={{
+                        display: 'flex',
+                        justifyContent: { xs: 'center', md: 'space-between' },
+                        alignItems: 'center',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        textAlign: 'center',
+                        gap: { xs: 0.5, md: 0 },
+                        mb: 1
+                    }}>
                         <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
                             {Math.round(progress)}% Complete
                         </Typography>
@@ -605,7 +625,7 @@ const PersonalityTest: React.FC = () => {
                 </Box>
             </AppBar>
 
-            <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+            <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
                 {/* Insights Panel */}
                 {showInsights && (
                     <Slide direction="down" in={showInsights} timeout={500}>
@@ -719,8 +739,8 @@ const PersonalityTest: React.FC = () => {
                                             <Box sx={{ textAlign: 'center' }}>
                                                 <Box
                                                     sx={{
-                                                        width: 40,
-                                                        height: 40,
+                                                        width: { xs: 36, sm: 40 },
+                                                        height: { xs: 36, sm: 40 },
                                                         borderRadius: '50%',
                                                         border: `3px solid ${opt.color}`,
                                                         backgroundColor: alpha(opt.color, 0.1),
@@ -729,7 +749,7 @@ const PersonalityTest: React.FC = () => {
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
-                                                        fontSize: '1.2rem',
+                                                        fontSize: { xs: '1rem', sm: '1.2rem' },
                                                         fontWeight: 700,
                                                         color: opt.color,
                                                         transition: 'all 0.3s ease-in-out',
@@ -832,14 +852,15 @@ const PersonalityTest: React.FC = () => {
                                                             fontWeight: 600,
                                                             mb: 3,
                                                             lineHeight: 1.6,
-                                                            color: theme.palette.text.primary
+                                                            color: theme.palette.text.primary,
+                                                            wordBreak: 'break-word'
                                                         }}
                                                     >
                                                         {q.text}
                                                     </Typography>
 
                                                     {/* Answer Options */}
-                                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
+                                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: { xs: 1.5, sm: 2 }, flexWrap: 'wrap' }}>
                                                         {answerOptions.map((option) => {
                                                             const selected = qAnswer === option.value;
                                                             return (
@@ -847,8 +868,8 @@ const PersonalityTest: React.FC = () => {
                                                                     <Box
                                                                         onClick={() => handleAnswerChangeFor(q.id, option.value)}
                                                                         sx={{
-                                                                            width: 50,
-                                                                            height: 50,
+                                                                            width: { xs: 44, sm: 50 },
+                                                                            height: { xs: 44, sm: 50 },
                                                                             borderRadius: '50%',
                                                                             border: `3px solid ${option.color}`,
                                                                             backgroundColor: selected
@@ -859,7 +880,7 @@ const PersonalityTest: React.FC = () => {
                                                                             display: 'flex',
                                                                             alignItems: 'center',
                                                                             justifyContent: 'center',
-                                                                            fontSize: '1.2rem',
+                                                                            fontSize: { xs: '1rem', sm: '1.2rem' },
                                                                             fontWeight: 700,
                                                                             color: option.color,
                                                                             position: 'relative',
@@ -881,14 +902,14 @@ const PersonalityTest: React.FC = () => {
                                                                                     position: 'absolute',
                                                                                     top: -5,
                                                                                     right: -5,
-                                                                                    width: 20,
-                                                                                    height: 20,
+                                                                                    width: { xs: 18, sm: 20 },
+                                                                                    height: { xs: 18, sm: 20 },
                                                                                     borderRadius: '50%',
                                                                                     backgroundColor: theme.palette.success.main,
                                                                                     display: 'flex',
                                                                                     alignItems: 'center',
                                                                                     justifyContent: 'center',
-                                                                                    fontSize: '0.8rem',
+                                                                                    fontSize: { xs: '0.7rem', sm: '0.8rem' },
                                                                                     color: 'white',
                                                                                     animation: `${pulseAnimation} 1s ease-in-out infinite`
                                                                                 }}

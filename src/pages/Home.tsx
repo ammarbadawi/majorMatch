@@ -138,6 +138,7 @@ const Home: React.FC = () => {
             <Box
                 sx={{
                     minHeight: '100vh',
+                    pt: { xs: 8, sm: 10 },
                     background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
                     display: 'flex',
                     alignItems: 'center',
@@ -154,11 +155,11 @@ const Home: React.FC = () => {
                     }
                 }}
             >
-                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+                <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, sm: 3, md: 4 } }}>
                     <Fade in timeout={1000}>
                         <Box sx={{ textAlign: 'center', mb: 8 }}>
                             <Chip
-                                label="🗺️ Your Academic Journey Starts Here"
+                                label="🗺️ Your Academic journey Starts Here"
                                 sx={{
                                     backgroundColor: 'rgba(255,255,255,0.15)',
                                     color: 'white',
@@ -252,10 +253,10 @@ const Home: React.FC = () => {
 
                     {/* Journey Path Visualization */}
                     <Fade in timeout={1500}>
-                        <Box sx={{ mt: 8 }}>
-                            <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} alignItems="center" justifyContent="center">
+                        <Box sx={{ mt: 8, pb: { xs: 6, sm: 8 } }}>
+                            <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} alignItems="stretch" justifyContent="center">
                                 {/* Step 1 */}
-                                <Grid xs={12} sm={6} md={3}>
+                                <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
                                     <Slide direction="up" in timeout={2000}>
                                         <Card
                                             elevation={8}
@@ -266,7 +267,9 @@ const Home: React.FC = () => {
                                                 textAlign: 'center',
                                                 position: 'relative',
                                                 overflow: 'hidden',
-                                                height: { xs: 'auto', md: '280px' },
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                height: '100%',
                                                 '&::before': {
                                                     content: '""',
                                                     position: 'absolute',
@@ -315,8 +318,19 @@ const Home: React.FC = () => {
                                     </Slide>
                                 </Grid>
 
+                                {/* Mobile Arrow between Step 1 and Step 2 */}
+                                <Grid item xs={12} sx={{ display: { xs: 'block', md: 'none' } }}>
+                                    <Box sx={{ textAlign: 'center', my: 2 }}>
+                                        <ArrowDownward sx={{
+                                            fontSize: 40,
+                                            color: 'rgba(255,255,255,0.8)',
+                                            animation: 'bounce 2s infinite'
+                                        }} />
+                                    </Box>
+                                </Grid>
+
                                 {/* Arrow 1 */}
-                                <Grid xs={12} md={1} sx={{ display: { xs: 'none', md: 'block' } }}>
+                                <Grid item xs={12} md={1} sx={{ display: { xs: 'none', md: 'block' } }}>
                                     <Box sx={{ textAlign: 'center', mt: 4 }}>
                                         <ArrowForward sx={{
                                             fontSize: { md: 50, lg: 60 },
@@ -327,7 +341,7 @@ const Home: React.FC = () => {
                                 </Grid>
 
                                 {/* Step 2 */}
-                                <Grid xs={12} sm={6} md={3}>
+                                <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
                                     <Slide direction="up" in timeout={2500}>
                                         <Card
                                             elevation={8}
@@ -339,7 +353,9 @@ const Home: React.FC = () => {
                                                 position: 'relative',
                                                 overflow: 'hidden',
                                                 opacity: hasMbti ? 1 : 0.6,
-                                                height: { xs: 'auto', md: '280px' },
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                height: '100%',
                                                 '&::before': {
                                                     content: '""',
                                                     position: 'absolute',
@@ -388,8 +404,19 @@ const Home: React.FC = () => {
                                     </Slide>
                                 </Grid>
 
+                                {/* Mobile Arrow between Step 2 and Step 3 */}
+                                <Grid item xs={12} sx={{ display: { xs: 'block', md: 'none' } }}>
+                                    <Box sx={{ textAlign: 'center', my: 2 }}>
+                                        <ArrowDownward sx={{
+                                            fontSize: 40,
+                                            color: 'rgba(255,255,255,0.8)',
+                                            animation: 'bounce 2s infinite'
+                                        }} />
+                                    </Box>
+                                </Grid>
+
                                 {/* Arrow 2 */}
-                                <Grid xs={12} md={1} sx={{ display: { xs: 'none', md: 'block' } }}>
+                                <Grid item xs={12} md={1} sx={{ display: { xs: 'none', md: 'block' } }}>
                                     <Box sx={{ textAlign: 'center', mt: 4 }}>
                                         <ArrowForward sx={{
                                             fontSize: { md: 50, lg: 60 },
@@ -400,7 +427,7 @@ const Home: React.FC = () => {
                                 </Grid>
 
                                 {/* Step 3 */}
-                                <Grid xs={12} sm={6} md={3}>
+                                <Grid item xs={12} sm={6} md={3} sx={{ display: 'flex' }}>
                                     <Slide direction="up" in timeout={3000}>
                                         <Card
                                             elevation={8}
@@ -411,7 +438,9 @@ const Home: React.FC = () => {
                                                 textAlign: 'center',
                                                 position: 'relative',
                                                 overflow: 'hidden',
-                                                height: { xs: 'auto', md: '280px' },
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                height: '100%',
                                                 '&::before': {
                                                     content: '""',
                                                     position: 'absolute',
@@ -460,16 +489,7 @@ const Home: React.FC = () => {
                                     </Slide>
                                 </Grid>
 
-                                {/* Mobile Arrows */}
-                                <Grid xs={12} sx={{ display: { xs: 'block', md: 'none' } }}>
-                                    <Box sx={{ textAlign: 'center', my: 2 }}>
-                                        <ArrowDownward sx={{
-                                            fontSize: 40,
-                                            color: 'rgba(255,255,255,0.8)',
-                                            animation: 'bounce 2s infinite'
-                                        }} />
-                                    </Box>
-                                </Grid>
+
                             </Grid>
                         </Box>
                     </Fade>
@@ -477,12 +497,12 @@ const Home: React.FC = () => {
             </Box>
 
             {/* Subscription Status */}
-            <Container maxWidth="lg" sx={{ py: 4 }}>
+            <Container maxWidth="lg" sx={{ py: 4, px: { xs: 2, sm: 3, md: 4 } }}>
                 <SubscriptionStatus />
             </Container>
 
             {/* Stats Section */}
-            <Container maxWidth="lg" sx={{ py: 10, mt: -8, position: 'relative', zIndex: 2 }}>
+            <Container maxWidth="lg" sx={{ py: 10, mt: -8, position: 'relative', zIndex: 2, px: { xs: 2, sm: 3, md: 4 } }}>
                 <Grid container spacing={6} alignItems="stretch" justifyContent="center">
                     {stats.map((stat, index) => (
                         <Grid item xs={6} md={3} key={index}>
@@ -518,7 +538,7 @@ const Home: React.FC = () => {
 
             {/* Journey Timeline Section */}
             <Box sx={{ backgroundColor: theme.palette.grey[50], py: 12 }}>
-                <Container maxWidth="lg">
+                <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
                     <Box sx={{ textAlign: 'center', mb: 10 }}>
                         <Chip
                             label="Your Journey Timeline"
@@ -920,7 +940,7 @@ const Home: React.FC = () => {
             </Box>
 
             {/* Journey Services Section */}
-            <Container maxWidth="lg" sx={{ py: 10 }}>
+            <Container maxWidth="lg" sx={{ py: 10, px: { xs: 2, sm: 3, md: 4 } }}>
                 <Box sx={{ textAlign: 'center', mb: 10 }}>
                     <Chip
                         label="Your Journey Tools"
@@ -1399,7 +1419,7 @@ const Home: React.FC = () => {
 
                     <Grid container spacing={4} alignItems="stretch" justifyContent="center">
                         {features.map((feature, index) => (
-                            <Grid xs={12} sm={6} md={3} key={index}>
+                            <Grid item xs={12} sm={6} md={3} key={index}>
                                 <Box sx={{ textAlign: 'center', p: 4, height: '100%' }}>
                                     <Avatar
                                         sx={{
@@ -1454,7 +1474,7 @@ const Home: React.FC = () => {
                     }
                 }}
             >
-                <Container maxWidth="md" sx={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+                <Container maxWidth="md" sx={{ textAlign: 'center', position: 'relative', zIndex: 1, px: { xs: 2, sm: 3, md: 4 } }}>
                     <Fade in timeout={1000}>
                         <Box>
                             <Box sx={{
