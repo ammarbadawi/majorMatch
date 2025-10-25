@@ -1,0 +1,9 @@
+[
+  {
+    "parent_major": "Physical Education & Sports Sciences",
+    "ria_sec": ["R", "S"],
+    "academic_strengths": ["Leadership & Public Speaking", "Biology", "Social Sciences"],
+    "core_values": ["Teamwork", "Health", "Discipline"],
+    "mbti_traits": ["E", "S", "J"]
+  }
+]

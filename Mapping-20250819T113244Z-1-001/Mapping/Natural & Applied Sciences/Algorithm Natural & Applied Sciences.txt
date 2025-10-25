@@ -1,0 +1,51 @@
+[
+  {
+    "parent_major": "Biological Sciences",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": ["Biology", "Research & Investigation", "Reading & Analysis"],
+    "core_values": ["Curiosity", "Discovery", "Nature & Environment"],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Chemical Sciences",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": ["Chemistry", "Mathematics", "Research & Investigation"],
+    "core_values": ["Precision", "Discovery", "Impact"],
+    "mbti_traits": ["I", "T", "J"]
+  },
+  {
+    "parent_major": "Physical Sciences",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": ["Physics", "Mathematics", "Research & Investigation"],
+    "core_values": ["Innovation", "Discovery", "Intellectual Challenge"],
+    "mbti_traits": ["I", "T", "J"]
+  },
+  {
+    "parent_major": "Mathematics & Statistics",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": ["Mathematics", "Programming & Logic", "Research & Investigation"],
+    "core_values": ["Logic", "Intellectual Challenge", "Accuracy"],
+    "mbti_traits": ["I", "T", "J"]
+  },
+  {
+    "parent_major": "Environmental Science",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": ["Biology", "Chemistry", "Research & Investigation"],
+    "core_values": ["Nature & Environment", "Sustainability", "Impact"],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Food Science",
+    "ria_sec": ["R", "C"],
+    "academic_strengths": ["Chemistry", "Biology", "Research & Investigation"],
+    "core_values": ["Health", "Sustainability", "Precision"],
+    "mbti_traits": ["S", "J", "T"]
+  },
+  {
+    "parent_major": "Forensic Science",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": ["Biology", "Chemistry", "Reading & Analysis"],
+    "core_values": ["Justice", "Precision", "Curiosity"],
+    "mbti_traits": ["I", "T", "J"]
+  }
+]

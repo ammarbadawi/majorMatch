@@ -1,0 +1,16 @@
+[
+  {
+    "parent_major": "Law",
+    "ria_sec": ["E", "C"],
+    "academic_strengths": ["Reading & Analysis", "Writing & Communication", "Leadership & Public Speaking"],
+    "core_values": ["Justice", "Influence", "Responsibility"],
+    "mbti_traits": ["T", "J", "E"]
+  },
+  {
+    "parent_major": "Public Administration",
+    "ria_sec": ["E", "S"],
+    "academic_strengths": ["Leadership & Public Speaking", "Social Sciences", "Writing & Communication"],
+    "core_values": ["Service", "Efficiency & Order", "Responsibility"],
+    "mbti_traits": ["E", "J", "F"]
+  }
+]

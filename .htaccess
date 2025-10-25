@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Serve API as-is
+  RewriteRule ^api/ - [L]
+
+  # If build exists, serve build index.html for SPA routes
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/build/index.html -f
+  RewriteRule ^ build/index.html [QSA,L]
+
+  # Fallback to public index.html if build not present
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/public/index.html -f
+  RewriteRule ^ public/index.html [QSA,L]
+</IfModule>
+
+

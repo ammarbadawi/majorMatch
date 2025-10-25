@@ -1,0 +1,60 @@
+1	After a conversation, you keep thinking of better ways you could’ve responded.	AT → T
+2	Before a short trip, you pack your bag two days early and double-check everything.	JP → J
+3	As you walk through an old hallway, the way the sunlight hits the wall paint catches your attention.	SN → S
+4	Once you decide on something, you rarely go back and rethink it unless truly necessary.	JP → J
+5	You often choose your words carefully to avoid upsetting someone, even if it takes longer to explain.	TF → F
+6	You enter a family gathering full of people and feel energized just by being there.	IE → E
+7	If there’s work to be done, you prefer to stay focused and not let emotions get in the way.	TF → T
+8	Even a small comment from someone can stay on your mind for hours.	AT → T
+9	In a group project, you’re more comfortable going with the flow than assigning roles and rules.	JP → P
+10	A friend is upset about a bad exam grade. You try to comfort them first before analyzing the situation.	TF → F
+11	When a deadline is moved earlier without warning, you immediately feel a wave of pressure.	JP → J
+12	You do your best work during the final hour, even if it’s stressful.	JP → P
+13	Watching the news, your mind naturally connects stories to bigger patterns and future events.	SN → N
+14	On your birthday, your ideal plan is a quiet meal with one or two people you trust.	IE → I
+15	Even when you succeed, you still compare yourself to others who seem to have done more.	AT → T
+16	When reading a book, you tend to skip long scene descriptions and go straight to what’s happening.	SN → S
+17	You enjoy tasks where you follow clear steps: measure, solve, and move on.	SN → S
+18	Looking at an old hand-drawn map, you start imagining the places it might lead to.	SN → N
+19	You glance at clouds and instantly picture them turning into stories or creatures.	SN → N
+20	On your first day in a new class, you say hi to multiple people before sitting down.	IE → E
+21	You like organizing your week with colors, boxes, or apps—and sticking to it.	JP → J
+22	Faced with a tough choice, you often list out pros and cons to decide.	TF → T
+23	At a large event, you prefer to stay near the snacks, a quiet corner, or close friends.	IE → I
+24	When someone compliments you, you smile and say thanks without overthinking it.	AT → A
+25	In a debate, you focus on facts and ideas more than how people feel.	TF → T
+26	If plans change suddenly, you’re usually okay to just adjust and go with it.	JP → P
+27	When you’re reading or working, you often forget to check your phone.	IE → I
+28	You start new hobbies with excitement but stop when they stop feeling fun.	JP → P
+29	When you see an old tree, you think about what it might symbolize.	SN → N
+30	Given a new gadget, you check the manual before using it.	SN → S
+31	If you’re leading a group and someone’s not doing their part, you confront them directly.	TF → T
+32	You dislike committing too early—you’d rather keep your options open.	JP → P
+33	Crossing something off a to-do list gives you real satisfaction.	JP → J
+34	You usually enter exams or interviews feeling calm and collected.	AT → A
+35	You plan your week in detail—almost down to the hour.	JP → J
+36	At a wedding or party, you pull people into the fun instead of waiting for others.	IE → E
+37	You prefer having trip or dinner plans settled a few days in advance.	JP → J
+38	You’d rather get honest feedback, even if it’s blunt, than polite praise.	AT → A
+39	During a break at an event, you feel comfortable chatting with people you don’t know.	IE → E
+40	Before making a decision, you think about how it might emotionally affect others.	TF → F
+41	Seeing someone falsely blamed in a story or real life bothers you deeply.	TF → F
+42	You’d rather do something useful than analyze poems or artistic symbolism.	SN → S
+43	You’ll stand up for what’s fair, even if it creates awkwardness.	TF → T
+44	Even after good results, you wonder what you could’ve done better.	AT → T
+45	You often look for outside feedback—even when you feel confident.	AT → T
+46	While cooking, you follow the recipe carefully and stick to the steps.	SN → S
+47	In conversations, you usually prefer to listen more than talk.	IE → I
+48	You notice someone struggling and offer help, even if you barely know them.	TF → F
+49	You don’t mind being the quiet one in a group—it feels natural.	IE → I
+50	A new challenge makes you feel excited, not nervous.	AT → A
+51	You’re asked to present last-minute—you jump in and figure it out on the spot.	AT → A
+52	When offered a leadership role, your first thought is: “Yes, I can do that.”	AT → A
+53	You usually show care through actions more than words.	TF → F
+54	Alone in a busy street or market, you don’t hesitate to speak with strangers.	IE → E
+55	When you describe emotions, you use images or metaphors (“like fog with no wind”).	SN → N
+56	After a noisy day, your ideal break is quiet time alone at home.	IE → I
+57	Shown a new idea, your mind jumps to what it could become in the future.	SN → N
+58	You often imagine what someone else might be thinking or feeling.	TF → F
+59	You’re given an unexpected task—you take a breath and just begin.	AT → A
+60	A catchy beat starts playing in public—you tap your foot without thinking twice.

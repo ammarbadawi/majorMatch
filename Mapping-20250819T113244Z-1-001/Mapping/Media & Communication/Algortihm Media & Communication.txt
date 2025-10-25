@@ -1,0 +1,37 @@
+[
+  {
+    "parent_major": "Journalism",
+    "ria_sec": ["A", "S"],
+    "academic_strengths": ["Writing & Communication", "Reading & Analysis", "Social Sciences"],
+    "core_values": ["Truth", "Impact", "Expression"],
+    "mbti_traits": ["I", "N", "F", "J"]
+  },
+  {
+    "parent_major": "Broadcast & Film",
+    "ria_sec": ["A", "E"],
+    "academic_strengths": ["Design & Creativity", "Writing & Communication", "Leadership & Public Speaking"],
+    "core_values": ["Creativity", "Influence", "Expression"],
+    "mbti_traits": ["E", "N", "F", "P"]
+  },
+  {
+    "parent_major": "Public Relations & Advertising",
+    "ria_sec": ["E", "A"],
+    "academic_strengths": ["Writing & Communication", "Business & Economics", "Leadership & Public Speaking"],
+    "core_values": ["Influence", "Prestige", "Creativity"],
+    "mbti_traits": ["E", "F", "N", "P"]
+  },
+  {
+    "parent_major": "Communication Studies",
+    "ria_sec": ["S", "A"],
+    "academic_strengths": ["Writing & Communication", "Social Sciences", "Reading & Analysis"],
+    "core_values": ["Connection", "Empathy", "Expression"],
+    "mbti_traits": ["F", "N", "J"]
+  },
+  {
+    "parent_major": "Digital Media & Animation",
+    "ria_sec": ["A", "C"],
+    "academic_strengths": ["Design & Creativity", "Programming & Logic", "Writing & Communication"],
+    "core_values": ["Creativity", "Innovation", "Expression"],
+    "mbti_traits": ["P", "N", "F"]
+  }
+]

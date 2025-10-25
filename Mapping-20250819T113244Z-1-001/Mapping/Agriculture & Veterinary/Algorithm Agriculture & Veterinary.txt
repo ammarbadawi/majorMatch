@@ -1,0 +1,32 @@
+[
+  {
+    "parent_major": "Veterinary Sciences",
+    "ria_sec": ["R", "S"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Nature & Environment",
+      "Stability"
+    ],
+    "mbti_traits": ["F", "J", "S"]
+  },
+  {
+    "parent_major": "Agriculture",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Visual-Spatial Thinking"
+    ],
+    "core_values": [
+      "Sustainability",
+      "Nature & Environment",
+      "Responsibility"
+    ],
+    "mbti_traits": ["I", "S", "T", "J"]
+  }
+]

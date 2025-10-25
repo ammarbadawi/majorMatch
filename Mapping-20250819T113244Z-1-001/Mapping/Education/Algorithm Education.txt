@@ -1,0 +1,44 @@
+[
+  {
+    "parent_major": "Early Childhood Education",
+    "ria_sec": ["S", "A"],
+    "academic_strengths": ["Writing & Communication", "Leadership & Public Speaking", "Social Sciences"],
+    "core_values": ["Helping Others", "Service", "Responsibility"],
+    "mbti_traits": ["F", "J", "E"]
+  },
+  {
+    "parent_major": "Primary Education Teaching",
+    "ria_sec": ["S", "A"],
+    "academic_strengths": ["Writing & Communication", "Leadership & Public Speaking", "Social Sciences"],
+    "core_values": ["Helping Others", "Teamwork", "Stability"],
+    "mbti_traits": ["E", "F", "J"]
+  },
+  {
+    "parent_major": "Education Administration",
+    "ria_sec": ["E", "C"],
+    "academic_strengths": ["Leadership & Public Speaking", "Social Sciences", "Writing & Communication"],
+    "core_values": ["Leadership", "Responsibility", "Efficiency & Order"],
+    "mbti_traits": ["E", "T", "J"]
+  },
+  {
+    "parent_major": "Special & Inclusive Education",
+    "ria_sec": ["S", "C"],
+    "academic_strengths": ["Writing & Communication", "Social Sciences", "Reading & Analysis"],
+    "core_values": ["Helping Others", "Empathy", "Service"],
+    "mbti_traits": ["F", "J", "S"]
+  },
+  {
+    "parent_major": "Teaching English / Languages",
+    "ria_sec": ["S", "A"],
+    "academic_strengths": ["Writing & Communication", "Reading & Analysis", "Foreign Languages"],
+    "core_values": ["Cultural Appreciation", "Helping Others", "Communication"],
+    "mbti_traits": ["I", "F", "J"]
+  },
+  {
+    "parent_major": "Art & Music Education",
+    "ria_sec": ["A", "S"],
+    "academic_strengths": ["Design & Creativity", "Writing & Communication", "Leadership & Public Speaking"],
+    "core_values": ["Creativity", "Helping Others", "Expression"],
+    "mbti_traits": ["F", "P", "E"]
+  }
+]

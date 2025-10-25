@@ -1,0 +1,58 @@
+[
+  {
+    "parent_major": "Languages & Translation",
+    "ria_sec": ["S", "A"],
+    "academic_strengths": ["Foreign Languages", "Reading & Analysis", "Writing & Communication"],
+    "core_values": ["Cultural Appreciation", "Communication", "Connection"],
+    "mbti_traits": ["I", "F", "J"]
+  },
+  {
+    "parent_major": "History & Cultural Studies",
+    "ria_sec": ["I", "S"],
+    "academic_strengths": ["Reading & Analysis", "Writing & Communication", "Social Sciences"],
+    "core_values": ["Cultural Appreciation", "Truth", "Insight"],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Philosophy & Religion",
+    "ria_sec": ["I", "S"],
+    "academic_strengths": ["Reading & Analysis", "Social Sciences", "Writing & Communication"],
+    "core_values": ["Wisdom", "Ethics", "Curiosity"],
+    "mbti_traits": ["I", "N", "F", "J"]
+  },
+  {
+    "parent_major": "Political Science & Intl. Affairs",
+    "ria_sec": ["E", "S"],
+    "academic_strengths": ["Social Sciences", "Leadership & Public Speaking", "Reading & Analysis"],
+    "core_values": ["Influence", "Justice", "Insight"],
+    "mbti_traits": ["E", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Psychology",
+    "ria_sec": ["I", "S"],
+    "academic_strengths": ["Social Sciences", "Reading & Analysis", "Writing & Communication"],
+    "core_values": ["Helping Others", "Insight", "Empathy"],
+    "mbti_traits": ["I", "F", "N", "J"]
+  },
+  {
+    "parent_major": "Sociology & Social Work",
+    "ria_sec": ["S", "E"],
+    "academic_strengths": ["Social Sciences", "Writing & Communication", "Leadership & Public Speaking"],
+    "core_values": ["Helping Others", "Community", "Empathy"],
+    "mbti_traits": ["E", "F", "J"]
+  },
+  {
+    "parent_major": "Geography & GIS",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": ["Visual-Spatial Thinking", "Research & Investigation", "Mathematics"],
+    "core_values": ["Discovery", "Nature & Environment", "Insight"],
+    "mbti_traits": ["I", "T", "J"]
+  },
+  {
+    "parent_major": "Arts & Archaeology",
+    "ria_sec": ["A", "I"],
+    "academic_strengths": ["Design & Creativity", "Reading & Analysis", "Visual-Spatial Thinking"],
+    "core_values": ["Cultural Appreciation", "Discovery", "Creativity"],
+    "mbti_traits": ["N", "F", "P"]
+  }
+]
