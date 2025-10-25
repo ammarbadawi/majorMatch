@@ -800,7 +800,14 @@ app.post('/api/stripe-webhook', bodyParser.raw({ type: 'application/json' }), as
 // Routes
 app.get('/api/questions', authMiddleware, async (req, res) => {
 	try {
-		if (!questionsCache.length) await loadMbtiCache();
+		if (!questionsCache.length) {
+			try {
+				await ensureMbtiSeedMongo();
+			} catch (_) {}
+			try {
+				await loadMbtiCache();
+			} catch (_) {}
+		}
 		res.json(questionsCache);
 	} catch (e) { res.status(500).json({ error: 'Server error' }); }
 });
@@ -1552,24 +1559,25 @@ app.post('/api/chat', authMiddleware, async (req, res) => {
 });
 
 // Start
-(async () => {
-	try {
-		if (mongoose.connection && mongoose.connection.readyState === 1) {
-			await ensureMbtiSeedMongo();
-			await ensureMajorSeedMongo();
-			await loadMbtiCache();
-		} else {
-			console.warn('Skipping DB seed/cache: database not connected yet');
-		}
-	} catch (e) {
-		console.warn('Startup tasks skipped:', e.message);
-	}
-	// SPA fallback for client routes (only when requesting HTML, not assets)
-	app.get('*', (req, res, next) => {
-		if (req.path.startsWith('/api')) return next();
-		if (req.path.startsWith('/static/')) return next();
-		if (req.path.includes('.')) return next();
-		res.sendFile(path.join(__dirname, 'build', 'index.html'));
-	});
-	app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
-})();
+// Start server and perform seeding when Mongo is connected
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    if (req.path.startsWith('/static/')) return next();
+    if (req.path.includes('.')) return next();
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
+
+if (mongoose.connection) {
+    mongoose.connection.once('open', async () => {
+        try {
+            await ensureMbtiSeedMongo();
+            await ensureMajorSeedMongo();
+            await loadMbtiCache();
+            console.log('Initial seed and cache load completed after DB open');
+        } catch (e) {
+            console.warn('Post-connection seed/cache failed:', e.message);
+        }
+    });
+}
