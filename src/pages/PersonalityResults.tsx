@@ -30,7 +30,9 @@ import {
   Star,
   Favorite
 } from '@mui/icons-material';
+import { WarningAmber, Gavel, Group, Handshake, Work, FormatQuote } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface PersonalityData {
   type: string;
@@ -47,6 +49,7 @@ const PersonalityResults: React.FC = () => {
   const location = useLocation();
   const state = location.state as LocationState;
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const [shareMessage, setShareMessage] = useState('');
   const [hasMbti, setHasMbti] = useState<boolean>(() => {
@@ -104,10 +107,10 @@ const PersonalityResults: React.FC = () => {
           >
             <Psychology sx={{ fontSize: 80, color: theme.palette.primary.main, mb: 3 }} />
             <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
-              No Personality Results Found
+              {t('personalityResults.noResults')}
             </Typography>
             <Typography variant="body1" color="text.secondary" gutterBottom sx={{ fontSize: '1.125rem', mb: 4 }}>
-              It looks like you haven't taken the test yet or the results were lost.
+              {t('personalityResults.noResultsDesc')}
             </Typography>
             <Button
               variant="contained"
@@ -122,7 +125,7 @@ const PersonalityResults: React.FC = () => {
                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
               }}
             >
-              Take Personality Test
+              {t('common.personalityTest')}
             </Button>
           </Paper>
         </Container>
@@ -190,6 +193,15 @@ const PersonalityResults: React.FC = () => {
 
   const parsedData = parsePersonalityContent(personalityData.content);
 
+  const formatMbtiDisplay = (type: string) => {
+    const safe = String(type || '').replace('‑', '-');
+    const parts = safe.split('-');
+    if (parts.length === 2 && parts[0] && parts[1]) {
+      return `${parts[0]}(${parts[1]})`;
+    }
+    return safe;
+  };
+
   const getPersonalityColor = (type: string) => {
     const colorMap: { [key: string]: string } = {
       'INFP': theme.palette.secondary.main,
@@ -225,13 +237,13 @@ const PersonalityResults: React.FC = () => {
 
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'My Personality Test Results', text: shareText, url: window.location.href });
+        await navigator.share({ title: t('personalityResults.myPersonalityTestResults'), text: shareText, url: window.location.href });
       } catch (err) {
         console.log('Error sharing:', err);
       }
     } else {
       navigator.clipboard.writeText(shareText);
-      setShareMessage('Results copied to clipboard!');
+      setShareMessage(t('personalityResults.resultsCopiedToClipboard'));
       setTimeout(() => setShareMessage(''), 3000);
     }
   };
@@ -250,16 +262,16 @@ const PersonalityResults: React.FC = () => {
           boxShadow: theme.shadows[4]
         }}
       >
-        <Toolbar sx={{ py: 1 }}>
-          <IconButton edge="start" color="inherit" onClick={() => navigate('/')} sx={{ mr: 3 }}>
+        <Toolbar sx={{ py: { xs: 1, sm: 1.5 }, flexWrap: 'wrap' }}>
+          <IconButton edge="start" color="inherit" onClick={() => navigate('/')} sx={{ mr: { xs: 1, sm: 3 }, mb: { xs: 1, sm: 0 } }}>
             <ArrowBack />
           </IconButton>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h5" component="h1" sx={{ fontWeight: 700, mb: 0.5 }}>
-              Your Personality Results
+          <Box sx={{ flexGrow: 1, minWidth: { xs: '100%', sm: 'auto' } }}>
+            <Typography variant="h5" component="h1" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '1.125rem', sm: '1.5rem' } }}>
+              {t('personalityResults.title')}
             </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.9 }}>
-              Complete personality analysis and insights
+            <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+              {t('personalityResults.subtitle')}
             </Typography>
           </Box>
           <Button
@@ -268,49 +280,52 @@ const PersonalityResults: React.FC = () => {
             startIcon={<Share />}
             onClick={handleShare}
             sx={{
-              borderColor: 'rgba(255,255,255,0.5)', borderWidth: '2px', color: 'white', mr: 2,
+              borderColor: 'rgba(255,255,255,0.5)', borderWidth: '2px', color: 'white', mr: { xs: 0, sm: 2 },
+              mt: { xs: 1, sm: 0 },
+              fontSize: { xs: '0.85rem', sm: '0.875rem' },
+              py: { xs: 0.75, sm: 1 },
+              px: { xs: 1.5, sm: 2 },
               '&:hover': { borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: '2px' }
             }}
           >
-            Share
+            {t('common.share')}
           </Button>
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
         {/* Hero Section */}
         <Card elevation={8} sx={{
-          mb: 6, background: `linear-gradient(135deg, ${personalityColor} 0%, ${personalityColor}CC 100%)`, color: 'white', overflow: 'hidden', position: 'relative',
+          mb: { xs: 4, sm: 6 }, background: `linear-gradient(135deg, ${personalityColor} 0%, ${personalityColor}CC 100%)`, color: 'white', overflow: 'hidden', position: 'relative',
           '&::before': { content: '""', position: 'absolute', top: -50, right: -50, width: 200, height: 200, background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }
         }}>
-          <CardContent sx={{ p: 6, position: 'relative', zIndex: 1 }}>
+          <CardContent sx={{ p: { xs: 3, sm: 4, md: 6 }, position: 'relative', zIndex: 1 }}>
             <Grid container spacing={4} alignItems="center" justifyContent="space-between">
               <Grid item xs={12} md={8}>
                 <Box sx={{ mb: 3 }}>
-                  <Typography variant="h1" sx={{ fontSize: { xs: '3rem', md: '4rem' }, fontWeight: 800, mb: 2, textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
-                    {personalityEmoji} {personalityType}
+                  <Typography variant="h1" sx={{ fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem', lg: '4rem' }, fontWeight: 800, mb: 2, textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
+                    {personalityEmoji} {formatMbtiDisplay(personalityType)}
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 600, mb: 3, opacity: 0.95 }}>
+                  <Typography variant="h4" sx={{ fontWeight: 600, mb: 3, opacity: 0.95, fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' } }}>
                     {parsedData.title}
                   </Typography>
-                  <Typography variant="h6" sx={{ fontStyle: 'italic', opacity: 0.9, mb: 4, fontSize: '1.25rem' }}>
-                    "{parsedData.quote}"
-                  </Typography>
-                  <Typography variant="body1" sx={{ fontSize: '1.125rem', lineHeight: 1.6, opacity: 0.95 }}>
-                    {parsedData.description}
-                  </Typography>
+                  {parsedData.quote && (
+                    <Typography variant="h6" sx={{ fontStyle: 'italic', opacity: 0.9, mb: 4, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' } }}>
+                      "{parsedData.quote}"
+                    </Typography>
+                  )}
                 </Box>
               </Grid>
               <Grid item xs={12} md={4}>
                 <Box sx={{ textAlign: 'center' }}>
-                  <Avatar sx={{ width: 120, height: 120, mx: 'auto', mb: 3, fontSize: '4rem', backgroundColor: 'rgba(255,255,255,0.2)', border: '4px solid rgba(255,255,255,0.3)' }}>
+                  <Avatar sx={{ width: { xs: 80, sm: 100, md: 120 }, height: { xs: 80, sm: 100, md: 120 }, mx: 'auto', mb: 3, fontSize: { xs: '2.5rem', sm: '3rem', md: '4rem' }, backgroundColor: 'rgba(255,255,255,0.2)', border: '4px solid rgba(255,255,255,0.3)' }}>
                     {personalityEmoji}
                   </Avatar>
-                  <Typography variant="h3" sx={{ fontWeight: 800, mb: 1 }}>
-                    {personalityType}
+                  <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' } }}>
+                    {formatMbtiDisplay(personalityType)}
                   </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
-                    Personality Type
+                  <Typography variant="body1" sx={{ opacity: 0.9, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                    {t('personalityResults.personalityType')}
                   </Typography>
                 </Box>
               </Grid>
@@ -325,24 +340,24 @@ const PersonalityResults: React.FC = () => {
           </Paper>
         )}
 
-        <Grid container spacing={6} alignItems="stretch" justifyContent="center">
+        <Grid container spacing={{ xs: 3, sm: 4, md: 6 }} alignItems="stretch" justifyContent="center">
           {/* Key Traits */}
           <Grid item xs={12} md={6}>
             <Card elevation={4} sx={{ height: '100%' }}>
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <Avatar sx={{ backgroundColor: `${personalityColor}20`, color: personalityColor, mr: 2, width: 48, height: 48 }}>
-                    <PersonPin sx={{ fontSize: 28 }} />
+                  <Avatar sx={{ backgroundColor: `${personalityColor}20`, color: personalityColor, mr: 2, width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 } }}>
+                    <PersonPin sx={{ fontSize: { xs: 20, sm: 28 } }} />
                   </Avatar>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
-                    Key Traits
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                    {t('personalityResults.keyTraits')}
                   </Typography>
                 </Box>
                 <Stack spacing={2}>
                   {parsedData.traits.map((trait, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <CheckCircle sx={{ color: personalityColor, mr: 2, fontSize: 24 }} />
-                      <Typography variant="body1" sx={{ fontSize: '1.1rem', fontWeight: 500 }}>
+                      <CheckCircle sx={{ color: personalityColor, mr: 2, fontSize: { xs: 20, sm: 24 }, flexShrink: 0 }} />
+                      <Typography variant="body1" sx={{ fontSize: { xs: '0.95rem', sm: '1.1rem' }, fontWeight: 500 }}>
                         {trait}
                       </Typography>
                     </Box>
@@ -355,20 +370,20 @@ const PersonalityResults: React.FC = () => {
           {/* Strengths */}
           <Grid item xs={12} md={6}>
             <Card elevation={4} sx={{ height: '100%' }}>
-              <CardContent sx={{ p: 4 }}>
+              <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <Avatar sx={{ backgroundColor: `${theme.palette.success.main}20`, color: theme.palette.success.main, mr: 2, width: 48, height: 48 }}>
-                    <Star sx={{ fontSize: 28 }} />
+                  <Avatar sx={{ backgroundColor: `${theme.palette.success.main}20`, color: theme.palette.success.main, mr: 2, width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 } }}>
+                    <Star sx={{ fontSize: { xs: 20, sm: 28 } }} />
                   </Avatar>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
-                    Your Strengths
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                    {t('personalityResults.yourStrengths')}
                   </Typography>
                 </Box>
                 <Stack spacing={2}>
                   {parsedData.strengths.map((strength, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Favorite sx={{ color: theme.palette.success.main, mr: 2, fontSize: 24 }} />
-                      <Typography variant="body1" sx={{ fontSize: '1.1rem', fontWeight: 500 }}>
+                      <Favorite sx={{ color: theme.palette.success.main, mr: 2, fontSize: { xs: 20, sm: 24 }, flexShrink: 0 }} />
+                      <Typography variant="body1" sx={{ fontSize: { xs: '0.95rem', sm: '1.1rem' }, fontWeight: 500 }}>
                         {strength}
                       </Typography>
                     </Box>
@@ -381,13 +396,13 @@ const PersonalityResults: React.FC = () => {
           {/* Detailed Analysis */}
           <Grid item xs={12}>
             <Card elevation={4}>
-              <CardContent sx={{ p: 4 }}>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, color: theme.palette.text.primary, mb: 3, display: 'flex', alignItems: 'center' }}>
-                  <Psychology sx={{ mr: 2, color: personalityColor, fontSize: 32 }} />
-                  Complete Personality Analysis
+              <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
+                <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, color: theme.palette.text.primary, mb: 3, display: 'flex', alignItems: 'center', fontSize: { xs: '1.25rem', sm: '1.5rem' }, flexWrap: 'wrap' }}>
+                  <Psychology sx={{ mr: 2, color: personalityColor, fontSize: { xs: 24, sm: 32 } }} />
+                  {t('personalityResults.completeAnalysis')}
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
-                <Typography variant="body1" sx={{ lineHeight: 1.8, fontSize: '1.1rem', whiteSpace: 'pre-line' }}>
+                <Typography variant="body1" sx={{ lineHeight: 1.8, fontSize: { xs: '0.95rem', sm: '1.1rem' }, whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
                   {personalityData.content}
                 </Typography>
               </CardContent>
@@ -396,23 +411,23 @@ const PersonalityResults: React.FC = () => {
 
           {/* Action Buttons */}
           <Grid item xs={12}>
-            <Paper elevation={3} sx={{ p: 4, textAlign: 'center', background: `linear-gradient(135deg, ${theme.palette.primary.main}08 0%, ${theme.palette.secondary.main}08 100%)` }}>
-              <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mb: 4 }}>
-                What's Next?
+            <Paper elevation={3} sx={{ p: { xs: 3, sm: 4 }, textAlign: 'center', background: `linear-gradient(135deg, ${theme.palette.primary.main}08 0%, ${theme.palette.secondary.main}08 100%)` }}>
+              <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mb: 4, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                {t('personalityResults.whatsNext')}
               </Typography>
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} justifyContent="center">
-                <Tooltip title="You need to do the MBTI test first" disableHoverListener={hasMbti}>
+                <Tooltip title={t('personalityResults.takeMajorTest')} disableHoverListener={hasMbti}>
                   <span>
-                    <Button variant="contained" size="large" startIcon={<School />} onClick={() => navigate('/major-matching-test')} sx={{ py: 2, px: 4, fontSize: '1.125rem', fontWeight: 700, background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)` }} disabled={!hasMbti}>
-                      Find Your Perfect Major
+                    <Button variant="contained" size="large" startIcon={<School />} onClick={() => navigate('/major-matching-test')} sx={{ py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 700, background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`, width: { xs: '100%', sm: 'auto' } }} disabled={!hasMbti}>
+                      {t('personalityResults.takeMajorTest')}
                     </Button>
                   </span>
                 </Tooltip>
-                <Button variant="outlined" size="large" startIcon={<Refresh />} onClick={() => navigate('/personality-test')} sx={{ py: 2, px: 4, fontSize: '1.125rem', fontWeight: 600, borderWidth: '2px', '&:hover': { borderWidth: '2px' } }}>
-                  Retake Test
+                <Button variant="outlined" size="large" startIcon={<Refresh />} onClick={() => navigate('/personality-test')} sx={{ py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 600, borderWidth: '2px', '&:hover': { borderWidth: '2px' }, width: { xs: '100%', sm: 'auto' } }}>
+                  {t('personalityResults.retakeTest')}
                 </Button>
-                <Button variant="outlined" size="large" startIcon={<Home />} onClick={() => navigate('/')} sx={{ py: 2, px: 4, fontSize: '1.125rem', fontWeight: 600, borderWidth: '2px', '&:hover': { borderWidth: '2px' } }}>
-                  Back to Home
+                <Button variant="outlined" size="large" startIcon={<Home />} onClick={() => navigate('/')} sx={{ py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 600, borderWidth: '2px', '&:hover': { borderWidth: '2px' }, width: { xs: '100%', sm: 'auto' } }}>
+                  {t('common.back')} {t('common.home')}
                 </Button>
               </Stack>
             </Paper>

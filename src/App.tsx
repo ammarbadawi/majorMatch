@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useTranslation } from 'react-i18next';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -13,8 +14,11 @@ import Profile from './pages/Profile';
 import NavBar from './components/NavBar';
 import VerifyEmail from './pages/VerifyEmail';
 import Chat from './pages/Chat';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
-const theme = createTheme({
+const getTheme = (direction: 'ltr' | 'rtl') => createTheme({
+    direction: direction,
     palette: {
         primary: {
             main: '#6C63FF',
@@ -71,7 +75,9 @@ const theme = createTheme({
         }
     },
     typography: {
-        fontFamily: '"Inter", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
+        fontFamily: direction === 'rtl' 
+            ? '"Cairo", "Tajawal", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif'
+            : '"Inter", "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
         h1: {
             fontSize: '3.5rem',
             fontWeight: 800,
@@ -316,6 +322,81 @@ declare module '@mui/material/styles' {
     }
 }
 
+function AppContent() {
+    const { i18n } = useTranslation();
+    const [direction, setDirection] = useState<'ltr' | 'rtl'>(i18n.language === 'ar' ? 'rtl' : 'ltr');
+    const theme = getTheme(direction);
+
+    useEffect(() => {
+        const currentDirection = i18n.language === 'ar' ? 'rtl' : 'ltr';
+        setDirection(currentDirection);
+        document.documentElement.dir = currentDirection;
+        document.documentElement.lang = i18n.language;
+        
+        // Add Arabic font if needed
+        if (currentDirection === 'rtl' && !document.getElementById('arabic-fonts')) {
+            const link = document.createElement('link');
+            link.id = 'arabic-fonts';
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap';
+            document.head.appendChild(link);
+        }
+    }, [i18n.language]);
+
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Router>
+                <NavBar />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/verify-email" element={<VerifyEmail />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route
+                        path="/chat"
+                        element={
+                            <RequireAuth>
+                                <Chat />
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="/personality-test"
+                        element={
+                            <RequireAuth>
+                                <PersonalityTest />
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="/major-matching-test"
+                        element={
+                            <RequireAuth>
+                                <RequireMbti>
+                                    <MajorMatchingTest />
+                                </RequireMbti>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route path="/personality-results" element={<PersonalityResults />} />
+                    <Route path="/major-matching-results" element={<MajorMatchingResults />} />
+                    <Route
+                        path="/profile"
+                        element={
+                            <RequireAuth>
+                                <Profile />
+                            </RequireAuth>
+                        }
+                    />
+                </Routes>
+            </Router>
+        </ThemeProvider>
+    );
+}
+
 function RequireAuth({ children }: { children: JSX.Element }) {
     const location = useLocation();
     const [checking, setChecking] = useState(true);
@@ -371,56 +452,7 @@ function RequireMbti({ children }: { children: JSX.Element }) {
 }
 
 function App() {
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Router>
-                <NavBar />
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/verify-email" element={<VerifyEmail />} />
-                    <Route
-                        path="/chat"
-                        element={
-                            <RequireAuth>
-                                <Chat />
-                            </RequireAuth>
-                        }
-                    />
-                    <Route
-                        path="/personality-test"
-                        element={
-                            <RequireAuth>
-                                <PersonalityTest />
-                            </RequireAuth>
-                        }
-                    />
-                    <Route
-                        path="/major-matching-test"
-                        element={
-                            <RequireAuth>
-                                <RequireMbti>
-                                    <MajorMatchingTest />
-                                </RequireMbti>
-                            </RequireAuth>
-                        }
-                    />
-                    <Route path="/personality-results" element={<PersonalityResults />} />
-                    <Route path="/major-matching-results" element={<MajorMatchingResults />} />
-                    <Route
-                        path="/profile"
-                        element={
-                            <RequireAuth>
-                                <Profile />
-                            </RequireAuth>
-                        }
-                    />
-                </Routes>
-            </Router>
-        </ThemeProvider>
-    );
+    return <AppContent />;
 }
 
 export default App; 

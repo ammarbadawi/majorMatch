@@ -51,6 +51,8 @@ import {
     VisibilityOff
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n/config';
 
 interface Question {
     id: number;
@@ -89,6 +91,7 @@ const glowAnimation = keyframes`
 const PersonalityTest: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const { t } = useTranslation();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -106,7 +109,7 @@ const PersonalityTest: React.FC = () => {
     // Load questions from backend
     useEffect(() => {
         fetchQuestions();
-    }, []);
+    }, [i18n.language]);
 
     // Timer effect
     useEffect(() => {
@@ -125,7 +128,9 @@ const PersonalityTest: React.FC = () => {
 
     const fetchQuestions = async () => {
         try {
-            const response = await fetch('/api/questions', { credentials: 'include' });
+            const currentLang = i18n.language || 'en';
+            const lang = currentLang === 'ar' ? 'ar' : 'en';
+            const response = await fetch(`/api/questions?lang=${lang}`, { credentials: 'include' });
             if (!response.ok) {
                 if (response.status === 401) {
                     navigate('/login');
@@ -175,13 +180,15 @@ const PersonalityTest: React.FC = () => {
         setSubmitting(true);
         try {
             const filtered = answers.filter(a => a.value && a.value >= 1 && a.value <= 5);
+            const currentLang = i18n.language || 'en';
+            const lang = currentLang === 'ar' ? 'ar' : 'en';
             const response = await fetch('/api/calculate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({ answers: filtered }),
+                body: JSON.stringify({ answers: filtered, lang }),
             });
 
             if (!response.ok) {
@@ -233,74 +240,67 @@ const PersonalityTest: React.FC = () => {
     const getAnswerOptions = () => [
         {
             value: 1,
-            label: 'Strongly Disagree',
+            label: t('personalityTest.stronglyDisagree'),
             color: theme.palette.error.main,
-            description: 'This doesn\'t describe me at all'
+            description: t('personalityTest.stronglyDisagreeDesc')
         },
         {
             value: 2,
-            label: 'Disagree',
+            label: t('personalityTest.disagree'),
             color: theme.palette.warning.main,
-            description: 'This rarely applies to me'
+            description: t('personalityTest.disagreeDesc')
         },
         {
             value: 3,
-            label: 'Neutral',
+            label: t('personalityTest.neutral'),
             color: theme.palette.grey[500],
-            description: 'Sometimes this applies'
+            description: t('personalityTest.neutralDesc')
         },
         {
             value: 4,
-            label: 'Agree',
+            label: t('personalityTest.agree'),
             color: theme.palette.success.light,
-            description: 'This often applies to me'
+            description: t('personalityTest.agreeDesc')
         },
         {
             value: 5,
-            label: 'Strongly Agree',
+            label: t('personalityTest.stronglyAgree'),
             color: theme.palette.success.main,
-            description: 'This perfectly describes me'
+            description: t('personalityTest.stronglyAgreeDesc')
         }
     ];
 
     const getDimensionInfo = (dimension: string) => {
-        const dimensionMap: { [key: string]: { name: string, color: string, icon: string, description: string } } = {
+        const dimensionMap: { [key: string]: { color: string, icon: string } } = {
             'IE': {
-                name: 'Energy',
                 color: theme.palette.error.main,
-                icon: '⚡',
-                description: 'How you gain and expend energy'
+                icon: '⚡'
             },
             'SN': {
-                name: 'Perception',
                 color: theme.palette.success.main,
-                icon: '🔍',
-                description: 'How you process information'
+                icon: '🔍'
             },
             'TF': {
-                name: 'Decision',
                 color: theme.palette.primary.main,
-                icon: '⚖️',
-                description: 'How you make decisions'
+                icon: '⚖️'
             },
             'JP': {
-                name: 'Structure',
                 color: theme.palette.warning.main,
-                icon: '📋',
-                description: 'How you approach life'
+                icon: '📋'
             },
             'AT': {
-                name: 'Identity',
                 color: theme.palette.secondary.main,
-                icon: '🎭',
-                description: 'How you express yourself'
+                icon: '🎭'
             }
         };
-        return dimensionMap[dimension] || {
-            name: 'Unknown',
+        const dim = dimensionMap[dimension] || {
             color: theme.palette.grey[500],
-            icon: '❓',
-            description: 'Unknown dimension'
+            icon: '❓'
+        };
+        return {
+            ...dim,
+            name: t(`personalityTest.dimensions.${dimension}.name`, { defaultValue: t('personalityTest.dimensions.unknown.name') }),
+            description: t(`personalityTest.dimensions.${dimension}.description`, { defaultValue: t('personalityTest.dimensions.unknown.description') })
         };
     };
 
@@ -416,7 +416,7 @@ const PersonalityTest: React.FC = () => {
                                     </Stack>
 
                                     <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-                                        "The best way to find out who you are is to discover who you're not."
+                                        {t('personalityTest.quote')}
                                     </Typography>
                                 </Box>
                             </Zoom>
@@ -453,7 +453,7 @@ const PersonalityTest: React.FC = () => {
                             }}
                         >
                             <AlertTitle sx={{ fontSize: '1.5rem', fontWeight: 700 }}>
-                                Oops! Something went wrong
+                                {t('personalityTest.oops')}
                             </AlertTitle>
                             <Typography variant="body1" sx={{ mt: 2, mb: 3 }}>
                                 {error}
@@ -470,7 +470,7 @@ const PersonalityTest: React.FC = () => {
                                     }
                                 }}
                             >
-                                Try Again
+                                {t('personalityTest.tryAgain')}
                             </Button>
                         </Alert>
                     </Fade>
@@ -483,7 +483,7 @@ const PersonalityTest: React.FC = () => {
         return (
             <Container maxWidth="md" sx={{ mt: 4 }}>
                 <Typography variant="h6" textAlign="center">
-                    No questions available
+                    {t('personalityTest.noQuestions')}
                 </Typography>
             </Container>
         );
@@ -521,7 +521,8 @@ const PersonalityTest: React.FC = () => {
                         color="inherit"
                         onClick={() => navigate('/')}
                         sx={{
-                            mr: { xs: 0, md: 3 },
+                            mr: { xs: 0, md: i18n.language === 'ar' ? 0 : 3 },
+                            ml: { xs: 0, md: i18n.language === 'ar' ? 3 : 0 },
                             mb: { xs: 1, md: 0 },
                             '&:hover': {
                                 transform: 'scale(1.1)',
@@ -529,7 +530,7 @@ const PersonalityTest: React.FC = () => {
                             }
                         }}
                     >
-                        <ArrowBack />
+                        <ArrowBack sx={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'none' }} />
                     </IconButton>
 
                     <Avatar
@@ -545,15 +546,15 @@ const PersonalityTest: React.FC = () => {
 
                     <Box sx={{ flexGrow: 1, width: { xs: '100%', md: 'auto' }, textAlign: { xs: 'center', md: 'left' } }}>
                         <Typography variant="h5" component="h1" sx={{ fontWeight: 800, mb: 0.5, fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' } }}>
-                            Personality Discovery
+                            {t('personalityTest.title')}
                         </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: { xs: '0.8rem', sm: '0.9rem' } }}>
-                            Uncover your unique personality blueprint
+                            {t('personalityTest.subtitle')}
                         </Typography>
                     </Box>
 
                     <Stack direction="row" spacing={2} alignItems="center" sx={{ flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'flex-end' }, rowGap: 1 }}>
-                        <Tooltip title="Time Spent">
+                        <Tooltip title={t('personalityTest.timeSpent')}>
                             <Chip
                                 icon={<Timer />}
                                 label={`${timeSpentMinutes}:${timeSpentSeconds.toString().padStart(2, '0')}`}
@@ -569,7 +570,7 @@ const PersonalityTest: React.FC = () => {
                         </Tooltip>
 
                         <Chip
-                            label={`Page ${currentPage + 1} / ${totalPages || 1}`}
+                            label={`${t('personalityTest.page')} ${currentPage + 1} / ${totalPages || 1}`}
                             sx={{
                                 backgroundColor: alpha(theme.palette.common.white, 0.2),
                                 color: 'white',
@@ -602,10 +603,10 @@ const PersonalityTest: React.FC = () => {
                         mb: 1
                     }}>
                         <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
-                            {Math.round(progress)}% Complete
+                            {Math.round(progress)}% {t('personalityTest.complete')}
                         </Typography>
                         <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
-                            ~{Math.ceil((questions.length - answeredCount) * 0.3)} min remaining
+                            ~{Math.ceil((questions.length - answeredCount) * 0.3)} {t('personalityTest.minRemaining')}
                         </Typography>
                     </Box>
                     <LinearProgress
@@ -641,7 +642,7 @@ const PersonalityTest: React.FC = () => {
                         >
                             <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, color: theme.palette.info.main }}>
                                 <Insights sx={{ mr: 1, verticalAlign: 'middle' }} />
-                                Test Insights
+                                {t('personalityTest.testInsights')}
                             </Typography>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6} md={3}>
@@ -650,7 +651,7 @@ const PersonalityTest: React.FC = () => {
                                             {answeredCount}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Questions Answered
+                                            {t('personalityTest.questionsAnswered')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -660,7 +661,7 @@ const PersonalityTest: React.FC = () => {
                                             {questions.length - answeredCount}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Remaining
+                                            {t('personalityTest.remaining')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -670,7 +671,7 @@ const PersonalityTest: React.FC = () => {
                                             {Math.round(progress)}%
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Complete
+                                            {t('personalityTest.complete')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -680,7 +681,7 @@ const PersonalityTest: React.FC = () => {
                                             {Math.ceil((questions.length - answeredCount) * 0.3)}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Min Left
+                                            {t('personalityTest.minLeft')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -713,10 +714,10 @@ const PersonalityTest: React.FC = () => {
                         <CardContent sx={{ p: { xs: 3, sm: 4, md: 6 } }}>
                             <Box sx={{ textAlign: 'center', mb: 4 }}>
                                 <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, color: theme.palette.text.primary }}>
-                                    How well does each statement describe you?
+                                    {t('personalityTest.howWellDescribes')}
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
-                                    Be honest and choose the option that best reflects your true self
+                                    {t('personalityTest.beHonest')}
                                 </Typography>
                             </Box>
 
@@ -731,7 +732,7 @@ const PersonalityTest: React.FC = () => {
                                 }}
                             >
                                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, textAlign: 'center' }}>
-                                    Response Scale
+                                    {t('personalityTest.responseScale')}
                                 </Typography>
                                 <Grid container spacing={2}>
                                     {answerOptions.map((opt) => (
@@ -853,7 +854,8 @@ const PersonalityTest: React.FC = () => {
                                                             mb: 3,
                                                             lineHeight: 1.6,
                                                             color: theme.palette.text.primary,
-                                                            wordBreak: 'break-word'
+                                                            wordBreak: 'break-word',
+                                                            direction: 'auto'
                                                         }}
                                                     >
                                                         {q.text}
@@ -929,7 +931,7 @@ const PersonalityTest: React.FC = () => {
                                                             <Box sx={{ textAlign: 'center', mt: 2 }}>
                                                                 <Chip
                                                                     icon={<CheckCircle />}
-                                                                    label="Answered"
+                                                                    label={t('personalityTest.answered')}
                                                                     size="small"
                                                                     sx={{
                                                                         backgroundColor: theme.palette.success.main,
@@ -948,12 +950,13 @@ const PersonalityTest: React.FC = () => {
                             </Grid>
 
                             {/* Navigation */}
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 6 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 6, flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' }}>
                                 <Button
                                     variant="outlined"
                                     onClick={handlePreviousPage}
                                     disabled={currentPage === 0 || submitting}
-                                    startIcon={<ArrowBack />}
+                                    startIcon={i18n.language === 'ar' ? undefined : <ArrowBack />}
+                                    endIcon={i18n.language === 'ar' ? <ArrowBack sx={{ transform: 'scaleX(-1)' }} /> : undefined}
                                     sx={{
                                         py: 1.5,
                                         px: 4,
@@ -963,11 +966,11 @@ const PersonalityTest: React.FC = () => {
                                         borderRadius: 3,
                                         '&:hover': {
                                             borderWidth: '2px',
-                                            transform: 'translateX(-2px)'
+                                            transform: i18n.language === 'ar' ? 'translateX(2px)' : 'translateX(-2px)'
                                         }
                                     }}
                                 >
-                                    Previous
+                                    {t('personalityTest.previous')}
                                 </Button>
 
                                 <Box sx={{ textAlign: 'center' }}>
@@ -975,7 +978,7 @@ const PersonalityTest: React.FC = () => {
                                         <Zoom in={true} timeout={500}>
                                             <Chip
                                                 icon={<CheckCircle />}
-                                                label="Page Complete"
+                                                label={t('personalityTest.pageComplete')}
                                                 sx={{
                                                     backgroundColor: theme.palette.success.main,
                                                     color: 'white',
@@ -993,8 +996,9 @@ const PersonalityTest: React.FC = () => {
                                     variant="contained"
                                     onClick={handleNextPage}
                                     disabled={!isPageComplete() || submitting}
-                                    endIcon={submitting ? <CircularProgress size={20} color="inherit" /> :
-                                        currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward />}
+                                    startIcon={i18n.language === 'ar' ? <ArrowForward sx={{ transform: 'scaleX(-1)' }} /> : undefined}
+                                    endIcon={i18n.language === 'ar' ? undefined : (submitting ? <CircularProgress size={20} color="inherit" /> :
+                                        currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward />)}
                                     sx={{
                                         py: 1.5,
                                         px: 4,
@@ -1009,12 +1013,12 @@ const PersonalityTest: React.FC = () => {
                                             background: isPageComplete()
                                                 ? `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`
                                                 : theme.palette.grey[300],
-                                            transform: 'translateX(2px)',
+                                            transform: i18n.language === 'ar' ? 'translateX(-2px)' : 'translateX(2px)',
                                             boxShadow: isPageComplete() ? theme.shadows[8] : 'none'
                                         }
                                     }}
                                 >
-                                    {submitting ? 'Processing...' : currentPage === totalPages - 1 ? 'Complete Test' : 'Next Page'}
+                                    {submitting ? t('personalityTest.processing') : currentPage === totalPages - 1 ? t('personalityTest.completeTest') : t('personalityTest.next')}
                                 </Button>
                             </Box>
                         </CardContent>
@@ -1036,7 +1040,7 @@ const PersonalityTest: React.FC = () => {
                     >
                         <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 3 }}>
                             <TrendingUp sx={{ mr: 1, verticalAlign: 'middle' }} />
-                            Test Progress Overview
+                            {t('personalityTest.progressOverview')}
                         </Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={6} sm={3}>
@@ -1045,7 +1049,7 @@ const PersonalityTest: React.FC = () => {
                                         {answeredCount}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Answered
+                                        {t('personalityTest.answered')}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -1055,7 +1059,7 @@ const PersonalityTest: React.FC = () => {
                                         {questions.length - answeredCount}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Remaining
+                                        {t('personalityTest.remaining')}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -1065,7 +1069,7 @@ const PersonalityTest: React.FC = () => {
                                         {Math.round(progress)}%
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Complete
+                                        {t('personalityTest.complete')}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -1075,7 +1079,7 @@ const PersonalityTest: React.FC = () => {
                                         {timeSpentMinutes}:{timeSpentSeconds.toString().padStart(2, '0')}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Time Spent
+                                        {t('personalityTest.timeSpent')}
                                     </Typography>
                                 </Box>
                             </Grid>

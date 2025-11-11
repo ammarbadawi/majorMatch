@@ -110,7 +110,11 @@ const userSchema = new mongoose.Schema({
 	is_verified: { type: Boolean, default: false, index: true },
 	verification_code_hash: { type: String, default: null },
 	verification_expires: { type: Date, default: null },
-	verification_last_sent_at: { type: Date, default: null }
+	verification_last_sent_at: { type: Date, default: null },
+	// Password reset fields
+	reset_token_hash: { type: String, default: null },
+	reset_expires: { type: Date, default: null },
+	reset_last_sent_at: { type: Date, default: null }
 });
 const User = mongoose.model('User', userSchema);
 
@@ -123,12 +127,42 @@ const personalityResultSchema = new mongoose.Schema({
 const PersonalityResult = mongoose.model('PersonalityResult', personalityResultSchema);
 
 const mbtiQuestionSchema = new mongoose.Schema({
-	id: { type: Number, required: true, unique: true, index: true },
+	id: { type: Number, required: true },
 	text: { type: String, required: true },
+	text_ar: { type: String, default: null },
 	dimension: { type: String, required: true },
-	direction: { type: String, required: true }
+	direction: { type: String, required: true },
+	language: { type: String, default: 'en' }
 });
+// Compound unique index on id + language (allows same id for different languages)
+mbtiQuestionSchema.index({ id: 1, language: 1 }, { unique: true });
 const MbtiQuestion = mongoose.model('MbtiQuestion', mbtiQuestionSchema);
+
+// Drop old unique index on id only if it exists (run after connection)
+mongoose.connection.once('open', async () => {
+	try {
+		const indexes = await MbtiQuestion.collection.getIndexes();
+		if (indexes.id_1 && indexes.id_1.unique) {
+			console.log('[Schema] Dropping old unique index on id only...');
+			await MbtiQuestion.collection.dropIndex('id_1');
+			console.log('[Schema] Old index dropped successfully');
+		}
+		// Ensure compound index exists
+		try {
+			await MbtiQuestion.collection.createIndex({ id: 1, language: 1 }, { unique: true, background: true });
+			console.log('[Schema] Compound index (id, language) ensured');
+		} catch (e) {
+			if (!e.message.includes('already exists')) {
+				console.warn('[Schema] Could not create compound index:', e.message);
+			}
+		}
+	} catch (e) {
+		// Index might not exist or already dropped, that's fine
+		if (!e.message.includes('index not found')) {
+			console.warn('[Schema] Could not manage indexes:', e.message);
+		}
+	}
+});
 
 const mbtiPersonalitySchema = new mongoose.Schema({
 	type: { type: String, required: true, unique: true, index: true },
@@ -137,11 +171,14 @@ const mbtiPersonalitySchema = new mongoose.Schema({
 const MbtiPersonality = mongoose.model('MbtiPersonality', mbtiPersonalitySchema);
 
 const majorQuestionSchema = new mongoose.Schema({
-	id: { type: Number, required: true, unique: true, index: true },
+	id: { type: Number, required: true },
 	category: { type: String, required: true },
 	topic: { type: String, default: null },
-	question: { type: String, required: true }
+	question: { type: String, required: true },
+	language: { type: String, default: 'en' }
 });
+// Compound unique index on id + language (allows same id for different languages)
+majorQuestionSchema.index({ id: 1, language: 1 }, { unique: true });
 const MajorQuestion = mongoose.model('MajorQuestion', majorQuestionSchema);
 
 const majorSchema = new mongoose.Schema({
@@ -196,6 +233,15 @@ const manualPaymentSchema = new mongoose.Schema({
     verified_at: { type: Date, default: null }
 });
 const ManualPayment = mongoose.model('ManualPayment', manualPaymentSchema);
+
+// Chat history schema
+const chatHistorySchema = new mongoose.Schema({
+	user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+	messages: { type: [mongoose.Schema.Types.Mixed], required: true, default: [] },
+	updated_at: { type: Date, default: Date.now }
+});
+chatHistorySchema.index({ user_id: 1 }, { unique: true });
+const ChatHistory = mongoose.model('ChatHistory', chatHistorySchema);
 
 // Auth helpers
 function generateToken(user) {
@@ -254,57 +300,292 @@ async function sendVerificationEmail(toEmail, code) {
 	}
 }
 
+async function sendPasswordResetEmail(toEmail, code) {
+	const html = `
+		<div style="font-family: Arial, sans-serif;">
+			<h2>Reset your password</h2>
+			<p>You requested to reset your password. Your reset code is:</p>
+			<div style="font-size: 24px; font-weight: bold; letter-spacing: 4px;">${code}</div>
+			<p>This code will expire in 15 minutes.</p>
+			<p>If you did not request a password reset, you can safely ignore this email.</p>
+		</div>
+	`;
+	try {
+		if (!mailer) throw new Error('Mailer not initialized');
+		const info = await mailer.sendMail({
+			from: EMAIL_FROM,
+			to: toEmail,
+			subject: 'Major Match - Reset your password',
+			html
+		});
+		const isDevTransport = !process.env.SMTP_HOST;
+		if (isDevTransport) {
+			console.log('[DEV] Password reset code for', toEmail, '=>', code);
+			try {
+				const raw = info && info.message && info.message.toString ? info.message.toString() : '';
+				if (raw) console.log('[DEV] Raw email output:\n' + raw);
+			} catch (_) {}
+		} else {
+			console.log('Sent password reset email to', toEmail);
+		}
+	} catch (e) {
+		console.warn('Failed to send password reset email:', e.message);
+	}
+}
+
 // Auto-seed from local files into MongoDB (runs once if collections are empty)
 async function ensureMbtiSeedMongo() {
 	try {
-		const qCount = await MbtiQuestion.countDocuments({});
-		const pCount = await MbtiPersonality.countDocuments({});
-		if (qCount > 0 && pCount > 0) return;
-
-		let seededQ = 0;
+		// Drop old unique index on id only if it exists
 		try {
-			const qPath = path.join(__dirname, 'MBTI Questions.txt');
-			if (fs.existsSync(qPath)) {
-				const raw = fs.readFileSync(qPath, 'utf8');
-				const lines = raw.split(/\r?\n/).filter(l => l.trim());
-				const docs = [];
-				for (const line of lines) {
-					const parts = line.split('\t');
-					if (parts.length >= 3) {
-						const id = parseInt(parts[0]);
-						const text = String(parts[1]).trim();
-						const scoring = parts[2];
-						const parts2 = scoring.split(' → ');
-						if (parts2.length >= 2) {
-							const dimension = String(parts2[0]).trim();
-							const direction = String(parts2[1]).trim();
-							docs.push({ id, text, dimension, direction });
+			const indexes = await MbtiQuestion.collection.getIndexes();
+			if (indexes.id_1 && indexes.id_1.unique) {
+				console.log('[Seed] Dropping old unique index on id only...');
+				await MbtiQuestion.collection.dropIndex('id_1');
+				console.log('[Seed] Old index dropped successfully');
+			}
+		} catch (e) {
+			if (!e.message.includes('index not found')) {
+				console.warn('[Seed] Could not drop old index:', e.message);
+			}
+		}
+		
+		// Ensure compound index exists
+		try {
+			await MbtiQuestion.collection.createIndex({ id: 1, language: 1 }, { unique: true, background: true });
+			console.log('[Seed] Compound index (id, language) ensured');
+		} catch (e) {
+			if (!e.message.includes('already exists')) {
+				console.warn('[Seed] Could not create compound index:', e.message);
+			}
+		}
+		
+		// Migrate existing questions without language field to 'en'
+		const questionsWithoutLang = await MbtiQuestion.countDocuments({ language: { $exists: false } });
+		if (questionsWithoutLang > 0) {
+			console.log(`[Seed] Found ${questionsWithoutLang} questions without language field, migrating to 'en'...`);
+			await MbtiQuestion.updateMany(
+				{ language: { $exists: false } },
+				{ $set: { language: 'en' } }
+			);
+			console.log(`[Seed] Migrated ${questionsWithoutLang} questions to language 'en'`);
+		}
+		
+		const qCountEn = await MbtiQuestion.countDocuments({ language: 'en' });
+		const qCountAr = await MbtiQuestion.countDocuments({ language: 'ar' });
+		const pCount = await MbtiPersonality.countDocuments({});
+
+		// Always try to upsert from the updated MBTI personalities file if it exists
+		try {
+			const updatedPath = path.join(__dirname, 'MBTI personalities Updated.txt');
+			if (fs.existsSync(updatedPath)) {
+				const data = fs.readFileSync(updatedPath, 'utf8');
+				const lines = data.split(/\r?\n/);
+				let currentType = null;
+				let buffer = [];
+				const flush = async () => {
+					if (currentType && buffer.length) {
+						const content = buffer.join('\n').trim();
+						if (content) {
+							await MbtiPersonality.updateOne({ type: currentType }, { $set: { content } }, { upsert: true });
 						}
 					}
+					buffer = [];
+				};
+				for (const rawLine of lines) {
+					const line = String(rawLine || '').trim();
+					// Match headers like: The Soul (INFP A) or The Visionary (INFJ‑A) or The Strategist (ENTJ-A)
+					const m = line.match(/\(([A-Z]{4})\s*[‑-]?\s*([AT])\)/);
+					if (m) {
+						await flush();
+						currentType = `${m[1]}-${m[2]}`;
+						buffer.push(rawLine);
+					} else {
+						buffer.push(rawLine);
+					}
 				}
-				if (docs.length) {
-					await MbtiQuestion.insertMany(docs);
-					seededQ = docs.length;
-				}
+				await flush();
+				try { await loadMbtiCache(); } catch (_) {}
+				console.log('MBTI personalities upserted from updated file');
 			}
-		} catch (e) {}
+		} catch (e) {
+			console.warn('MBTI updated file upsert skipped:', e.message);
+		}
+
+		// Seed English questions if missing
+		let seededQ = 0;
+		if (qCountEn === 0) {
+			try {
+				const qPath = path.join(__dirname, 'MBTI Questions.txt');
+				if (fs.existsSync(qPath)) {
+					const raw = fs.readFileSync(qPath, 'utf8');
+					const lines = raw.split(/\r?\n/).filter(l => l.trim());
+					const docs = [];
+					for (const line of lines) {
+						const parts = line.split('\t');
+						if (parts.length >= 3) {
+							const id = parseInt(parts[0]);
+							const text = String(parts[1]).trim();
+							const scoring = parts[2];
+							const parts2 = scoring.split(' → ');
+							if (parts2.length >= 2) {
+								const dimension = String(parts2[0]).trim();
+								const direction = String(parts2[1]).trim();
+								docs.push({ id, text, dimension, direction, language: 'en' });
+							}
+						}
+					}
+					if (docs.length) {
+						try {
+							await MbtiQuestion.insertMany(docs);
+							seededQ = docs.length;
+							console.log(`[Seed] Seeded ${seededQ} English questions`);
+						} catch (insertError) {
+							// If duplicate key error, try inserting one by one
+							if (insertError.code === 11000 || insertError.name === 'MongoServerError') {
+								console.log(`[Seed] Duplicate key error, trying to insert English questions one by one...`);
+								let inserted = 0;
+								for (const doc of docs) {
+									try {
+										await MbtiQuestion.updateOne(
+											{ id: doc.id, language: 'en' },
+											{ $set: doc },
+											{ upsert: true }
+										);
+										inserted++;
+									} catch (e) {
+										console.error(`[Seed] Error inserting English question ${doc.id}:`, e.message);
+									}
+								}
+								seededQ = inserted;
+								console.log(`[Seed] Upserted ${seededQ} English questions`);
+							} else {
+								throw insertError;
+							}
+						}
+					}
+				} else {
+					console.warn('MBTI Questions.txt file not found');
+				}
+			} catch (e) {
+				console.error('Error seeding English questions:', e.message);
+			}
+		}
+
+		// Seed Arabic questions if missing
+		let seededQAr = 0;
+		if (qCountAr === 0) {
+			try {
+				const qPathAr = path.join(__dirname, 'MBTI Questions - Arabic.txt');
+				if (fs.existsSync(qPathAr)) {
+					const raw = fs.readFileSync(qPathAr, 'utf8');
+					const lines = raw.split(/\r?\n/).filter(l => l.trim());
+					const docs = [];
+					for (const line of lines) {
+						const parts = line.split('\t');
+						if (parts.length >= 3) {
+							const id = parseInt(parts[0]);
+							const text = String(parts[1]).trim();
+							const scoring = parts[2];
+							const parts2 = scoring.split(' → ');
+							if (parts2.length >= 2) {
+								const dimension = String(parts2[0]).trim();
+								const direction = String(parts2[1]).trim();
+								docs.push({ id, text, dimension, direction, language: 'ar' });
+							}
+						}
+					}
+					if (docs.length) {
+						try {
+							await MbtiQuestion.insertMany(docs);
+							seededQAr = docs.length;
+							console.log(`[Seed] Seeded ${seededQAr} Arabic questions`);
+						} catch (insertError) {
+							// If duplicate key error, try inserting one by one using replaceOne
+							if (insertError.code === 11000 || insertError.name === 'MongoServerError') {
+								console.log(`[Seed] Duplicate key error, trying to insert Arabic questions one by one...`);
+								let inserted = 0;
+								for (const doc of docs) {
+									try {
+										// Use replaceOne with upsert to handle the compound index properly
+										const result = await MbtiQuestion.replaceOne(
+											{ id: doc.id, language: 'ar' },
+											doc,
+											{ upsert: true }
+										);
+										if (result.upsertedCount > 0 || result.modifiedCount > 0) {
+											inserted++;
+										}
+									} catch (e) {
+										// If still duplicate key, the old index might still exist
+										if (e.code === 11000) {
+											console.warn(`[Seed] Still getting duplicate key for Arabic question ${doc.id}, old index may still exist`);
+											// Try using insertOne with ignore duplicates
+											try {
+												await MbtiQuestion.collection.insertOne(doc, { forceServerObjectId: false });
+												inserted++;
+											} catch (e2) {
+												if (e2.code === 11000) {
+													// Document already exists, that's fine
+													console.log(`[Seed] Arabic question ${doc.id} already exists, skipping`);
+												} else {
+													console.error(`[Seed] Error inserting Arabic question ${doc.id}:`, e2.message);
+												}
+											}
+										} else {
+											console.error(`[Seed] Error inserting Arabic question ${doc.id}:`, e.message);
+										}
+									}
+								}
+								seededQAr = inserted;
+								console.log(`[Seed] Upserted ${seededQAr} Arabic questions`);
+							} else {
+								throw insertError;
+							}
+						}
+					}
+				} else {
+					console.warn('MBTI Questions - Arabic.txt file not found');
+				}
+			} catch (e) {
+				console.error('Error seeding Arabic questions:', e.message);
+			}
+		}
 
 		let seededP = 0;
 		try {
-			const pPath = path.join(__dirname, 'MBTI personalities.txt');
-			if (fs.existsSync(pPath)) {
-				const data = fs.readFileSync(pPath, 'utf8');
-				const sections = data.split(/🟣|🟡|🔴|🔵|🟢|🟦|🟤|🟠/);
+			// Prefer updated file for initial seeding; fallback to legacy file if not present
+			const candidates = [
+				path.join(__dirname, 'MBTI personalities Updated.txt'),
+				path.join(__dirname, 'MBTI personalities.txt')
+			];
+			let picked = null;
+			for (const p of candidates) { if (fs.existsSync(p)) { picked = p; break; } }
+			if (picked) {
+				const data = fs.readFileSync(picked, 'utf8');
+				const lines = data.split(/\r?\n/);
+				let currentType = null;
+				let buffer = [];
 				const docs = [];
-				for (const section of sections) {
-					if (!section || !section.trim()) continue;
-					const firstLine = (section.split(/\r?\n/).find(l => l.trim()) || '').trim();
-					const m = firstLine.match(/\(([A-Z]{4}[‑-][AT])\)/);
+				const flush = () => {
+					if (currentType && buffer.length) {
+						const content = buffer.join('\n').trim();
+						if (content) docs.push({ type: currentType, content });
+					}
+					buffer = [];
+				};
+				for (const rawLine of lines) {
+					const line = String(rawLine || '').trim();
+					const m = line.match(/\(([A-Z]{4})\s*[‑-]?\s*([AT])\)/);
 					if (m) {
-						const type = m[1].replace('‑', '-');
-						docs.push({ type, content: section.trim() });
+						flush();
+						currentType = `${m[1]}-${m[2]}`;
+						buffer.push(rawLine);
+					} else {
+						buffer.push(rawLine);
 					}
 				}
+				flush();
 				if (docs.length) {
 					await MbtiPersonality.insertMany(docs);
 					seededP = docs.length;
@@ -314,7 +595,12 @@ async function ensureMbtiSeedMongo() {
 
 		if (!seededQ) {
 			await MbtiQuestion.insertMany([
-				{ id: 1, text: 'You enjoy social gatherings.', dimension: 'IE', direction: 'E' }
+				{ id: 1, text: 'You enjoy social gatherings.', dimension: 'IE', direction: 'E', language: 'en' }
+			]);
+		}
+		if (!seededQAr) {
+			await MbtiQuestion.insertMany([
+				{ id: 1, text: 'تستمتع بالتجمعات الاجتماعية.', dimension: 'IE', direction: 'E', language: 'ar' }
 			]);
 		}
 		if (!seededP) {
@@ -322,7 +608,17 @@ async function ensureMbtiSeedMongo() {
 				{ type: 'INFP-T', content: 'Default INFP-T description.' }
 			]);
 		}
-		console.log(`MBTI seed complete: questions=${await MbtiQuestion.countDocuments({})}, personalities=${await MbtiPersonality.countDocuments({})}`);
+		const totalQuestions = await MbtiQuestion.countDocuments({});
+		const enCount = await MbtiQuestion.countDocuments({ language: 'en' });
+		const arCount = await MbtiQuestion.countDocuments({ language: 'ar' });
+		console.log(`[Seed] MBTI seed complete: total questions=${totalQuestions} (en=${enCount}, ar=${arCount}), personalities=${await MbtiPersonality.countDocuments({})}`);
+		
+		// Reload cache after seeding
+		try {
+			await loadMbtiCache();
+		} catch (e) {
+			console.error('[Seed] Error reloading cache after seeding:', e.message);
+		}
 	} catch (e) {
 		console.warn('MBTI auto-seed skipped:', e.message);
 	}
@@ -330,9 +626,53 @@ async function ensureMbtiSeedMongo() {
 
 async function ensureMajorSeedMongo() {
 	try {
-		// Major questions
-		const mqCount = await MajorQuestion.countDocuments({});
-		if (mqCount === 0) {
+		// Drop old unique index on id only if it exists
+		try {
+			const indexes = await MajorQuestion.collection.getIndexes();
+			console.log('[Seed] Current MajorQuestion indexes:', Object.keys(indexes));
+			if (indexes.id_1) {
+				console.log('[Seed] Dropping old index on id only for MajorQuestion...');
+				try {
+					await MajorQuestion.collection.dropIndex('id_1');
+					console.log('[Seed] Old index id_1 dropped successfully');
+				} catch (dropError) {
+					if (dropError.message.includes('index not found')) {
+						console.log('[Seed] Index id_1 already dropped or does not exist');
+					} else {
+						console.warn('[Seed] Could not drop old index id_1:', dropError.message);
+					}
+				}
+			} else {
+				console.log('[Seed] No id_1 index found, skipping drop');
+			}
+		} catch (e) {
+			console.warn('[Seed] Could not check indexes:', e.message);
+		}
+		
+		// Ensure compound index exists
+		try {
+			await MajorQuestion.collection.createIndex({ id: 1, language: 1 }, { unique: true, background: true });
+			console.log('[Seed] Compound index (id, language) ensured for MajorQuestion');
+		} catch (e) {
+			if (!e.message.includes('already exists')) {
+				console.warn('[Seed] Could not create compound index:', e.message);
+			}
+		}
+		
+		// Migrate existing questions without language field to 'en'
+		const questionsWithoutLang = await MajorQuestion.countDocuments({ language: { $exists: false } });
+		if (questionsWithoutLang > 0) {
+			console.log(`[Seed] Found ${questionsWithoutLang} major questions without language field, migrating to 'en'...`);
+			await MajorQuestion.updateMany(
+				{ language: { $exists: false } },
+				{ $set: { language: 'en' } }
+			);
+			console.log(`[Seed] Migrated ${questionsWithoutLang} major questions to language 'en'`);
+		}
+		
+		// Major questions - English
+		const mqCountEn = await MajorQuestion.countDocuments({ language: 'en' });
+		if (mqCountEn === 0) {
 			const qCandidates = [
 				process.env.MAJOR_QUESTIONS_PATH,
 				path.join(__dirname, 'Mapping-20250819T113244Z-1-001', 'Mapping', 'Question 2.txt'),
@@ -350,14 +690,103 @@ async function ensureMajorSeedMongo() {
 								id: parseInt(q.id ?? (idx + 1)),
 								category: String(q.category || 'General'),
 								topic: q.topic ? String(q.topic) : null,
-								question: String(q.question || q.text || '')
+								question: String(q.question || q.text || ''),
+								language: 'en'
 							}));
 							await MajorQuestion.insertMany(docs);
-							console.log(`Seeded ${docs.length} major questions from ${p}`);
+							console.log(`Seeded ${docs.length} major questions (en) from ${p}`);
 							break;
 						}
 					}
 				} catch (e) {}
+			}
+		}
+		
+		// Major questions - Arabic
+		const mqCountAr = await MajorQuestion.countDocuments({ language: 'ar' });
+		if (mqCountAr === 0) {
+			const qCandidatesAr = [
+				process.env.MAJOR_QUESTIONS_PATH_AR,
+				path.join(__dirname, 'Mapping-20250819T113244Z-1-001', 'Mapping', 'Question 2 - Arabic.txt'),
+				path.join(process.cwd(), 'Mapping-20250819T113244Z-1-001', 'Mapping', 'Question 2 - Arabic.txt'),
+				path.join(__dirname, 'Mapping', 'Question 2 - Arabic.txt'),
+				path.join(process.cwd(), 'Mapping', 'Question 2 - Arabic.txt'),
+				path.join(__dirname, 'Question 2 - Arabic.txt'),
+				path.join(process.cwd(), 'Question 2 - Arabic.txt')
+			].filter(Boolean);
+			for (const p of qCandidatesAr) {
+				try {
+					if (p && fs.existsSync(p)) {
+						const raw = fs.readFileSync(p, 'utf8').replace(/^\uFEFF/, '');
+						const parsed = JSON.parse(raw);
+						if (Array.isArray(parsed) && parsed.length) {
+							const docs = parsed.map((q, idx) => ({
+								id: parseInt(q.id ?? (idx + 1)),
+								category: String(q.category || 'General'),
+								topic: q.topic ? String(q.topic) : null,
+								question: String(q.question || q.text || ''),
+								language: 'ar'
+							}));
+							try {
+								await MajorQuestion.insertMany(docs);
+								console.log(`Seeded ${docs.length} major questions (ar) from ${p}`);
+								break;
+							} catch (insertError) {
+								// If duplicate key error, try inserting one by one
+								if (insertError.code === 11000 || insertError.name === 'MongoServerError') {
+									console.log(`[Seed] Duplicate key error, trying to insert Arabic major questions one by one...`);
+									let inserted = 0;
+									for (const doc of docs) {
+										try {
+											const result = await MajorQuestion.replaceOne(
+												{ id: doc.id, language: 'ar' },
+												doc,
+												{ upsert: true }
+											);
+											if (result.upsertedCount > 0 || result.modifiedCount > 0) {
+												inserted++;
+											}
+										} catch (e) {
+											// If still duplicate key, check if it's the old index or document already exists
+											if (e.code === 11000) {
+												const existing = await MajorQuestion.findOne({ id: doc.id, language: 'ar' });
+												if (existing) {
+													// Already exists, update it
+													await MajorQuestion.updateOne(
+														{ id: doc.id, language: 'ar' },
+														{ $set: doc }
+													);
+													inserted++;
+													console.log(`[Seed] Updated existing Arabic major question ${doc.id}`);
+												} else {
+													// Old index conflict - try using raw collection insert
+													try {
+														await MajorQuestion.collection.insertOne(doc);
+														inserted++;
+													} catch (e2) {
+														if (e2.code === 11000) {
+															console.log(`[Seed] Arabic major question ${doc.id} already exists (duplicate key), skipping`);
+														} else {
+															console.error(`[Seed] Error inserting Arabic major question ${doc.id}:`, e2.message);
+														}
+													}
+												}
+											} else {
+												console.error(`[Seed] Error inserting Arabic major question ${doc.id}:`, e.message);
+											}
+										}
+									}
+									console.log(`[Seed] Upserted ${inserted} Arabic major questions`);
+									if (inserted > 0) break;
+								} else {
+									throw insertError;
+								}
+							}
+						}
+					}
+				} catch (e) {
+					console.warn(`Error loading Arabic major questions from ${p}:`, e.message);
+				}
 			}
 		}
 	} catch (e) {
@@ -464,26 +893,39 @@ async function ensureMajorSeedMongo() {
 	}
 }
 
-let questionsCache = [];
+let questionsCache = { en: [], ar: [] };
 let personalitiesCache = {};
 
 async function loadMbtiCache() {
-	const qRows = await MbtiQuestion.find({}).sort({ id: 1 }).lean();
-	questionsCache = Array.isArray(qRows) ? qRows : [];
+	const qRowsEn = await MbtiQuestion.find({ language: 'en' }).sort({ id: 1 }).lean();
+	const qRowsAr = await MbtiQuestion.find({ language: 'ar' }).sort({ id: 1 }).lean();
+	questionsCache.en = Array.isArray(qRowsEn) ? qRowsEn : [];
+	questionsCache.ar = Array.isArray(qRowsAr) ? qRowsAr : [];
 	const pRows = await MbtiPersonality.find({}).lean();
 	personalitiesCache = {};
 	(pRows || []).forEach(r => { personalitiesCache[r.type] = { type: r.type, content: r.content }; });
-	console.log(`Loaded ${questionsCache.length} MBTI questions (mongo)`);
-	console.log(`Loaded ${Object.keys(personalitiesCache).length} personality types (mongo)`);
+	console.log(`[Cache] Loaded ${questionsCache.en.length} MBTI questions (en) and ${questionsCache.ar.length} MBTI questions (ar) from mongo`);
+	console.log(`[Cache] Loaded ${Object.keys(personalitiesCache).length} personality types (mongo)`);
+	
+	// Debug: Show first few questions for each language
+	if (questionsCache.en.length > 0) {
+		console.log(`[Cache] Sample EN question: ${questionsCache.en[0].text.substring(0, 50)}...`);
+	}
+	if (questionsCache.ar.length > 0) {
+		console.log(`[Cache] Sample AR question: ${questionsCache.ar[0].text.substring(0, 50)}...`);
+	} else {
+		console.warn(`[Cache] No Arabic questions found in database!`);
+	}
 }
 
 // No file-based seeding for majors/mappings/questions. Use admin bulk endpoints instead.
 
 // Calculate MBTI
-function calculateMBTIType(answers) {
+function calculateMBTIType(answers, language = 'en') {
 	const scores = { I: 0, E: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0, A: 0, T2: 0 };
+	const cache = questionsCache[language] || questionsCache.en;
 	answers.forEach(a => {
-		const q = questionsCache.find(q => q.id === a.questionId);
+		const q = cache.find(q => q.id === a.questionId);
 		if (!q) return;
 		const value = a.value;
 		if (value < 1 || value > 5) return;
@@ -800,23 +1242,49 @@ app.post('/api/stripe-webhook', bodyParser.raw({ type: 'application/json' }), as
 // Routes
 app.get('/api/questions', authMiddleware, async (req, res) => {
 	try {
-		if (!questionsCache.length) {
+		const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+		const language = lang === 'ar' ? 'ar' : 'en';
+		
+		console.log(`[API] Requesting questions in language: ${language}, query lang: ${req.query.lang}`);
+		
+		if (!questionsCache[language] || questionsCache[language].length === 0) {
+			console.log(`[API] Cache empty for ${language}, seeding and loading...`);
 			try {
 				await ensureMbtiSeedMongo();
-			} catch (_) {}
+			} catch (e) {
+				console.error('[API] Error in ensureMbtiSeedMongo:', e.message);
+			}
 			try {
 				await loadMbtiCache();
-			} catch (_) {}
+			} catch (e) {
+				console.error('[API] Error in loadMbtiCache:', e.message);
+			}
 		}
-		res.json(questionsCache);
-	} catch (e) { res.status(500).json({ error: 'Server error' }); }
+		
+		const questions = questionsCache[language] || questionsCache.en;
+		console.log(`[API] Returning ${questions.length} questions for language: ${language}`);
+		
+		// Map questions to include text field (for backward compatibility)
+		const mappedQuestions = questions.map(q => ({
+			id: q.id,
+			text: q.text,
+			dimension: q.dimension,
+			direction: q.direction
+		}));
+		res.json(mappedQuestions);
+	} catch (e) {
+		console.error('[API] Error in /api/questions:', e);
+		res.status(500).json({ error: 'Server error' });
+	}
 });
 
 app.post('/api/calculate', authMiddleware, async (req, res) => {
 	try {
-		const { answers } = req.body;
+		const { answers, lang } = req.body;
 		if (!answers || !Array.isArray(answers)) return res.status(400).json({ error: 'Invalid answers format' });
-		const type = calculateMBTIType(answers);
+		const language = lang === 'ar' ? 'ar' : 'en';
+		if (!questionsCache[language] || questionsCache[language].length === 0 || !Object.keys(personalitiesCache).length) await loadMbtiCache();
+		const type = calculateMBTIType(answers, language);
 		const personality = personalitiesCache[type];
 		if (!personality) return res.status(404).json({ error: 'Personality type not found' });
 		try { await PersonalityResult.create({ user_id: req.user.id, type, raw_answers: answers }); } catch (e) {}
@@ -851,6 +1319,21 @@ app.post('/api/auth/signup', async (req, res) => {
 	try {
 		const { firstName, lastName, email, password, university } = req.body;
 		if (!firstName || !lastName || !email || !password) return res.status(400).json({ error: 'Missing required fields' });
+		
+		// Validate password requirements
+		if (password.length < 8) {
+			return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+		}
+		if (!/[A-Z]/.test(password)) {
+			return res.status(400).json({ error: 'Password must contain at least one capital letter' });
+		}
+		if (!/[0-9]/.test(password)) {
+			return res.status(400).json({ error: 'Password must contain at least one number' });
+		}
+		if (!/[^a-zA-Z0-9]/.test(password)) {
+			return res.status(400).json({ error: 'Password must contain at least one special character' });
+		}
+		
 		const lower = String(email).toLowerCase();
 		const existing = await User.findOne({ email: lower }).lean();
 		if (existing) return res.status(409).json({ error: 'Email already registered' });
@@ -945,6 +1428,153 @@ app.get('/api/me', authMiddleware, async (req, res) => {
 	res.json({ id: user._id, firstName: user.first_name, lastName: user.last_name, email: user.email, university: user.university });
 });
 
+// Profile update endpoints
+app.put('/api/profile/update', authMiddleware, async (req, res) => {
+	try {
+		const { firstName, lastName } = req.body;
+		if (!firstName || !lastName) return res.status(400).json({ error: 'First name and last name are required' });
+		
+		const user = await User.findById(req.user.id);
+		if (!user) return res.status(404).json({ error: 'User not found' });
+		
+		user.first_name = String(firstName).trim();
+		user.last_name = String(lastName).trim();
+		await user.save();
+		
+		res.json({ ok: true, firstName: user.first_name, lastName: user.last_name });
+	} catch (e) {
+		res.status(500).json({ error: 'Server error' });
+	}
+});
+
+app.put('/api/profile/change-password', authMiddleware, async (req, res) => {
+	try {
+		const { currentPassword, newPassword } = req.body;
+		if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Current password and new password are required' });
+		
+		// Validate new password requirements
+		if (newPassword.length < 8) {
+			return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+		}
+		if (!/[A-Z]/.test(newPassword)) {
+			return res.status(400).json({ error: 'Password must contain at least one capital letter' });
+		}
+		if (!/[0-9]/.test(newPassword)) {
+			return res.status(400).json({ error: 'Password must contain at least one number' });
+		}
+		if (!/[^a-zA-Z0-9]/.test(newPassword)) {
+			return res.status(400).json({ error: 'Password must contain at least one special character' });
+		}
+		
+		const user = await User.findById(req.user.id);
+		if (!user) return res.status(404).json({ error: 'User not found' });
+		
+		// Verify current password
+		const ok = bcrypt.compareSync(currentPassword, user.password_hash);
+		if (!ok) return res.status(401).json({ error: 'Current password is incorrect' });
+		
+		// Update password
+		user.password_hash = bcrypt.hashSync(newPassword, 10);
+		await user.save();
+		
+		res.json({ ok: true });
+	} catch (e) {
+		res.status(500).json({ error: 'Server error' });
+	}
+});
+
+// Password reset endpoints (unauthenticated)
+app.post('/api/auth/forgot-password', async (req, res) => {
+	try {
+		const { email } = req.body || {};
+		const lower = String(email || '').toLowerCase();
+		if (!lower) return res.status(400).json({ error: 'Email is required' });
+		
+		const user = await User.findOne({ email: lower });
+		// Don't reveal if user exists or not for security
+		if (!user) {
+			// Return success even if user doesn't exist to prevent email enumeration
+			return res.json({ ok: true });
+		}
+		
+		// Rate limiting: check if reset was sent recently
+		const last = user.reset_last_sent_at ? new Date(user.reset_last_sent_at).getTime() : 0;
+		if (Date.now() - last < 60 * 1000) {
+			return res.status(429).json({ error: 'Please wait before requesting another reset' });
+		}
+		
+		// Generate reset code
+		const code = generateNumericCode(6);
+		const codeHash = bcrypt.hashSync(code, 8);
+		const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+		
+		user.reset_token_hash = codeHash;
+		user.reset_expires = expires;
+		user.reset_last_sent_at = new Date();
+		await user.save();
+		
+		try {
+			await sendPasswordResetEmail(lower, code);
+		} catch (e) {
+			console.warn('Failed to send password reset email:', e.message);
+		}
+		
+		res.json({ ok: true });
+	} catch (e) {
+		res.status(500).json({ error: 'Server error' });
+	}
+});
+
+app.post('/api/auth/reset-password', async (req, res) => {
+	try {
+		const { email, code, newPassword } = req.body || {};
+		const lower = String(email || '').toLowerCase();
+		if (!lower || !code || !newPassword) {
+			return res.status(400).json({ error: 'Email, code, and new password are required' });
+		}
+		
+		// Validate new password requirements
+		if (newPassword.length < 8) {
+			return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+		}
+		if (!/[A-Z]/.test(newPassword)) {
+			return res.status(400).json({ error: 'Password must contain at least one capital letter' });
+		}
+		if (!/[0-9]/.test(newPassword)) {
+			return res.status(400).json({ error: 'Password must contain at least one number' });
+		}
+		if (!/[^a-zA-Z0-9]/.test(newPassword)) {
+			return res.status(400).json({ error: 'Password must contain at least one special character' });
+		}
+		
+		const user = await User.findOne({ email: lower });
+		if (!user) return res.status(404).json({ error: 'User not found' });
+		
+		if (!user.reset_token_hash || !user.reset_expires) {
+			return res.status(400).json({ error: 'No active reset code' });
+		}
+		
+		if (new Date() > new Date(user.reset_expires)) {
+			return res.status(400).json({ error: 'Reset code expired' });
+		}
+		
+		const match = bcrypt.compareSync(String(code), user.reset_token_hash);
+		if (!match) {
+			return res.status(400).json({ error: 'Invalid reset code' });
+		}
+		
+		// Update password and clear reset fields
+		user.password_hash = bcrypt.hashSync(newPassword, 10);
+		user.reset_token_hash = null;
+		user.reset_expires = null;
+		await user.save();
+		
+		res.json({ ok: true });
+	} catch (e) {
+		res.status(500).json({ error: 'Server error' });
+	}
+});
+
 // Admin JSON bulk endpoints
 app.post('/api/admin/majors/bulk', authMiddleware, async (req, res) => {
 	try {
@@ -1008,16 +1638,22 @@ app.get('/api/major/questions', authMiddleware, async (req, res) => {
 			}
 		}
 
-		let list = await MajorQuestion.find({}).sort({ id: 1 }).lean();
+		// Get language from query parameter or Accept-Language header
+		const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+		const language = lang === 'ar' ? 'ar' : 'en';
+		
+		console.log(`[API] Requesting major questions in language: ${language}, query lang: ${req.query.lang}`);
+
+		let list = await MajorQuestion.find({ language: language }).sort({ id: 1 }).lean();
 		if (!Array.isArray(list) || list.length < 10) {
 			// Try structured seeding first
 			try {
 				await ensureMajorSeedMongo();
-				list = await MajorQuestion.find({}).sort({ id: 1 }).lean();
+				list = await MajorQuestion.find({ language: language }).sort({ id: 1 }).lean();
 			} catch (e) {}
 
-			// Last resort: read from local file candidates and persist
-			if (!Array.isArray(list) || list.length < 10) {
+			// Last resort: read from local file candidates and persist (only for English)
+			if (!Array.isArray(list) || list.length < 10 && language === 'en') {
 				const candidates = [
 					process.env.MAJOR_QUESTIONS_PATH,
 					path.join(__dirname, 'Mapping-20250819T113244Z-1-001', 'Mapping', 'Question 2.txt'),
@@ -1048,11 +1684,12 @@ app.get('/api/major/questions', authMiddleware, async (req, res) => {
 									id: parseInt(q.id ?? (idx + 1)),
 									category: String(q.category || 'General'),
 									topic: q.topic ? String(q.topic) : null,
-									question: String(q.question || q.text || '')
+									question: String(q.question || q.text || ''),
+									language: 'en'
 								}));
-								await MajorQuestion.deleteMany({});
+								await MajorQuestion.deleteMany({ language: 'en' });
 								await MajorQuestion.insertMany(docs);
-								list = await MajorQuestion.find({}).sort({ id: 1 }).lean();
+								list = await MajorQuestion.find({ language: language }).sort({ id: 1 }).lean();
 								break;
 							}
 						}
@@ -1060,21 +1697,29 @@ app.get('/api/major/questions', authMiddleware, async (req, res) => {
 				} // ✅ closes for loop
 			} // ✅ closes "if (list < 10)" for file seeding
 
-			// If still empty, seed minimal fallback
-			if (!Array.isArray(list) || list.length === 0) {
+			// If still empty, seed minimal fallback (only for English)
+			if (!Array.isArray(list) || list.length === 0 && language === 'en') {
 				const fallback = [
-					{ id: 1, category: 'Academic Strength', topic: 'Mathematics', question: 'I enjoy solving equations and math problems in my free time.' },
-					{ id: 2, category: 'Academic Strength', topic: 'Physics', question: 'I enjoy solving real-world problems using physics concepts.' },
-					{ id: 3, category: 'Academic Strength', topic: 'Programming & Logic', question: 'I am curious about how software or applications are built.' },
-					{ id: 4, category: 'Core Value', topic: 'Creativity', question: 'I feel fulfilled when I’m inventing or creating something new.' },
-					{ id: 5, category: 'RIASEC', topic: 'I', question: 'I enjoy analyzing problems logically.' }
+					{ id: 1, category: 'Academic Strength', topic: 'Mathematics', question: 'I enjoy solving equations and math problems in my free time.', language: 'en' },
+					{ id: 2, category: 'Academic Strength', topic: 'Physics', question: 'I enjoy solving real-world problems using physics concepts.', language: 'en' },
+					{ id: 3, category: 'Academic Strength', topic: 'Programming & Logic', question: 'I am curious about how software or applications are built.', language: 'en' },
+					{ id: 4, category: 'Core Value', topic: 'Creativity', question: 'I feel fulfilled when I\'m inventing or creating something new.', language: 'en' },
+					{ id: 5, category: 'RIASEC', topic: 'I', question: 'I enjoy analyzing problems logically.', language: 'en' }
 				];
 				try {
 					await MajorQuestion.insertMany(fallback);
-					list = await MajorQuestion.find({}).sort({ id: 1 }).lean();
+					list = await MajorQuestion.find({ language: language }).sort({ id: 1 }).lean();
 				} catch (e) {}
 			}
 		}
+		
+		// Fallback to English if requested language not available
+		if (!Array.isArray(list) || list.length === 0) {
+			if (language !== 'en') {
+				list = await MajorQuestion.find({ language: 'en' }).sort({ id: 1 }).lean();
+			}
+		}
+		
 		res.json((list || []).map(q => ({ id: q.id, category: q.category, topic: q.topic, question: q.question })));
 	} catch (e) {
 		res.status(500).json({ error: 'Server error' });
@@ -1550,11 +2195,78 @@ app.post('/api/chat', authMiddleware, async (req, res) => {
         });
 
         const text = (resp.data && resp.data.choices && resp.data.choices[0] && resp.data.choices[0].message && resp.data.choices[0].message.content) ? String(resp.data.choices[0].message.content).trim() : '';
+        
+        // Save chat history (only user and assistant messages, exclude system messages)
+        try {
+            // Filter out system messages from the conversation history
+            const conversationMessages = rawMessages
+                .filter(m => m.role === 'user' || m.role === 'assistant')
+                .map(m => ({ role: String(m.role || 'user'), content: String(m.content || '') }));
+            
+            // Add the new assistant reply
+            const messagesToSave = [...conversationMessages, { role: 'assistant', content: text }];
+            
+            await ChatHistory.findOneAndUpdate(
+                { user_id: req.user.id },
+                { 
+                    messages: messagesToSave,
+                    updated_at: new Date()
+                },
+                { upsert: true, new: true }
+            );
+        } catch (saveErr) {
+            console.warn('Failed to save chat history:', saveErr.message);
+            // Don't fail the request if saving history fails
+        }
+        
         return res.json({ reply: text });
     } catch (e) {
         const status = (e.response && e.response.status) ? e.response.status : 500;
         const detail = (e.response && e.response.data && (e.response.data.error || e.response.data)) ? e.response.data : { error: 'Server error' };
         return res.status(status >= 400 && status < 600 ? status : 500).json(detail);
+    }
+});
+
+// Get chat history endpoint
+app.get('/api/chat/history', authMiddleware, async (req, res) => {
+    try {
+        const history = await ChatHistory.findOne({ user_id: req.user.id });
+        if (!history) {
+            return res.json({ messages: [] });
+        }
+        return res.json({ messages: history.messages || [] });
+    } catch (e) {
+        console.error('Failed to load chat history:', e);
+        return res.status(500).json({ error: 'Failed to load chat history' });
+    }
+});
+
+// Save chat history endpoint (for manual saves if needed)
+app.post('/api/chat/history', authMiddleware, async (req, res) => {
+    try {
+        const { messages } = req.body;
+        if (!Array.isArray(messages)) {
+            return res.status(400).json({ error: 'messages must be an array' });
+        }
+        
+        // Filter out system messages and validate structure
+        const messagesToSave = messages
+            .filter(m => m.role === 'user' || m.role === 'assistant')
+            .map(m => ({ role: m.role, content: String(m.content || '') }));
+        
+        await ChatHistory.findOneAndUpdate(
+            { user_id: req.user.id },
+            { 
+                messages: messagesToSave,
+                updated_at: new Date()
+            },
+            { upsert: true, new: true }
+        );
+        
+        return res.json({ success: true });
+    } catch (e) {
+        console.error('Failed to save chat history:', e);
+        return res.status(500).json({ error: 'Failed to save chat history' });
     }
 });
 

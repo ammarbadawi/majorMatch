@@ -20,6 +20,7 @@ import {
     Star,
     Warning
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 interface SubscriptionData {
     hasSubscription: boolean;
@@ -29,6 +30,7 @@ interface SubscriptionData {
 }
 
 const SubscriptionStatus: React.FC = () => {
+    const { t, i18n } = useTranslation();
     const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
     const [loading, setLoading] = useState(true);
     const [canceling, setCanceling] = useState(false);
@@ -68,11 +70,11 @@ const SubscriptionStatus: React.FC = () => {
                 setShowCancelDialog(false);
             } else {
                 const data = await response.json();
-                alert(data.error || 'Failed to cancel subscription');
+                alert(data.error || t('subscriptionStatus.failedToCancelSubscription'));
             }
         } catch (error) {
             console.error('Failed to cancel subscription:', error);
-            alert('Failed to cancel subscription');
+            alert(t('subscriptionStatus.failedToCancelSubscription'));
         } finally {
             setCanceling(false);
         }
@@ -90,10 +92,10 @@ const SubscriptionStatus: React.FC = () => {
         return (
             <Alert severity="info" sx={{ mb: 2 }}>
                 <Typography variant="body2">
-                    You don't have an active subscription. Subscribe to access the premium major test.
+                    {t('subscriptionStatus.noActiveSubscription')}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                    If you paid via Whish Money, verification may take up to 24 hours. You'll be notified once activated.
+                    {t('subscriptionStatus.whishMoneyVerificationNote')}
                 </Typography>
             </Alert>
         );
@@ -130,7 +132,7 @@ const SubscriptionStatus: React.FC = () => {
     };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
+        return new Date(dateString).toLocaleDateString(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
@@ -140,16 +142,18 @@ const SubscriptionStatus: React.FC = () => {
     return (
         <>
             <Card sx={{ mb: 2 }}>
-                <CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <Typography variant="h6">
-                            Subscription Status
+                <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+                        <Typography variant="h6" sx={{ fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                            {t('subscriptionStatus.subscriptionStatus')}
                         </Typography>
                         <Chip
                             icon={getStatusIcon(subscription.status!)}
                             label={subscription.status?.toUpperCase()}
                             color={getStatusColor(subscription.status!) as any}
                             variant="outlined"
+                            size={window.innerWidth < 600 ? 'small' : 'medium'}
+                            sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
                         />
                     </Box>
 
@@ -157,11 +161,11 @@ const SubscriptionStatus: React.FC = () => {
                         <Stack spacing={1}>
                             {subscription.payment_type === 'one_time' ? (
                                 <Typography variant="body2" color="text.secondary">
-                                    Access expires: {formatDate(subscription.current_period_end!)}
+                                    {t('subscriptionStatus.accessExpires', { date: formatDate(subscription.current_period_end!) })}
                                 </Typography>
                             ) : (
                                 <Typography variant="body2" color="text.secondary">
-                                    Next billing date: {formatDate(subscription.current_period_end!)}
+                                    {t('subscriptionStatus.nextBillingDate', { date: formatDate(subscription.current_period_end!) })}
                                 </Typography>
                             )}
                             <Button
@@ -171,7 +175,7 @@ const SubscriptionStatus: React.FC = () => {
                                 onClick={() => setShowCancelDialog(true)}
                                 size="small"
                             >
-                                {subscription.payment_type === 'one_time' ? 'Revoke Access' : 'Cancel Subscription'}
+                                {subscription.payment_type === 'one_time' ? t('subscriptionStatus.revokeAccess') : t('subscriptionStatus.cancelSubscription')}
                             </Button>
                         </Stack>
                     )}
@@ -179,7 +183,7 @@ const SubscriptionStatus: React.FC = () => {
                     {subscription.status === 'past_due' && (
                         <Alert severity="warning">
                             <Typography variant="body2">
-                                Your subscription payment failed. Please update your payment method.
+                                {t('subscriptionStatus.paymentFailedUpdateMethod')}
                             </Typography>
                         </Alert>
                     )}
@@ -188,8 +192,8 @@ const SubscriptionStatus: React.FC = () => {
                         <Alert severity="info">
                             <Typography variant="body2">
                                 {subscription.payment_type === 'one_time'
-                                    ? 'Your access has been revoked.'
-                                    : `Your subscription has been canceled. You'll retain access until ${formatDate(subscription.current_period_end!)}.`
+                                    ? t('subscriptionStatus.accessRevoked')
+                                    : t('subscriptionStatus.subscriptionCanceledRetainAccess', { date: formatDate(subscription.current_period_end!) })
                                 }
                             </Typography>
                         </Alert>
@@ -197,21 +201,25 @@ const SubscriptionStatus: React.FC = () => {
                 </CardContent>
             </Card>
 
-            <Dialog open={showCancelDialog} onClose={() => setShowCancelDialog(false)}>
-                <DialogTitle>
-                    {subscription?.payment_type === 'one_time' ? 'Revoke Access' : 'Cancel Subscription'}
+            <Dialog open={showCancelDialog} onClose={() => setShowCancelDialog(false)} sx={{ '& .MuiDialog-paper': { m: { xs: 1, sm: 2 } } }}>
+                <DialogTitle sx={{ fontSize: { xs: '1.125rem', sm: '1.25rem' } }}>
+                    {subscription?.payment_type === 'one_time' ? t('subscriptionStatus.revokeAccess') : t('subscriptionStatus.cancelSubscription')}
                 </DialogTitle>
-                <DialogContent>
-                    <Typography>
+                <DialogContent sx={{ px: { xs: 2, sm: 3 } }}>
+                    <Typography sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
                         {subscription?.payment_type === 'one_time'
-                            ? 'Are you sure you want to revoke access? This action cannot be undone.'
-                            : 'Are you sure you want to cancel your subscription? You\'ll retain access until the end of your current billing period.'
+                            ? t('subscriptionStatus.areYouSureRevokeAccess')
+                            : t('subscriptionStatus.areYouSureCancelSubscription')
                         }
                     </Typography>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowCancelDialog(false)}>
-                        {subscription?.payment_type === 'one_time' ? 'Keep Access' : 'Keep Subscription'}
+                <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 }, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 0 } }}>
+                    <Button 
+                        onClick={() => setShowCancelDialog(false)}
+                        fullWidth={window.innerWidth < 600}
+                        sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}
+                    >
+                        {subscription?.payment_type === 'one_time' ? t('subscriptionStatus.keepAccess') : t('subscriptionStatus.keepSubscription')}
                     </Button>
                     <Button
                         onClick={handleCancelSubscription}
@@ -219,8 +227,10 @@ const SubscriptionStatus: React.FC = () => {
                         variant="contained"
                         disabled={canceling}
                         startIcon={canceling ? <CircularProgress size={20} /> : <Cancel />}
+                        fullWidth={window.innerWidth < 600}
+                        sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}
                     >
-                        {canceling ? 'Processing...' : (subscription?.payment_type === 'one_time' ? 'Revoke Access' : 'Cancel Subscription')}
+                        {canceling ? t('subscriptionStatus.processing') : (subscription?.payment_type === 'one_time' ? t('subscriptionStatus.revokeAccess') : t('subscriptionStatus.cancelSubscription'))}
                     </Button>
                 </DialogActions>
             </Dialog>

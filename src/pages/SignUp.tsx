@@ -24,14 +24,17 @@ import {
     School
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -41,18 +44,50 @@ const SignUp: React.FC = () => {
         university: ''
     });
 
+    const validatePassword = (password: string): string | null => {
+        if (password.length < 8) {
+            return t('signup.passwordMustBe8Chars');
+        }
+        if (!/[A-Z]/.test(password)) {
+            return t('signup.passwordMustContain');
+        }
+        if (!/[0-9]/.test(password)) {
+            return t('signup.passwordMustContainNumber');
+        }
+        if (!/[^a-zA-Z0-9]/.test(password)) {
+            return t('signup.passwordMustContainSpecial');
+        }
+        return null;
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         });
+        
+        // Validate password in real-time
+        if (e.target.name === 'password') {
+            const error = validatePassword(value);
+            setPasswordError(error);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+        
+        // Validate password requirements
+        const passwordValidationError = validatePassword(formData.password);
+        if (passwordValidationError) {
+            setError(passwordValidationError);
+            setPasswordError(passwordValidationError);
+            return;
+        }
+        
         if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
+            setError(t('signup.passwordsDoNotMatch'));
             return;
         }
         setLoading(true);
@@ -116,18 +151,18 @@ const SignUp: React.FC = () => {
                     }
                 }}
             >
-                <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+                <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, sm: 3 } }}>
                     <Paper
                         elevation={12}
                         sx={{
-                            p: 6,
+                            p: { xs: 3, sm: 4, md: 6 },
                             backgroundColor: 'rgba(255, 255, 255, 0.95)',
                             backdropFilter: 'blur(20px)',
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             boxShadow: theme.shadows[12]
                         }}
                     >
-                        <Box sx={{ textAlign: 'center', mb: 6 }}>
+                        <Box sx={{ textAlign: 'center', mb: { xs: 4, sm: 6 } }}>
                             <Typography
                                 variant="h3"
                                 component="h1"
@@ -135,23 +170,25 @@ const SignUp: React.FC = () => {
                                 sx={{
                                     color: theme.palette.primary.main,
                                     fontWeight: 800,
-                                    mb: 2
+                                    mb: 2,
+                                    fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                                 }}
                             >
-                                Major Match
+                                {t('signup.appName')}
                             </Typography>
                             <Typography variant="h4" component="h2" gutterBottom sx={{
                                 fontWeight: 600,
                                 color: theme.palette.text.primary,
-                                mb: 1.5
+                                mb: 1.5,
+                                fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
                             }}>
-                                Create Your Account
+                                {t('signup.title')}
                             </Typography>
                             <Typography variant="body1" color="text.secondary" sx={{
-                                fontSize: '1.125rem',
+                                fontSize: { xs: '1rem', sm: '1.125rem' },
                                 lineHeight: 1.6
                             }}>
-                                Join thousands of students finding their perfect major
+                                {t('signup.joinThousands')}
                             </Typography>
                         </Box>
 
@@ -164,7 +201,7 @@ const SignUp: React.FC = () => {
                                 <Grid item xs={12} sm={6} md={6}>
                                     <TextField
                                         fullWidth
-                                        label="First Name"
+                                        label={t('signup.firstName')}
                                         name="firstName"
                                         value={formData.firstName}
                                         onChange={handleChange}
@@ -203,7 +240,7 @@ const SignUp: React.FC = () => {
                                 <Grid item xs={12} sm={6} md={6}>
                                     <TextField
                                         fullWidth
-                                        label="Last Name"
+                                        label={t('signup.lastName')}
                                         name="lastName"
                                         value={formData.lastName}
                                         onChange={handleChange}
@@ -242,7 +279,7 @@ const SignUp: React.FC = () => {
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth
-                                        label="Email Address"
+                                        label={t('signup.emailAddress')}
                                         name="email"
                                         type="email"
                                         value={formData.email}
@@ -282,7 +319,7 @@ const SignUp: React.FC = () => {
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth
-                                        label="University (Optional)"
+                                        label={t('signup.universityOptional')}
                                         name="university"
                                         value={formData.university}
                                         onChange={handleChange}
@@ -320,13 +357,15 @@ const SignUp: React.FC = () => {
                                 <Grid item xs={12} sm={6} md={6}>
                                     <TextField
                                         fullWidth
-                                        label="Password"
+                                        label={t('signup.password')}
                                         name="password"
                                         type={showPassword ? 'text' : 'password'}
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
                                         variant="outlined"
+                                        error={!!passwordError}
+                                        helperText={passwordError || t('signup.passwordRequirements')}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">
@@ -371,7 +410,7 @@ const SignUp: React.FC = () => {
                                 <Grid item xs={12} sm={6} md={6}>
                                     <TextField
                                         fullWidth
-                                        label="Confirm Password"
+                                        label={t('signup.confirmPassword')}
                                         name="confirmPassword"
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         value={formData.confirmPassword}
@@ -428,9 +467,10 @@ const SignUp: React.FC = () => {
                                 disabled={loading}
                                 endIcon={loading ? <CircularProgress size={20} color="inherit" /> : undefined}
                                 sx={{
-                                    mt: 5,
+                                    mt: { xs: 4, sm: 5 },
                                     mb: 4,
-                                    fontSize: '1.125rem',
+                                    py: { xs: 1.75, sm: 2 },
+                                    fontSize: { xs: '1rem', sm: '1.125rem' },
                                     fontWeight: 700,
                                     background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
                                     boxShadow: theme.shadows[6],
@@ -441,12 +481,12 @@ const SignUp: React.FC = () => {
                                     }
                                 }}
                             >
-                                Create Account
+                                {t('signup.createAccount')}
                             </Button>
 
                             <Box sx={{ textAlign: 'center', mb: 4 }}>
-                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem' }}>
-                                    Already have an account?{' '}
+                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                                    {t('signup.alreadyHaveAccount')}{' '}
                                     <Link
                                         component="button"
                                         type="button"
@@ -460,7 +500,7 @@ const SignUp: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        Sign in here
+                                        {t('signup.signInHere')}
                                     </Link>
                                 </Typography>
                             </Box>
@@ -470,12 +510,14 @@ const SignUp: React.FC = () => {
                                     variant="outlined"
                                     startIcon={<Home />}
                                     onClick={() => navigate('/')}
+                                    fullWidth
                                     sx={{
                                         borderColor: theme.palette.grey[300],
                                         color: theme.palette.text.secondary,
                                         borderWidth: '2px',
-                                        py: 1.5,
-                                        px: 4,
+                                        py: { xs: 1.25, sm: 1.5 },
+                                        px: { xs: 3, sm: 4 },
+                                        fontSize: { xs: '0.9rem', sm: '1rem' },
                                         fontWeight: 600,
                                         '&:hover': {
                                             borderColor: theme.palette.primary.main,
@@ -485,7 +527,7 @@ const SignUp: React.FC = () => {
                                         }
                                     }}
                                 >
-                                    Back to Home
+                                    {t('signup.backToHome')}
                                 </Button>
                             </Box>
                         </form>

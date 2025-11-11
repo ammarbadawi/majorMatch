@@ -21,10 +21,12 @@ import {
     Home
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -57,11 +59,11 @@ const Login: React.FC = () => {
                     navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
                     return;
                 }
-                throw new Error(data.error || 'Login failed');
+                throw new Error(data.error || t('login.invalidCredentials'));
             }
             navigate('/');
         } catch (err: any) {
-            setError(err.message || 'Login failed');
+            setError(err.message || t('login.invalidCredentials'));
         } finally {
             setLoading(false);
         }
@@ -93,18 +95,18 @@ const Login: React.FC = () => {
                     }
                 }}
             >
-                <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
+                <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1, px: { xs: 2, sm: 3 } }}>
                     <Paper
                         elevation={10}
                         sx={{
-                            p: 6,
+                            p: { xs: 3, sm: 4, md: 6 },
                             backgroundColor: 'rgba(255, 255, 255, 0.95)',
                             backdropFilter: 'blur(20px)',
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             boxShadow: theme.shadows[12]
                         }}
                     >
-                        <Box sx={{ textAlign: 'center', mb: 6 }}>
+                        <Box sx={{ textAlign: 'center', mb: { xs: 4, sm: 6 } }}>
                             <Typography
                                 variant="h3"
                                 component="h1"
@@ -112,23 +114,25 @@ const Login: React.FC = () => {
                                 sx={{
                                     color: theme.palette.primary.main,
                                     fontWeight: 800,
-                                    mb: 2
+                                    mb: 2,
+                                    fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                                 }}
                             >
-                                Major Match
+                                {t('login.appName')}
                             </Typography>
                             <Typography variant="h4" component="h2" gutterBottom sx={{
                                 fontWeight: 600,
                                 color: theme.palette.text.primary,
-                                mb: 1.5
+                                mb: 1.5,
+                                fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
                             }}>
-                                Welcome Back!
+                                {t('login.title')}
                             </Typography>
                             <Typography variant="body1" color="text.secondary" sx={{
-                                fontSize: '1.125rem',
+                                fontSize: { xs: '1rem', sm: '1.125rem' },
                                 lineHeight: 1.6
                             }}>
-                                Sign in to continue your journey
+                                {t('login.subtitle')}
                             </Typography>
                         </Box>
 
@@ -140,7 +144,7 @@ const Login: React.FC = () => {
                             <Box sx={{ mb: 4 }}>
                                 <TextField
                                     fullWidth
-                                    label="Email Address"
+                                    label={t('login.emailLabel')}
                                     name="email"
                                     type="email"
                                     value={formData.email}
@@ -180,7 +184,7 @@ const Login: React.FC = () => {
                             <Box sx={{ mb: 4 }}>
                                 <TextField
                                     fullWidth
-                                    label="Password"
+                                    label={t('login.passwordLabel')}
                                     name="password"
                                     type={showPassword ? 'text' : 'password'}
                                     value={formData.password}
@@ -238,8 +242,8 @@ const Login: React.FC = () => {
                                 sx={{
                                     mt: 3,
                                     mb: 4,
-                                    py: 2,
-                                    fontSize: '1.125rem',
+                                    py: { xs: 1.75, sm: 2 },
+                                    fontSize: { xs: '1rem', sm: '1.125rem' },
                                     fontWeight: 700,
                                     background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
                                     boxShadow: theme.shadows[6],
@@ -250,12 +254,31 @@ const Login: React.FC = () => {
                                     }
                                 }}
                             >
-                                Sign In
+                                {t('login.signIn')}
                             </Button>
 
+                            <Box sx={{ textAlign: 'center', mb: 2 }}>
+                                <Link
+                                    component="button"
+                                    type="button"
+                                    onClick={() => navigate('/forgot-password')}
+                                    sx={{
+                                        color: theme.palette.primary.main,
+                                        textDecoration: 'none',
+                                        fontWeight: 600,
+                                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                                        '&:hover': {
+                                            textDecoration: 'underline'
+                                        }
+                                    }}
+                                >
+                                    {t('common.forgotPassword')}
+                                </Link>
+                            </Box>
+
                             <Box sx={{ textAlign: 'center', mb: 4 }}>
-                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: '1rem' }}>
-                                    Don't have an account?{' '}
+                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                                    {t('login.noAccount')}{' '}
                                     <Link
                                         component="button"
                                         type="button"
@@ -269,7 +292,7 @@ const Login: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        Sign up here
+                                        {t('common.signup')}
                                     </Link>
                                 </Typography>
                             </Box>
@@ -279,12 +302,14 @@ const Login: React.FC = () => {
                                     variant="outlined"
                                     startIcon={<Home />}
                                     onClick={() => navigate('/')}
+                                    fullWidth
                                     sx={{
                                         borderColor: theme.palette.grey[300],
                                         color: theme.palette.text.secondary,
                                         borderWidth: '2px',
-                                        py: 1.5,
-                                        px: 4,
+                                        py: { xs: 1.25, sm: 1.5 },
+                                        px: { xs: 3, sm: 4 },
+                                        fontSize: { xs: '0.9rem', sm: '1rem' },
                                         fontWeight: 600,
                                         '&:hover': {
                                             borderColor: theme.palette.primary.main,
@@ -294,7 +319,7 @@ const Login: React.FC = () => {
                                         }
                                     }}
                                 >
-                                    Back to Home
+                                    {t('common.back')} {t('common.home')}
                                 </Button>
                             </Box>
                         </form>

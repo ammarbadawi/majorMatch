@@ -52,6 +52,8 @@ import {
     VisibilityOff
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n/config';
 import PaymentModal from '../components/PaymentModal';
 import SubscriptionStatus from '../components/SubscriptionStatus';
 
@@ -87,6 +89,7 @@ const glowAnimation = keyframes`
 const MajorMatchingTest: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const { t } = useTranslation();
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [currentPage, setCurrentPage] = useState(0);
     const [answers, setAnswers] = useState<{ [key: number]: string }>({});
@@ -111,6 +114,13 @@ const MajorMatchingTest: React.FC = () => {
             checkMbtiThenLoad();
         }
     }, [showPaymentPrompt, hasSubscription]);
+
+    // Reload questions when language changes
+    useEffect(() => {
+        if (questions.length > 0 && hasSubscription && !showPaymentPrompt) {
+            loadQuestions();
+        }
+    }, [i18n.language]);
 
     // Timer effect
     useEffect(() => {
@@ -173,7 +183,9 @@ const MajorMatchingTest: React.FC = () => {
     const loadQuestions = async () => {
         setLoading(true);
         try {
-            const res = await fetch('/api/major/questions', {
+            const currentLang = i18n.language || 'en';
+            const lang = currentLang === 'ar' ? 'ar' : 'en';
+            const res = await fetch(`/api/major/questions?lang=${lang}`, {
                 credentials: 'include'
             });
             console.log('Questions response status:', res.status);
@@ -183,15 +195,15 @@ const MajorMatchingTest: React.FC = () => {
                 return;
             }
             if (res.status === 402) {
-                setError('Subscription required to access major test.');
+                setError(t('majorMatchingTest.subscriptionRequired'));
                 setShowPaymentPrompt(true);
                 return;
             }
             if (res.status === 403) {
-                setError('You must complete the personality test before taking the major test.');
+                setError(t('majorMatchingTest.completePersonalityFirst'));
                 return;
             }
-            if (!res.ok) throw new Error('Failed to load questions');
+            if (!res.ok) throw new Error(t('majorMatchingTest.failedToLoad'));
             const data = await res.json();
             console.log('Questions loaded successfully:', data.length, 'questions');
             setQuestions(data);
@@ -206,30 +218,30 @@ const MajorMatchingTest: React.FC = () => {
     const likertOptions = useMemo(() => ([
         {
             value: 'strongly disagree',
-            label: 'Strongly Disagree',
-            description: 'This doesn\'t describe me at all'
+            label: t('majorMatchingTest.stronglyDisagree'),
+            description: t('majorMatchingTest.stronglyDisagreeDesc')
         },
         {
             value: 'disagree',
-            label: 'Disagree',
-            description: 'This rarely applies to me'
+            label: t('majorMatchingTest.disagree'),
+            description: t('majorMatchingTest.disagreeDesc')
         },
         {
             value: 'neutral',
-            label: 'Neutral',
-            description: 'Sometimes this applies'
+            label: t('majorMatchingTest.neutral'),
+            description: t('majorMatchingTest.neutralDesc')
         },
         {
             value: 'agree',
-            label: 'Agree',
-            description: 'This often applies to me'
+            label: t('majorMatchingTest.agree'),
+            description: t('majorMatchingTest.agreeDesc')
         },
         {
             value: 'strongly agree',
-            label: 'Strongly Agree',
-            description: 'This perfectly describes me'
+            label: t('majorMatchingTest.stronglyAgree'),
+            description: t('majorMatchingTest.stronglyAgreeDesc')
         }
-    ]), []);
+    ]), [t]);
 
     const getLikertColor = (value: string) => {
         const map: { [key: string]: string } = {
@@ -277,12 +289,12 @@ const MajorMatchingTest: React.FC = () => {
                 return;
             }
             if (res.status === 403) {
-                setError('You must complete the personality test before taking the major test.');
+                setError(t('majorMatchingTest.completePersonalityFirst'));
                 return;
             }
             if (!res.ok) {
-                const data = await res.json().catch(() => ({ error: 'Failed to calculate results' }));
-                throw new Error(data.error || 'Failed to calculate results');
+                const data = await res.json().catch(() => ({ error: t('majorMatchingTest.failedToCalculate') }));
+                throw new Error(data.error || t('majorMatchingTest.failedToCalculate'));
             }
             const data = await res.json();
             navigate('/major-matching-results', { state: { results: data.results } });
@@ -352,21 +364,24 @@ const MajorMatchingTest: React.FC = () => {
                             edge="start"
                             color="inherit"
                             onClick={() => navigate('/')}
-                            sx={{ mr: 3 }}
+                            sx={{ 
+                                mr: i18n.language === 'ar' ? 0 : 3,
+                                ml: i18n.language === 'ar' ? 3 : 0
+                            }}
                         >
-                            <ArrowBack />
+                            <ArrowBack sx={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'none' }} />
                         </IconButton>
                         <School sx={{ mr: 2, fontSize: 32 }} />
                         <Box sx={{ flexGrow: 1 }}>
                             <Typography variant="h5" component="h1" sx={{ fontWeight: 700, mb: 0.5 }}>
-                                Major Matching Test
+                                {t('majorMatchingTest.title')}
                             </Typography>
                             <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                                Find your perfect academic major
+                                {t('majorMatchingTest.subtitle')}
                             </Typography>
                         </Box>
                         <Chip
-                            label="PREMIUM"
+                            label={t('common.premium')}
                             sx={{
                                 backgroundColor: theme.palette.warning.main,
                                 color: 'white',
@@ -378,11 +393,11 @@ const MajorMatchingTest: React.FC = () => {
                     </Toolbar>
                 </AppBar>
 
-                <Container maxWidth="md" sx={{ py: 8 }}>
+                <Container maxWidth="md" sx={{ py: { xs: 4, sm: 6, md: 8 }, px: { xs: 2, sm: 3 } }}>
                     <Paper
                         elevation={12}
                         sx={{
-                            p: 8,
+                            p: { xs: 4, sm: 6, md: 8 },
                             textAlign: 'center',
                             backgroundColor: 'rgba(255, 255, 255, 0.95)',
                             backdropFilter: 'blur(20px)',
@@ -391,131 +406,134 @@ const MajorMatchingTest: React.FC = () => {
                     >
                         <Avatar
                             sx={{
-                                width: 100,
-                                height: 100,
+                                width: { xs: 80, sm: 90, md: 100 },
+                                height: { xs: 80, sm: 90, md: 100 },
                                 mx: 'auto',
-                                mb: 4,
+                                mb: { xs: 3, sm: 4 },
                                 backgroundColor: `${theme.palette.secondary.main}20`,
                                 border: `4px solid ${theme.palette.secondary.main}30`
                             }}
                         >
-                            <School sx={{ fontSize: 50, color: theme.palette.secondary.main }} />
+                            <School sx={{ fontSize: { xs: 40, sm: 45, md: 50 }, color: theme.palette.secondary.main }} />
                         </Avatar>
 
                         <Typography variant="h2" component="h1" gutterBottom sx={{
                             color: theme.palette.secondary.main,
                             fontWeight: 800,
-                            mb: 2
+                            mb: 2,
+                            fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                         }}>
-                            Major Matching Test
+                            {t('majorMatchingTest.title')}
                         </Typography>
 
                         <Chip
-                            label="PREMIUM FEATURE"
+                            label={t('majorMatchingTest.premiumFeature')}
                             sx={{
-                                mb: 4,
+                                mb: { xs: 3, sm: 4 },
                                 backgroundColor: theme.palette.warning.main,
                                 color: 'white',
                                 fontWeight: 700,
-                                fontSize: '1rem',
-                                px: 3,
-                                py: 1
+                                fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                                px: { xs: 2, sm: 3 },
+                                py: { xs: 0.75, sm: 1 }
                             }}
                         />
 
                         <Typography variant="h5" gutterBottom sx={{
                             fontWeight: 600,
                             color: theme.palette.text.primary,
-                            mb: 3
+                            mb: { xs: 2, sm: 3 },
+                            fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' }
                         }}>
-                            Discover Your Perfect Academic Major
+                            {t('majorMatchingTest.discoverPerfectMajor')}
                         </Typography>
 
                         <Typography variant="body1" color="text.secondary" sx={{
-                            fontSize: '1.125rem',
+                            fontSize: { xs: '1rem', sm: '1.125rem' },
                             lineHeight: 1.6,
-                            mb: 6,
+                            mb: { xs: 4, sm: 5, md: 6 },
                             maxWidth: '80%',
-                            mx: 'auto'
+                            mx: 'auto',
+                            px: { xs: 2, sm: 0 }
                         }}>
-                            Our advanced assessment analyzes your interests, skills, and career goals
-                            to provide personalized major recommendations with detailed insights.
+                            {t('majorMatchingTest.advancedAssessmentDesc')}
                         </Typography>
 
-                        <Grid container spacing={4} sx={{ mb: 6 }}>
-                            <Grid xs={12} sm={4}>
+                        <Grid container spacing={{ xs: 3, sm: 4 }} sx={{ mb: { xs: 4, sm: 5, md: 6 } }}>
+                            <Grid item xs={12} sm={4}>
                                 <Box sx={{ textAlign: 'center' }}>
                                     <Avatar sx={{
                                         backgroundColor: theme.palette.primary.main,
-                                        width: 60,
-                                        height: 60,
+                                        width: { xs: 50, sm: 60 },
+                                        height: { xs: 50, sm: 60 },
                                         mx: 'auto',
                                         mb: 2
                                     }}>
-                                        <Psychology sx={{ fontSize: 30 }} />
+                                        <Psychology sx={{ fontSize: { xs: 24, sm: 30 } }} />
                                     </Avatar>
-                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                                        Dynamic Questions
+                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                                        {t('majorMatchingTest.dynamicQuestions')}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Comprehensive assessment
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.85rem', sm: '0.875rem' } }}>
+                                        {t('majorMatchingTest.comprehensiveAssessment')}
                                     </Typography>
                                 </Box>
                             </Grid>
-                            <Grid xs={12} sm={4}>
+                            <Grid item xs={12} sm={4}>
                                 <Box sx={{ textAlign: 'center' }}>
                                     <Avatar sx={{
                                         backgroundColor: theme.palette.success.main,
-                                        width: 60,
-                                        height: 60,
+                                        width: { xs: 50, sm: 60 },
+                                        height: { xs: 50, sm: 60 },
                                         mx: 'auto',
                                         mb: 2
                                     }}>
-                                        <TrendingUp sx={{ fontSize: 30 }} />
+                                        <TrendingUp sx={{ fontSize: { xs: 24, sm: 30 } }} />
                                     </Avatar>
-                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                                        AI-Powered
+                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                                        {t('majorMatchingTest.aiPowered')}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Advanced analysis
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.85rem', sm: '0.875rem' } }}>
+                                        {t('majorMatchingTest.advancedAnalysis')}
                                     </Typography>
                                 </Box>
                             </Grid>
-                            <Grid xs={12} sm={4}>
+                            <Grid item xs={12} sm={4}>
                                 <Box sx={{ textAlign: 'center' }}>
                                     <Avatar sx={{
                                         backgroundColor: theme.palette.warning.main,
-                                        width: 60,
-                                        height: 60,
+                                        width: { xs: 50, sm: 60 },
+                                        height: { xs: 50, sm: 60 },
                                         mx: 'auto',
                                         mb: 2
                                     }}>
-                                        <EmojiEvents sx={{ fontSize: 30 }} />
+                                        <EmojiEvents sx={{ fontSize: { xs: 24, sm: 30 } }} />
                                     </Avatar>
-                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
-                                        Detailed Results
+                                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 1, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
+                                        {t('majorMatchingTest.detailedResults')}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Personalized recommendations
+                                    <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.85rem', sm: '0.875rem' } }}>
+                                        {t('majorMatchingTest.personalizedRecommendations')}
                                     </Typography>
                                 </Box>
                             </Grid>
                         </Grid>
 
-                        <Stack spacing={2} sx={{ mb: 6 }}>
+                        <Stack spacing={2} sx={{ mb: { xs: 4, sm: 5, md: 6 } }}>
                             {[
-                                'Comprehensive major compatibility analysis',
-                                'University program recommendations',
-                                'Career pathway mapping & salary insights',
-                                'Detailed academic guidance & next steps'
+                                t('majorMatchingTest.comprehensiveMajorAnalysis'),
+                                t('majorMatchingTest.universityProgramRecommendations'),
+                                t('majorMatchingTest.careerPathwayMapping'),
+                                t('majorMatchingTest.detailedAcademicGuidance')
                             ].map((feature, index) => (
-                                <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
                                     <CheckCircle sx={{
                                         color: theme.palette.success.main,
                                         mr: 2,
-                                        fontSize: 24
+                                        fontSize: { xs: 20, sm: 24 },
+                                        flexShrink: 0
                                     }} />
-                                    <Typography variant="body1" sx={{ fontSize: '1.1rem', fontWeight: 500 }}>
+                                    <Typography variant="body1" sx={{ fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' }, fontWeight: 500, textAlign: { xs: 'center', sm: 'left' } }}>
                                         {feature}
                                     </Typography>
                                 </Box>
@@ -528,10 +546,11 @@ const MajorMatchingTest: React.FC = () => {
                                 size="large"
                                 startIcon={<AttachMoney />}
                                 onClick={handleStartTest}
+                                fullWidth
                                 sx={{
-                                    py: 2,
-                                    px: 5,
-                                    fontSize: '1.125rem',
+                                    py: { xs: 1.75, sm: 2 },
+                                    px: { xs: 3, sm: 5 },
+                                    fontSize: { xs: '1rem', sm: '1.125rem' },
                                     fontWeight: 700,
                                     background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
                                     boxShadow: theme.shadows[6],
@@ -541,16 +560,17 @@ const MajorMatchingTest: React.FC = () => {
                                     }
                                 }}
                             >
-                                Start Premium Test - $14.99 (One Time)
+                                {t('majorMatchingTest.startPremiumTest')}
                             </Button>
                             <Button
                                 variant="outlined"
                                 size="large"
                                 onClick={() => navigate('/')}
+                                fullWidth
                                 sx={{
-                                    py: 2,
-                                    px: 5,
-                                    fontSize: '1.125rem',
+                                    py: { xs: 1.75, sm: 2 },
+                                    px: { xs: 3, sm: 5 },
+                                    fontSize: { xs: '1rem', sm: '1.125rem' },
                                     fontWeight: 600,
                                     borderWidth: '2px',
                                     '&:hover': {
@@ -558,7 +578,7 @@ const MajorMatchingTest: React.FC = () => {
                                     }
                                 }}
                             >
-                                Maybe Later
+                                {t('majorMatchingTest.maybeLater')}
                             </Button>
                         </Stack>
 
@@ -567,7 +587,7 @@ const MajorMatchingTest: React.FC = () => {
                             display: 'block',
                             fontSize: '1rem'
                         }}>
-                            💰 One-time payment • 🔒 Secure checkout • ✨ Lifetime access
+                            💰 {t('majorMatchingTest.oneTimePayment')} • 🔒 {t('majorMatchingTest.secureCheckout')} • ✨ {t('majorMatchingTest.lifetimeAccess')}
                         </Typography>
                     </Paper>
                 </Container>
@@ -657,11 +677,11 @@ const MajorMatchingTest: React.FC = () => {
                                             WebkitTextFillColor: 'transparent'
                                         }}
                                     >
-                                        Preparing Your Major Assessment
+                                        {t('majorMatchingTest.preparingMajorAssessment')}
                                     </Typography>
 
                                     <Typography variant="h6" color="text.secondary" sx={{ mb: 4, fontWeight: 500 }}>
-                                        Loading personalized major matching questions...
+                                        {t('majorMatchingTest.loadingQuestions')}
                                     </Typography>
 
                                     <Box sx={{ position: 'relative', mb: 4 }}>
@@ -721,10 +741,10 @@ const MajorMatchingTest: React.FC = () => {
                             }}
                         >
                             <AlertTitle sx={{ fontSize: '1.5rem', fontWeight: 700 }}>
-                                No Questions Available
+                                {t('majorMatchingTest.noQuestionsAvailable')}
                             </AlertTitle>
                             <Typography variant="body1" sx={{ mt: 2 }}>
-                                Please try again later or contact support if the issue persists.
+                                {t('majorMatchingTest.tryAgainLater')}
                             </Typography>
                         </Alert>
                     </Fade>
@@ -763,7 +783,8 @@ const MajorMatchingTest: React.FC = () => {
                         color="inherit"
                         onClick={() => navigate('/')}
                         sx={{
-                            mr: { xs: 0, md: 3 },
+                            mr: { xs: 0, md: i18n.language === 'ar' ? 0 : 3 },
+                            ml: { xs: 0, md: i18n.language === 'ar' ? 3 : 0 },
                             mb: { xs: 1, md: 0 },
                             '&:hover': {
                                 transform: 'scale(1.1)',
@@ -771,7 +792,7 @@ const MajorMatchingTest: React.FC = () => {
                             }
                         }}
                     >
-                        <ArrowBack />
+                        <ArrowBack sx={{ transform: i18n.language === 'ar' ? 'scaleX(-1)' : 'none' }} />
                     </IconButton>
 
                     <Avatar
@@ -787,15 +808,15 @@ const MajorMatchingTest: React.FC = () => {
 
                     <Box sx={{ flexGrow: 1, width: { xs: '100%', md: 'auto' }, textAlign: { xs: 'center', md: 'left' } }}>
                         <Typography variant="h5" component="h1" sx={{ fontWeight: 800, mb: 0.5, fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' } }}>
-                            Major Discovery
+                            {t('majorMatchingTest.majorDiscovery')}
                         </Typography>
                         <Typography variant="body2" sx={{ opacity: 0.9, fontWeight: 500, fontSize: { xs: '0.8rem', sm: '0.9rem' } }}>
-                            Find your perfect academic path
+                            {t('majorMatchingTest.findPerfectPath')}
                         </Typography>
                     </Box>
 
                     <Stack direction="row" spacing={2} alignItems="center" sx={{ flexWrap: 'wrap', justifyContent: { xs: 'center', md: 'flex-end' }, rowGap: 1 }}>
-                        <Tooltip title="Time Spent">
+                        <Tooltip title={t('majorMatchingTest.timeSpent')}>
                             <Chip
                                 icon={<Timer />}
                                 label={`${timeSpentMinutes}:${timeSpentSeconds.toString().padStart(2, '0')}`}
@@ -811,7 +832,7 @@ const MajorMatchingTest: React.FC = () => {
                         </Tooltip>
 
                         <Chip
-                            label={`Page ${currentPage + 1} / ${totalPages || 1}`}
+                            label={`${t('majorMatchingTest.page')} ${currentPage + 1} / ${totalPages || 1}`}
                             sx={{
                                 backgroundColor: alpha(theme.palette.common.white, 0.2),
                                 color: 'white',
@@ -844,10 +865,10 @@ const MajorMatchingTest: React.FC = () => {
                         mb: 1
                     }}>
                         <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
-                            {Math.round(progress)}% Complete
+                            {Math.round(progress)}% {t('majorMatchingTest.complete')}
                         </Typography>
                         <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>
-                            ~{Math.ceil((questions.length - answeredCount) * 0.3)} min remaining
+                            ~{Math.ceil((questions.length - answeredCount) * 0.3)} {t('majorMatchingTest.minRemaining')}
                         </Typography>
                     </Box>
                     <LinearProgress
@@ -901,7 +922,7 @@ const MajorMatchingTest: React.FC = () => {
                         >
                             <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, color: theme.palette.info.main }}>
                                 <Insights sx={{ mr: 1, verticalAlign: 'middle' }} />
-                                Test Insights
+                                {t('majorMatchingTest.testInsights')}
                             </Typography>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6} md={3}>
@@ -910,7 +931,7 @@ const MajorMatchingTest: React.FC = () => {
                                             {answeredCount}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Questions Answered
+                                            {t('majorMatchingTest.questionsAnswered')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -920,7 +941,7 @@ const MajorMatchingTest: React.FC = () => {
                                             {questions.length - answeredCount}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Remaining
+                                            {t('majorMatchingTest.remaining')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -930,7 +951,7 @@ const MajorMatchingTest: React.FC = () => {
                                             {Math.round(progress)}%
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Complete
+                                            {t('majorMatchingTest.complete')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -940,7 +961,7 @@ const MajorMatchingTest: React.FC = () => {
                                             {Math.ceil((questions.length - answeredCount) * 0.3)}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">
-                                            Min Left
+                                            {t('majorMatchingTest.minLeft')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -973,10 +994,10 @@ const MajorMatchingTest: React.FC = () => {
                         <CardContent sx={{ p: { xs: 3, sm: 4, md: 6 } }}>
                             <Box sx={{ textAlign: 'center', mb: 4 }}>
                                 <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, color: theme.palette.text.primary }}>
-                                    How well does each statement describe you?
+                                    {t('majorMatchingTest.howWellDescribes')}
                                 </Typography>
                                 <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
-                                    Be honest and choose the option that best reflects your interests and goals
+                                    {t('majorMatchingTest.beHonest')}
                                 </Typography>
                             </Box>
 
@@ -991,7 +1012,7 @@ const MajorMatchingTest: React.FC = () => {
                                 }}
                             >
                                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, textAlign: 'center' }}>
-                                    Response Scale
+                                    {t('majorMatchingTest.responseScale')}
                                 </Typography>
                                 <Grid container spacing={2}>
                                     {likertOptions.map((opt, index) => (
@@ -1189,7 +1210,7 @@ const MajorMatchingTest: React.FC = () => {
                                                             <Box sx={{ textAlign: 'center', mt: 2 }}>
                                                                 <Chip
                                                                     icon={<CheckCircle />}
-                                                                    label="Answered"
+                                                                    label={t('majorMatchingTest.answered')}
                                                                     size="small"
                                                                     sx={{
                                                                         backgroundColor: theme.palette.success.main,
@@ -1208,12 +1229,13 @@ const MajorMatchingTest: React.FC = () => {
                             </Grid>
 
                             {/* Navigation */}
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 6 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 6, flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' }}>
                                 <Button
                                     variant="outlined"
                                     onClick={handlePreviousPage}
                                     disabled={currentPage === 0 || submitting}
-                                    startIcon={<ArrowBack />}
+                                    startIcon={i18n.language === 'ar' ? undefined : <ArrowBack />}
+                                    endIcon={i18n.language === 'ar' ? <ArrowBack sx={{ transform: 'scaleX(-1)' }} /> : undefined}
                                     sx={{
                                         py: 1.5,
                                         px: 4,
@@ -1223,11 +1245,11 @@ const MajorMatchingTest: React.FC = () => {
                                         borderRadius: 3,
                                         '&:hover': {
                                             borderWidth: '2px',
-                                            transform: 'translateX(-2px)'
+                                            transform: i18n.language === 'ar' ? 'translateX(2px)' : 'translateX(-2px)'
                                         }
                                     }}
                                 >
-                                    Previous
+                                    {t('majorMatchingTest.previous')}
                                 </Button>
 
                                 <Box sx={{ textAlign: 'center' }}>
@@ -1235,7 +1257,7 @@ const MajorMatchingTest: React.FC = () => {
                                         <Zoom in={true} timeout={500}>
                                             <Chip
                                                 icon={<CheckCircle />}
-                                                label="Page Complete"
+                                                label={t('majorMatchingTest.pageComplete')}
                                                 sx={{
                                                     backgroundColor: theme.palette.success.main,
                                                     color: 'white',
@@ -1253,8 +1275,10 @@ const MajorMatchingTest: React.FC = () => {
                                     variant="contained"
                                     onClick={handleNextPage}
                                     disabled={!isPageComplete() || submitting}
-                                    endIcon={submitting ? <CircularProgress size={20} color="inherit" /> :
-                                        currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward />}
+                                    startIcon={i18n.language === 'ar' ? (submitting ? <CircularProgress size={20} color="inherit" /> :
+                                        currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward sx={{ transform: 'scaleX(-1)' }} />) : undefined}
+                                    endIcon={i18n.language === 'ar' ? undefined : (submitting ? <CircularProgress size={20} color="inherit" /> :
+                                        currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward />)}
                                     sx={{
                                         py: 1.5,
                                         px: 4,
@@ -1269,12 +1293,12 @@ const MajorMatchingTest: React.FC = () => {
                                             background: isPageComplete()
                                                 ? `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${categoryColor} 100%)`
                                                 : theme.palette.grey[300],
-                                            transform: 'translateX(2px)',
+                                            transform: i18n.language === 'ar' ? 'translateX(-2px)' : 'translateX(2px)',
                                             boxShadow: isPageComplete() ? theme.shadows[8] : 'none'
                                         }
                                     }}
                                 >
-                                    {submitting ? 'Processing...' : currentPage === totalPages - 1 ? 'Get Results' : 'Next Page'}
+                                    {submitting ? t('majorMatchingTest.processing') : currentPage === totalPages - 1 ? t('majorMatchingTest.getResults') : t('majorMatchingTest.nextPage')}
                                 </Button>
                             </Box>
                         </CardContent>
@@ -1296,7 +1320,7 @@ const MajorMatchingTest: React.FC = () => {
                     >
                         <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, textAlign: 'center', mb: 3 }}>
                             <TrendingUp sx={{ mr: 1, verticalAlign: 'middle' }} />
-                            Test Progress Overview
+                            {t('majorMatchingTest.testProgressOverview')}
                         </Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={6} sm={3}>
@@ -1305,7 +1329,7 @@ const MajorMatchingTest: React.FC = () => {
                                         {answeredCount}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Answered
+                                        {t('majorMatchingTest.answered')}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -1315,7 +1339,7 @@ const MajorMatchingTest: React.FC = () => {
                                         {questions.length - answeredCount}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Remaining
+                                        {t('majorMatchingTest.remaining')}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -1325,7 +1349,7 @@ const MajorMatchingTest: React.FC = () => {
                                         {Math.round(progress)}%
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Complete
+                                        {t('majorMatchingTest.complete')}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -1335,7 +1359,7 @@ const MajorMatchingTest: React.FC = () => {
                                         {timeSpentMinutes}:{timeSpentSeconds.toString().padStart(2, '0')}
                                     </Typography>
                                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
-                                        Time Spent
+                                        {t('majorMatchingTest.timeSpent')}
                                     </Typography>
                                 </Box>
                             </Grid>

@@ -42,6 +42,7 @@ import {
     SmartToy
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getMajorDescription } from '../services/majorDescriptions';
 
 interface Major {
@@ -61,6 +62,7 @@ const MajorMatchingResults: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const theme = useTheme();
+    const { t } = useTranslation();
 
     const apiResults: Major[] | undefined = location.state?.results;
 
@@ -137,58 +139,67 @@ const MajorMatchingResults: React.FC = () => {
                     boxShadow: theme.shadows[4]
                 }}
             >
-                <Toolbar sx={{ py: 1 }}>
+                <Toolbar sx={{ py: { xs: 1, sm: 1.5 }, flexWrap: 'wrap' }}>
                     <IconButton
                         edge="start"
                         color="inherit"
                         onClick={() => navigate('/')}
-                        sx={{ mr: 3 }}
+                        sx={{ mr: { xs: 1, sm: 3 }, mb: { xs: 1, sm: 0 } }}
                     >
                         <ArrowBack />
                     </IconButton>
-                    <School sx={{ mr: 2, fontSize: 32 }} />
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Typography variant="h5" component="h1" sx={{ fontWeight: 700, mb: 0.5 }}>
-                            Your Major Matching Results
+                    <School sx={{ mr: { xs: 1, sm: 2 }, fontSize: { xs: 24, sm: 32 }, mb: { xs: 1, sm: 0 } }} />
+                    <Box sx={{ flexGrow: 1, minWidth: { xs: '100%', sm: 'auto' } }}>
+                        <Typography variant="h5" component="h1" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '1.125rem', sm: '1.5rem' } }}>
+                            {t('majorMatchingResults.title')}
                         </Typography>
-                        <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                            Personalized academic major recommendations
+                        <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
+                            {t('majorMatchingResults.personalizedRecommendations')}
                         </Typography>
                     </Box>
                     <Button
                         color="inherit"
                         startIcon={<Download />}
                         sx={{
-                            mr: 2,
+                            mr: { xs: 1, sm: 2 },
+                            mt: { xs: 1, sm: 0 },
                             borderRadius: '12px',
+                            fontSize: { xs: '0.85rem', sm: '0.875rem' },
+                            py: { xs: 0.75, sm: 1 },
+                            px: { xs: 1.5, sm: 2 },
                             '&:hover': {
                                 backgroundColor: 'rgba(255,255,255,0.1)'
                             }
                         }}
                     >
-                        Download
+                        <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>{t('majorMatchingResults.downloadResults')}</Box>
+                        <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>DL</Box>
                     </Button>
                     <Button
                         color="inherit"
                         startIcon={<Share />}
                         sx={{
+                            mt: { xs: 1, sm: 0 },
                             borderRadius: '12px',
+                            fontSize: { xs: '0.85rem', sm: '0.875rem' },
+                            py: { xs: 0.75, sm: 1 },
+                            px: { xs: 1.5, sm: 2 },
                             '&:hover': {
                                 backgroundColor: 'rgba(255,255,255,0.1)'
                             }
                         }}
                     >
-                        Share
+                        {t('majorMatchingResults.shareResults')}
                     </Button>
                 </Toolbar>
             </AppBar>
 
-            <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+            <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
                 {/* Results Header */}
                 <Card
                     elevation={8}
                     sx={{
-                        mb: 6,
+                        mb: { xs: 4, sm: 6 },
                         background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
                         color: 'white',
                         overflow: 'hidden',
@@ -205,45 +216,47 @@ const MajorMatchingResults: React.FC = () => {
                         }
                     }}
                 >
-                    <CardContent sx={{ p: 6, position: 'relative', zIndex: 1, textAlign: 'center' }}>
+                    <CardContent sx={{ p: { xs: 3, sm: 4, md: 6 }, position: 'relative', zIndex: 1, textAlign: 'center' }}>
                         <Avatar
                             sx={{
-                                width: 80,
-                                height: 80,
+                                width: { xs: 60, sm: 70, md: 80 },
+                                height: { xs: 60, sm: 70, md: 80 },
                                 mx: 'auto',
                                 mb: 3,
                                 backgroundColor: 'rgba(255,255,255,0.2)',
                                 border: '3px solid rgba(255,255,255,0.3)'
                             }}
                         >
-                            <EmojiEvents sx={{ fontSize: 40 }} />
+                            <EmojiEvents sx={{ fontSize: { xs: 30, sm: 35, md: 40 } }} />
                         </Avatar>
 
                         <Typography variant="h2" component="h1" gutterBottom sx={{
                             fontWeight: 800,
                             mb: 2,
-                            textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+                            textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                            fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                         }}>
-                            Your Perfect Major Matches
+                            {t('majorMatchingResults.perfectMajorMatches')}
                         </Typography>
 
                         <Typography variant="h5" sx={{
                             opacity: 0.95,
                             mb: 3,
-                            fontWeight: 500
+                            fontWeight: 500,
+                            fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' }
                         }}>
-                            {apiResults ? 'Here are your top matches based on your answers' : 'Based on your comprehensive assessment, here are your top 5 major matches'}
+                            {apiResults ? t('majorMatchingResults.topMatchesBasedOnAnswers') : t('majorMatchingResults.top5MajorMatches')}
                         </Typography>
 
                         <Chip
-                            label={apiResults ? '✨ PREMIUM ASSESSMENT COMPLETE' : '✨ SAMPLE RESULTS'}
+                            label={apiResults ? t('majorMatchingResults.premiumAssessmentComplete') : t('majorMatchingResults.sampleResults')}
                             sx={{
                                 backgroundColor: theme.palette.warning.main,
                                 color: 'white',
                                 fontWeight: 700,
-                                fontSize: '1.125rem',
-                                px: 3,
-                                py: 1,
+                                fontSize: { xs: '0.875rem', sm: '1rem', md: '1.125rem' },
+                                px: { xs: 2, sm: 3 },
+                                py: { xs: 0.75, sm: 1 },
                                 boxShadow: theme.shadows[4]
                             }}
                         />
@@ -270,7 +283,7 @@ const MajorMatchingResults: React.FC = () => {
                                     sx={{
                                         background: `linear-gradient(135deg, ${matchColor} 0%, ${matchColor}CC 100%)`,
                                         color: 'white',
-                                        p: 4,
+                                        p: { xs: 3, sm: 4 },
                                         position: 'relative',
                                         overflow: 'hidden',
                                         '&::before': {
@@ -287,30 +300,32 @@ const MajorMatchingResults: React.FC = () => {
                                 >
                                     <Grid container spacing={3} alignItems="center" justifyContent="space-between">
                                         <Grid item xs={12} sm={8}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
                                                 <Avatar
                                                     sx={{
                                                         backgroundColor: 'rgba(255,255,255,0.2)',
                                                         mr: 2,
-                                                        width: 48,
-                                                        height: 48
+                                                        width: { xs: 40, sm: 48 },
+                                                        height: { xs: 40, sm: 48 },
+                                                        mb: { xs: 1, sm: 0 }
                                                     }}
                                                 >
-                                                    <IconComponent sx={{ fontSize: 28 }} />
+                                                    <IconComponent sx={{ fontSize: { xs: 20, sm: 28 } }} />
                                                 </Avatar>
                                                 <Typography variant="h4" component="h2" sx={{
                                                     fontWeight: 700,
-                                                    textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
+                                                    textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
+                                                    fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' }
                                                 }}>
                                                     #{index + 1} {major.name}
                                                 </Typography>
                                             </Box>
                                             <Typography variant="body1" sx={{
-                                                fontSize: '1.125rem',
+                                                fontSize: { xs: '0.95rem', sm: '1rem', md: '1.125rem' },
                                                 lineHeight: 1.6,
                                                 opacity: 0.95
                                             }}>
-                                                {major.description || 'No description available'}
+                                                {major.description || t('majorMatchingResults.noDescriptionAvailable')}
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -318,19 +333,20 @@ const MajorMatchingResults: React.FC = () => {
                                                 <Typography variant="h2" sx={{
                                                     fontWeight: 800,
                                                     mb: 1,
-                                                    textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+                                                    textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                                                    fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' }
                                                 }}>
                                                     {major.match}%
                                                 </Typography>
-                                                <Typography variant="h6" sx={{ opacity: 0.9 }}>
-                                                    Compatibility Match
+                                                <Typography variant="h6" sx={{ opacity: 0.9, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                                                    {t('majorMatchingResults.compatibilityMatch')}
                                                 </Typography>
                                                 <LinearProgress
                                                     variant="determinate"
                                                     value={major.match}
                                                     sx={{
                                                         mt: 2,
-                                                        height: 8,
+                                                        height: { xs: 6, sm: 8 },
                                                         backgroundColor: 'rgba(255,255,255,0.3)',
                                                         '& .MuiLinearProgress-bar': {
                                                             backgroundColor: 'rgba(255,255,255,0.9)'
@@ -342,9 +358,16 @@ const MajorMatchingResults: React.FC = () => {
                                                     color="secondary"
                                                     startIcon={<SmartToy />}
                                                     onClick={() => navigate('/chat', { state: { prefill: `Why did I get ${major.name} as a recommended major? Please explain based on my personality test and the specific answers I gave in the major test.` } })}
-                                                    sx={{ mt: 2, fontWeight: 700 }}
+                                                    sx={{ 
+                                                        mt: 2, 
+                                                        fontWeight: 700,
+                                                        fontSize: { xs: '0.85rem', sm: '0.875rem' },
+                                                        py: { xs: 1, sm: 1.25 },
+                                                        px: { xs: 1.5, sm: 2 },
+                                                        width: { xs: '100%', sm: 'auto' }
+                                                    }}
                                                 >
-                                                    Ask AI: Why this major?
+                                                    {t('majorMatchingResults.askAIWhyThisMajor')}
                                                 </Button>
                                             </Box>
                                         </Grid>
@@ -352,7 +375,7 @@ const MajorMatchingResults: React.FC = () => {
                                 </Box>
 
                                 {/* Content Section */}
-                                <Box sx={{ p: 4 }}>
+                                <Box sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
                                     <Accordion defaultExpanded={index === 0}>
                                         <AccordionSummary
                                             expandIcon={<ExpandMore />}
@@ -363,12 +386,12 @@ const MajorMatchingResults: React.FC = () => {
                                                 }
                                             }}
                                         >
-                                            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                                🚀 Career Paths & Detailed Information
+                                            <Typography variant="h6" sx={{ fontWeight: 700, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' } }}>
+                                                {t('majorMatchingResults.careerPathsDetailedInfo')}
                                             </Typography>
                                         </AccordionSummary>
-                                        <AccordionDetails sx={{ p: 4 }}>
-                                            <Grid container spacing={4} alignItems="stretch" justifyContent="center">
+                                        <AccordionDetails sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+                                            <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} alignItems="stretch" justifyContent="center">
                                                 <Grid item xs={12} md={6}>
                                                     <Box sx={{ mb: 4 }}>
                                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -378,7 +401,7 @@ const MajorMatchingResults: React.FC = () => {
                                                                 fontSize: 24
                                                             }} />
                                                             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                                                Career Opportunities
+                                                                {t('majorMatchingResults.careerOpportunities')}
                                                             </Typography>
                                                         </Box>
                                                         <Stack spacing={1}>
@@ -405,7 +428,7 @@ const MajorMatchingResults: React.FC = () => {
                                                                 fontSize: 24
                                                             }} />
                                                             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                                                Required Skills
+                                                                {t('majorMatchingResults.requiredSkills')}
                                                             </Typography>
                                                         </Box>
                                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -435,7 +458,7 @@ const MajorMatchingResults: React.FC = () => {
                                                                 fontSize: 24
                                                             }} />
                                                             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                                                Salary & Growth
+                                                                {t('majorMatchingResults.salaryGrowth')}
                                                             </Typography>
                                                         </Box>
                                                         <Paper sx={{ p: 2, backgroundColor: theme.palette.success.light + '20' }}>
@@ -444,13 +467,13 @@ const MajorMatchingResults: React.FC = () => {
                                                                 fontWeight: 700,
                                                                 mb: 1
                                                             }}>
-                                                                {major.averageSalary || 'Varies by role and location'}
+                                                                {major.averageSalary || t('majorMatchingResults.variesByRoleLocation')}
                                                             </Typography>
                                                             <Typography variant="body2" color="text.secondary">
-                                                                Average annual salary range
+                                                                {t('majorMatchingResults.averageAnnualSalaryRange')}
                                                             </Typography>
                                                             <Typography variant="body2" sx={{ mt: 1, fontWeight: 600 }}>
-                                                                Job Outlook: {major.jobOutlook || 'Good'}
+                                                                {t('majorMatchingResults.jobOutlook')}: {major.jobOutlook || 'Good'}
                                                             </Typography>
                                                         </Paper>
                                                     </Box>
@@ -463,7 +486,7 @@ const MajorMatchingResults: React.FC = () => {
                                                                 fontSize: 24
                                                             }} />
                                                             <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                                                Work Environment
+                                                                {t('majorMatchingResults.workEnvironment')}
                                                             </Typography>
                                                         </Box>
                                                         <Typography variant="body1" sx={{
@@ -472,7 +495,7 @@ const MajorMatchingResults: React.FC = () => {
                                                             borderRadius: 2,
                                                             border: `1px solid ${theme.palette.primary.light}30`
                                                         }}>
-                                                            {major.workEnvironment || 'Varies by specialization'}
+                                                            {major.workEnvironment || t('majorMatchingResults.variesByRoleLocation')}
                                                         </Typography>
                                                     </Box>
                                                 </Grid>
@@ -489,24 +512,23 @@ const MajorMatchingResults: React.FC = () => {
                 <Paper
                     elevation={4}
                     sx={{
-                        p: 6,
+                        p: { xs: 3, sm: 4, md: 6 },
                         textAlign: 'center',
                         background: `linear-gradient(135deg, ${theme.palette.primary.main}08 0%, ${theme.palette.secondary.main}08 100%)`,
-                        mt: 6
+                        mt: { xs: 4, sm: 6 }
                     }}
                 >
-                    <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, mb: 4 }}>
-                        Ready to Take the Next Step?
+                                            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, mb: 4, fontSize: { xs: '1.5rem', sm: '2rem' } }}>
+                        {t('majorMatchingResults.readyToTakeNextStep')}
                     </Typography>
                     <Typography variant="body1" sx={{
-                        fontSize: '1.125rem',
+                        fontSize: { xs: '1rem', sm: '1.125rem' },
                         color: theme.palette.text.secondary,
                         mb: 4,
                         maxWidth: '600px',
                         mx: 'auto'
                     }}>
-                        Start your journey towards your perfect major. Explore universities,
-                        connect with advisors, and take the first step towards your future career.
+                        {t('majorMatchingResults.startJourneyDescription')}
                     </Typography>
                     <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} justifyContent="center">
                         <Button
@@ -514,14 +536,15 @@ const MajorMatchingResults: React.FC = () => {
                             size="large"
                             startIcon={<School />}
                             sx={{
-                                py: 2,
-                                px: 5,
-                                fontSize: '1.125rem',
+                                py: { xs: 1.5, sm: 2 },
+                                px: { xs: 3, sm: 5 },
+                                fontSize: { xs: '1rem', sm: '1.125rem' },
                                 fontWeight: 700,
                                 background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+                                width: { xs: '100%', sm: 'auto' }
                             }}
                         >
-                            Explore Universities
+                            {t('majorMatchingResults.exploreUniversities')}
                         </Button>
                         <Button
                             variant="outlined"
@@ -529,17 +552,18 @@ const MajorMatchingResults: React.FC = () => {
                             startIcon={<Home />}
                             onClick={() => navigate('/')}
                             sx={{
-                                py: 2,
-                                px: 5,
-                                fontSize: '1.125rem',
+                                py: { xs: 1.5, sm: 2 },
+                                px: { xs: 3, sm: 5 },
+                                fontSize: { xs: '1rem', sm: '1.125rem' },
                                 fontWeight: 600,
                                 borderWidth: '2px',
+                                width: { xs: '100%', sm: 'auto' },
                                 '&:hover': {
                                     borderWidth: '2px'
                                 }
                             }}
                         >
-                            Back to Home
+                            {t('majorMatchingResults.backToHome')}
                         </Button>
                     </Stack>
                 </Paper>

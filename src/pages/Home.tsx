@@ -32,6 +32,7 @@ import {
     CheckCircle,
     BusinessCenter,
     ArrowForward,
+    ArrowBack,
     ArrowDownward,
     Explore,
     Route,
@@ -43,11 +44,13 @@ import {
     Chat
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import SubscriptionStatus from '../components/SubscriptionStatus';
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
+    const { t, i18n } = useTranslation();
     const [hasMbti, setHasMbti] = useState<boolean>(() => {
         try { return localStorage.getItem('hasMbti') === '1'; } catch { return false; }
     });
@@ -84,34 +87,34 @@ const Home: React.FC = () => {
 
 
     const stats = [
-        { number: '32', label: 'Personality Types', icon: <Psychology /> },
-        { number: '50K+', label: 'Students Helped', icon: <Groups /> },
-        { number: '200+', label: 'University Programs', icon: <School /> },
-        { number: '95%', label: 'Satisfaction Rate', icon: <Star /> }
+        { number: '32', label: t('home.stats.personalityTypes'), icon: <Psychology /> },
+        { number: '50K+', label: t('home.stats.studentsHelped'), icon: <Groups /> },
+        { number: '200+', label: t('home.stats.universityPrograms'), icon: <School /> },
+        { number: '95%', label: t('home.stats.satisfactionRate'), icon: <Star /> }
     ];
 
     const features = [
         {
-            title: 'Scientifically Backed',
-            description: 'Based on proven psychological frameworks and research',
+            title: t('home.features.scientificallyBacked'),
+            description: t('home.features.scientificallyBackedDesc'),
             icon: <AutoAwesome />,
             color: theme.palette.error.main
         },
         {
-            title: 'Personalized Results',
-            description: 'Tailored recommendations just for your unique personality',
+            title: t('home.features.personalizedResults'),
+            description: t('home.features.personalizedResultsDesc'),
             icon: <Favorite />,
             color: theme.palette.warning.main
         },
         {
-            title: 'Career Guidance',
-            description: 'Connect your personality to real career opportunities',
+            title: t('home.features.careerGuidance'),
+            description: t('home.features.careerGuidanceDesc'),
             icon: <BusinessCenter />,
             color: theme.palette.success.main
         },
         {
-            title: 'University Matches',
-            description: 'Find the perfect academic programs for your goals',
+            title: t('home.features.universityMatches'),
+            description: t('home.features.universityMatchesDesc'),
             icon: <School />,
             color: theme.palette.primary.main
         }
@@ -159,7 +162,7 @@ const Home: React.FC = () => {
                     <Fade in timeout={1000}>
                         <Box sx={{ textAlign: 'center', mb: 8 }}>
                             <Chip
-                                label="🗺️ Your Academic journey Starts Here"
+                                label={t('home.academicJourneyStartsHere')}
                                 sx={{
                                     backgroundColor: 'rgba(255,255,255,0.15)',
                                     color: 'white',
@@ -187,17 +190,7 @@ const Home: React.FC = () => {
                                     px: { xs: 2, sm: 0 }
                                 }}
                             >
-                                Begin Your Journey
-                                <Box component="span" sx={{
-                                    display: 'block',
-                                    background: `linear-gradient(45deg, ${theme.palette.tertiary.main}, ${theme.palette.warning.main})`,
-                                    backgroundClip: 'text',
-                                    color: 'transparent',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent'
-                                }}>
-                                    to Success
-                                </Box>
+                                {t('home.title')}
                             </Typography>
 
                             <Typography
@@ -214,8 +207,7 @@ const Home: React.FC = () => {
                                     px: { xs: 2, sm: 0 }
                                 }}
                             >
-                                Follow our proven three-step journey: Discover your unique personality, unlock your perfect major match,
-                                then get personalized AI career guidance. Thousands of students have found their path - now it's your turn.
+                                {t('home.subtitle')}
                             </Typography>
 
                             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
@@ -243,7 +235,7 @@ const Home: React.FC = () => {
                                         },
                                     }}
                                 >
-                                    Start Your Journey
+                                    {t('home.startJourney')}
                                 </Button>
 
 
@@ -296,17 +288,17 @@ const Home: React.FC = () => {
                                                 mb: { xs: 1, sm: 2 },
                                                 fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.5rem' }
                                             }}>
-                                                Step 1: Discover Yourself
+                                                {t('home.step1')}
                                             </Typography>
                                             <Typography variant="body2" sx={{
                                                 mb: { xs: 2, sm: 3 },
                                                 opacity: 0.9,
                                                 fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' }
                                             }}>
-                                                Take our comprehensive 60-question personality assessment to understand your unique traits and strengths.
+                                                {t('home.step1Desc')}
                                             </Typography>
                                             <Chip
-                                                label="FREE"
+                                                label={t('home.free')}
                                                 sx={{
                                                     backgroundColor: theme.palette.success.main,
                                                     color: 'white',
@@ -332,11 +324,19 @@ const Home: React.FC = () => {
                                 {/* Arrow 1 */}
                                 <Grid item xs={12} md={1} sx={{ display: { xs: 'none', md: 'block' } }}>
                                     <Box sx={{ textAlign: 'center', mt: 4 }}>
-                                        <ArrowForward sx={{
-                                            fontSize: { md: 50, lg: 60 },
-                                            color: 'rgba(255,255,255,0.8)',
-                                            animation: 'pulse 2s infinite'
-                                        }} />
+                                        {i18n.language === 'ar' ? (
+                                            <ArrowBack sx={{
+                                                fontSize: { md: 50, lg: 60 },
+                                                color: 'rgba(255,255,255,0.8)',
+                                                animation: 'pulse 2s infinite'
+                                            }} />
+                                        ) : (
+                                            <ArrowForward sx={{
+                                                fontSize: { md: 50, lg: 60 },
+                                                color: 'rgba(255,255,255,0.8)',
+                                                animation: 'pulse 2s infinite'
+                                            }} />
+                                        )}
                                     </Box>
                                 </Grid>
 
@@ -382,17 +382,17 @@ const Home: React.FC = () => {
                                                 mb: { xs: 1, sm: 2 },
                                                 fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.5rem' }
                                             }}>
-                                                Step 2: Find Your Major
+                                                {t('home.step2')}
                                             </Typography>
                                             <Typography variant="body2" sx={{
                                                 mb: { xs: 2, sm: 3 },
                                                 opacity: 0.9,
                                                 fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' }
                                             }}>
-                                                Get personalized major recommendations based on your personality profile and career goals.
+                                                {t('home.step2Desc')}
                                             </Typography>
                                             <Chip
-                                                label="PREMIUM"
+                                                label={t('home.premium')}
                                                 sx={{
                                                     backgroundColor: theme.palette.warning.main,
                                                     color: 'white',
@@ -418,11 +418,19 @@ const Home: React.FC = () => {
                                 {/* Arrow 2 */}
                                 <Grid item xs={12} md={1} sx={{ display: { xs: 'none', md: 'block' } }}>
                                     <Box sx={{ textAlign: 'center', mt: 4 }}>
-                                        <ArrowForward sx={{
-                                            fontSize: { md: 50, lg: 60 },
-                                            color: 'rgba(255,255,255,0.8)',
-                                            animation: 'pulse 2s infinite'
-                                        }} />
+                                        {i18n.language === 'ar' ? (
+                                            <ArrowBack sx={{
+                                                fontSize: { md: 50, lg: 60 },
+                                                color: 'rgba(255,255,255,0.8)',
+                                                animation: 'pulse 2s infinite'
+                                            }} />
+                                        ) : (
+                                            <ArrowForward sx={{
+                                                fontSize: { md: 50, lg: 60 },
+                                                color: 'rgba(255,255,255,0.8)',
+                                                animation: 'pulse 2s infinite'
+                                            }} />
+                                        )}
                                     </Box>
                                 </Grid>
 
@@ -467,17 +475,17 @@ const Home: React.FC = () => {
                                                 mb: { xs: 1, sm: 2 },
                                                 fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.5rem' }
                                             }}>
-                                                Step 3: AI Counselor
+                                                {t('home.step3')}
                                             </Typography>
                                             <Typography variant="body2" sx={{
                                                 mb: { xs: 2, sm: 3 },
                                                 opacity: 0.9,
                                                 fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' }
                                             }}>
-                                                Get personalized guidance and career advice from our AI counselor based on your complete profile.
+                                                {t('home.step3Desc')}
                                             </Typography>
                                             <Chip
-                                                label="PREMIUM"
+                                                label={t('home.premium')}
                                                 sx={{
                                                     backgroundColor: theme.palette.info.main,
                                                     color: 'white',
@@ -502,14 +510,14 @@ const Home: React.FC = () => {
             </Container>
 
             {/* Stats Section */}
-            <Container maxWidth="lg" sx={{ py: 10, mt: -8, position: 'relative', zIndex: 2, px: { xs: 2, sm: 3, md: 4 } }}>
-                <Grid container spacing={6} alignItems="stretch" justifyContent="center">
+            <Container maxWidth="lg" sx={{ py: { xs: 6, sm: 8, md: 10 }, mt: { xs: -4, sm: -6, md: -8 }, position: 'relative', zIndex: 2, px: { xs: 2, sm: 3, md: 4 } }}>
+                <Grid container spacing={{ xs: 2, sm: 4, md: 6 }} alignItems="stretch" justifyContent="center">
                     {stats.map((stat, index) => (
                         <Grid item xs={6} md={3} key={index}>
                             <Paper
                                 elevation={3}
                                 sx={{
-                                    p: 4,
+                                    p: { xs: 2, sm: 3, md: 4 },
                                     height: '100%',
                                     textAlign: 'center',
                                     background: 'linear-gradient(135deg, white 0%, #fafbfc 100%)',
@@ -518,16 +526,17 @@ const Home: React.FC = () => {
                                 }}
                             >
                                 <Box sx={{ color: theme.palette.primary.main, mb: 2 }}>
-                                    {React.cloneElement(stat.icon, { sx: { fontSize: 48 } })}
+                                    {React.cloneElement(stat.icon, { sx: { fontSize: { xs: 32, sm: 40, md: 48 } } })}
                                 </Box>
                                 <Typography variant="h3" component="div" sx={{
                                     fontWeight: 800,
                                     color: theme.palette.text.primary,
-                                    mb: 1
+                                    mb: 1,
+                                    fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                                 }}>
                                     {stat.number}
                                 </Typography>
-                                <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 600, fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' } }}>
                                     {stat.label}
                                 </Typography>
                             </Paper>
@@ -537,35 +546,38 @@ const Home: React.FC = () => {
             </Container>
 
             {/* Journey Timeline Section */}
-            <Box sx={{ backgroundColor: theme.palette.grey[50], py: 12 }}>
+            <Box sx={{ backgroundColor: theme.palette.grey[50], py: { xs: 6, sm: 8, md: 12 } }}>
                 <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
-                    <Box sx={{ textAlign: 'center', mb: 10 }}>
+                    <Box sx={{ textAlign: 'center', mb: { xs: 6, sm: 8, md: 10 } }}>
                         <Chip
-                            label="Your Journey Timeline"
+                            label={t('home.journeyTimeline')}
                             sx={{
                                 backgroundColor: `${theme.palette.primary.main}20`,
                                 color: theme.palette.primary.main,
                                 fontWeight: 700,
-                                mb: 4,
-                                fontSize: '1rem',
-                                px: 4,
-                                py: 1.5
+                                mb: { xs: 3, sm: 4 },
+                                fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                                px: { xs: 2, sm: 3, md: 4 },
+                                py: { xs: 1, sm: 1.25, md: 1.5 }
                             }}
                         />
                         <Typography variant="h2" component="h2" gutterBottom sx={{
                             fontWeight: 800,
                             color: theme.palette.text.primary,
-                            mb: 3
+                            mb: { xs: 2, sm: 3 },
+                            fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                         }}>
-                            Follow Your Path to Success
+                            {t('home.followPath')}
                         </Typography>
                         <Typography variant="h6" color="text.secondary" sx={{
                             maxWidth: 600,
                             mx: 'auto',
                             lineHeight: 1.6,
-                            fontWeight: 400
+                            fontWeight: 400,
+                            fontSize: { xs: '0.95rem', sm: '1.125rem', md: '1.25rem' },
+                            px: { xs: 2, sm: 0 }
                         }}>
-                            Every successful student follows a clear path. Here's your roadmap to discovering your perfect major.
+                            {t('home.followPathDesc')}
                         </Typography>
                     </Box>
 
@@ -604,7 +616,7 @@ const Home: React.FC = () => {
                                     }
                                 }}
                             >
-                                Take Your Personality Assessment
+                                {t('home.takePersonalityAssessment')}
                             </StepLabel>
                             <StepContent>
                                 <Box sx={{
@@ -619,11 +631,10 @@ const Home: React.FC = () => {
                                         lineHeight: 1.6,
                                         fontSize: { xs: '0.9rem', sm: '1rem' }
                                     }}>
-                                        Begin your journey with our comprehensive 60-question personality assessment.
-                                        This scientifically-backed test will reveal your unique personality type from 32 different types and help you understand your natural strengths.
+                                        {t('home.assessmentDesc')}
                                     </Typography>
                                     <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap', mb: 3 }}>
-                                        {['Free Assessment', '32 Personality Types', 'Detailed Analysis', 'Career Insights'].map((feature, index) => (
+                                        {[t('home.freeAssessment'), t('home.personalityTypes'), t('home.detailedAnalysis'), t('home.careerInsights')].map((feature, index) => (
                                             <Chip
                                                 key={index}
                                                 label={feature}
@@ -649,7 +660,7 @@ const Home: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        Start Assessment
+                                        {t('home.startAssessment')}
                                     </Button>
                                 </Box>
                             </StepContent>
@@ -691,7 +702,7 @@ const Home: React.FC = () => {
                                     }
                                 }}
                             >
-                                Unlock Your Perfect Major Match
+                                {t('home.unlockMajorMatch')}
                             </StepLabel>
                             <StepContent>
                                 <Box sx={{
@@ -706,11 +717,10 @@ const Home: React.FC = () => {
                                         lineHeight: 1.6,
                                         fontSize: { xs: '0.9rem', sm: '1rem' }
                                     }}>
-                                        With your personality profile complete, you can now access our premium major matching system.
-                                        Get personalized recommendations for university programs that align perfectly with your unique traits and career aspirations.
+                                        {t('home.majorMatchingDesc')}
                                     </Typography>
                                     <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap', mb: 3 }}>
-                                        {['Premium Analysis', 'University Matches', 'Career Pathways', 'Salary Insights'].map((feature, index) => (
+                                        {[t('home.premiumAnalysis'), t('home.universityMatches'), t('home.careerPathways'), t('home.salaryInsights')].map((feature, index) => (
                                             <Chip
                                                 key={index}
                                                 label={feature}
@@ -724,7 +734,7 @@ const Home: React.FC = () => {
                                             />
                                         ))}
                                     </Box>
-                                    <Tooltip title="Complete the personality test first" disableHoverListener={hasMbti}>
+                                    <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasMbti}>
                                         <span>
                                             <Button
                                                 variant="contained"
@@ -739,7 +749,7 @@ const Home: React.FC = () => {
                                                     }
                                                 }}
                                             >
-                                                {hasMbti ? 'Start Major Matching' : 'Complete Step 1 First'}
+                                                {hasMbti ? t('home.startMajorMatching') : t('home.completeStep1First')}
                                             </Button>
                                         </span>
                                     </Tooltip>
@@ -782,7 +792,7 @@ const Home: React.FC = () => {
                                     }
                                 }}
                             >
-                                Get AI Career Guidance
+                                {t('home.getAIGuidance')}
                             </StepLabel>
                             <StepContent>
                                 <Box sx={{
@@ -797,9 +807,7 @@ const Home: React.FC = () => {
                                         lineHeight: 1.6,
                                         fontSize: { xs: '0.9rem', sm: '1rem' }
                                     }}>
-                                        Complete your journey with personalized AI career counseling powered by advanced machine learning.
-                                        Our intelligent counselor analyzes your complete personality profile, academic interests, and career aspirations
-                                        to provide expert guidance, strategic career planning, and ongoing mentorship tailored specifically to your unique goals.
+                                        {t('home.aiGuidanceDesc')}
                                     </Typography>
 
                                     <Typography variant="body2" sx={{
@@ -808,8 +816,7 @@ const Home: React.FC = () => {
                                         fontSize: { xs: '0.85rem', sm: '0.9rem' },
                                         color: 'text.secondary'
                                     }}>
-                                        Our AI counselor provides 24/7 access to personalized career advice, industry insights, and strategic planning that adapts to your evolving goals and market trends.
-                                        Get instant answers to career questions, detailed industry analysis, and personalized recommendations for internships, job opportunities, and skill development.
+                                        {t('home.aiGuidanceDesc2')}
                                     </Typography>
 
                                     <Typography variant="body2" sx={{
@@ -818,11 +825,11 @@ const Home: React.FC = () => {
                                         fontSize: { xs: '0.85rem', sm: '0.9rem' },
                                         color: 'text.secondary'
                                     }}>
-                                        Whether you're exploring career options, planning your academic path, or seeking guidance on professional development, our AI counselor is here to help you make informed decisions and achieve your goals.
+                                        {t('home.aiGuidanceDesc3')}
                                     </Typography>
 
                                     <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap', mb: 3 }}>
-                                        {['AI Counselor', 'Career Planning', 'Expert Guidance', 'Ongoing Support', 'Industry Insights', 'Strategic Planning'].map((feature, index) => (
+                                        {[t('home.aiCounselor'), t('home.careerPlanning'), t('home.expertGuidance'), t('home.ongoingSupport'), t('home.industryInsights'), t('home.strategicPlanning')].map((feature, index) => (
                                             <Chip
                                                 key={index}
                                                 label={feature}
@@ -852,7 +859,7 @@ const Home: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        Start AI Counseling
+                                        {t('home.startAICounseling')}
                                     </Button>
                                 </Box>
                             </StepContent>
@@ -893,7 +900,7 @@ const Home: React.FC = () => {
                                     }
                                 }}
                             >
-                                Begin Your Academic Journey
+                                {t('home.beginAcademicJourney')}
                             </StepLabel>
                             <StepContent>
                                 <Box sx={{
@@ -908,11 +915,10 @@ const Home: React.FC = () => {
                                         lineHeight: 1.6,
                                         fontSize: { xs: '0.9rem', sm: '1rem' }
                                     }}>
-                                        Congratulations! You now have a complete roadmap for your academic future.
-                                        Use your personalized results and AI guidance to make informed decisions about your education and career path.
+                                        {t('home.academicJourneyDesc')}
                                     </Typography>
                                     <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap', mb: 3 }}>
-                                        {['Clear Direction', 'Informed Decisions', 'Career Confidence', 'Future Success'].map((feature, index) => (
+                                        {[t('home.clearDirection'), t('home.informedDecisions'), t('home.careerConfidence'), t('home.futureSuccess')].map((feature, index) => (
                                             <Chip
                                                 key={index}
                                                 label={feature}
@@ -930,7 +936,7 @@ const Home: React.FC = () => {
                                         fontStyle: 'italic',
                                         fontSize: { xs: '0.8rem', sm: '0.9rem' }
                                     }}>
-                                        "The best way to predict your future is to create it." - Start your journey today!
+                                        {t('home.quote')}
                                     </Typography>
                                 </Box>
                             </StepContent>
@@ -940,35 +946,37 @@ const Home: React.FC = () => {
             </Box>
 
             {/* Journey Services Section */}
-            <Container maxWidth="lg" sx={{ py: 10, px: { xs: 2, sm: 3, md: 4 } }}>
-                <Box sx={{ textAlign: 'center', mb: 10 }}>
+            <Container maxWidth="lg" sx={{ py: { xs: 6, sm: 8, md: 10 }, px: { xs: 2, sm: 3, md: 4 } }}>
+                <Box sx={{ textAlign: 'center', mb: { xs: 6, sm: 8, md: 10 } }}>
                     <Chip
-                        label="Your Journey Tools"
+                        label={t('home.journeyTools')}
                         sx={{
                             backgroundColor: `${theme.palette.primary.main}20`,
                             color: theme.palette.primary.main,
                             fontWeight: 700,
-                            mb: 4,
-                            fontSize: '1rem',
-                            px: 4,
-                            py: 1.5
+                            mb: { xs: 3, sm: 4 },
+                            fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                            px: { xs: 2, sm: 3, md: 4 },
+                            py: { xs: 1, sm: 1.25, md: 1.5 }
                         }}
                     />
                     <Typography variant="h2" component="h2" gutterBottom sx={{
                         fontWeight: 800,
                         color: theme.palette.text.primary,
-                        mb: 3
+                        mb: { xs: 2, sm: 3 },
+                        fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                     }}>
-                        Two Powerful Tools for Your Success
+                        {t('home.twoPowerfulTools')}
                     </Typography>
                     <Typography variant="h6" color="text.secondary" sx={{
                         maxWidth: 700,
                         mx: 'auto',
                         lineHeight: 1.6,
-                        fontWeight: 400
+                        fontWeight: 400,
+                        fontSize: { xs: '0.95rem', sm: '1.125rem', md: '1.25rem' },
+                        px: { xs: 2, sm: 0 }
                     }}>
-                        Each tool builds upon the other, creating a comprehensive journey from self-discovery to career clarity.
-                        Start with understanding yourself, then discover where you belong.
+                        {t('home.twoPowerfulToolsDesc')}
                     </Typography>
                 </Box>
 
@@ -1014,12 +1022,13 @@ const Home: React.FC = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                         mb: { xs: 3, sm: 4 },
-                                        flexDirection: { xs: 'column', sm: 'row' },
-                                        textAlign: { xs: 'center', sm: 'left' }
+                                        flexDirection: { xs: 'column', sm: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                     }}>
                                         <Avatar sx={{
                                             backgroundColor: 'rgba(255,255,255,0.2)',
-                                            mr: { xs: 0, sm: 3 },
+                                            mr: { xs: 0, sm: i18n.language === 'ar' ? 0 : 3 },
+                                            ml: { xs: 0, sm: i18n.language === 'ar' ? 3 : 0 },
                                             mb: { xs: 2, sm: 0 },
                                             width: { xs: 60, sm: 70 },
                                             height: { xs: 60, sm: 70 },
@@ -1027,16 +1036,16 @@ const Home: React.FC = () => {
                                         }}>
                                             <Psychology sx={{ fontSize: { xs: 30, sm: 36 } }} />
                                         </Avatar>
-                                        <Box>
+                                        <Box sx={{ textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' } }}>
                                             <Typography variant="h5" component="h3" sx={{
                                                 fontWeight: 700,
                                                 mb: 1.5,
                                                 fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
                                             }}>
-                                                Step 1: Discover Yourself
+                                                {t('home.step1')}
                                             </Typography>
                                             <Chip
-                                                label="FREE • START HERE"
+                                                label={t('home.freeStartHere')}
                                                 sx={{
                                                     backgroundColor: theme.palette.success.main,
                                                     color: 'white',
@@ -1051,31 +1060,39 @@ const Home: React.FC = () => {
                                         mb: { xs: 3, sm: 4 },
                                         lineHeight: 1.7,
                                         flexGrow: 1,
-                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' }
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
+                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                     }}>
-                                        Begin your journey with our comprehensive 60-question personality assessment. This is your foundation -
-                                        understanding who you are is the first step to discovering where you belong in the academic world.
+                                        {t('home.step1CardDesc')}
                                     </Typography>
 
                                     <Box sx={{ mb: { xs: 3, sm: 4 } }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
                                             mb: 3,
-                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
-                                        }}>Your journey begins with:</Typography>
+                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                                            textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
+                                        }}>{t('home.journeyBeginsWith')}</Typography>
                                         {[
-                                            '32-type personality analysis',
-                                            'Detailed personality breakdown',
-                                            'Foundation for major matching'
+                                            t('home.personalityAnalysis'),
+                                            t('home.detailedBreakdown'),
+                                            t('home.foundationForMatching')
                                         ].map((feature, index) => (
-                                            <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                                            <Box key={index} sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                mb: 1.5,
+                                                flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row'
+                                            }}>
                                                 <CheckCircle sx={{
                                                     fontSize: { xs: 20, sm: 24 },
-                                                    mr: 2,
+                                                    mr: i18n.language === 'ar' ? 0 : 2,
+                                                    ml: i18n.language === 'ar' ? 2 : 0,
                                                     color: theme.palette.success.light
                                                 }} />
                                                 <Typography variant="body2" sx={{
-                                                    fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' }
+                                                    fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                                                    textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                                 }}>{feature}</Typography>
                                             </Box>
                                         ))}
@@ -1102,7 +1119,7 @@ const Home: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        Begin Your Journey
+                                        {t('home.beginJourney')}
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -1151,12 +1168,13 @@ const Home: React.FC = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                         mb: { xs: 3, sm: 4 },
-                                        flexDirection: { xs: 'column', sm: 'row' },
-                                        textAlign: { xs: 'center', sm: 'left' }
+                                        flexDirection: { xs: 'column', sm: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                     }}>
                                         <Avatar sx={{
                                             backgroundColor: 'rgba(255,255,255,0.2)',
-                                            mr: { xs: 0, sm: 3 },
+                                            mr: { xs: 0, sm: i18n.language === 'ar' ? 0 : 3 },
+                                            ml: { xs: 0, sm: i18n.language === 'ar' ? 3 : 0 },
                                             mb: { xs: 2, sm: 0 },
                                             width: { xs: 60, sm: 70 },
                                             height: { xs: 60, sm: 70 },
@@ -1164,16 +1182,16 @@ const Home: React.FC = () => {
                                         }}>
                                             <School sx={{ fontSize: { xs: 30, sm: 36 } }} />
                                         </Avatar>
-                                        <Box>
+                                        <Box sx={{ textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' } }}>
                                             <Typography variant="h5" component="h3" sx={{
                                                 fontWeight: 700,
                                                 mb: 1.5,
                                                 fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
                                             }}>
-                                                Step 2: Find Your Major
+                                                {t('home.step2')}
                                             </Typography>
                                             <Chip
-                                                label={hasMbti ? "PREMIUM • READY" : "PREMIUM • LOCKED"}
+                                                label={hasMbti ? t('home.premiumReady') : t('home.premiumLocked')}
                                                 sx={{
                                                     backgroundColor: hasMbti ? theme.palette.warning.main : theme.palette.grey[500],
                                                     color: 'white',
@@ -1188,11 +1206,12 @@ const Home: React.FC = () => {
                                         mb: { xs: 3, sm: 4 },
                                         lineHeight: 1.7,
                                         flexGrow: 1,
-                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' }
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
+                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                     }}>
                                         {hasMbti
-                                            ? "Now that you know yourself, discover where you belong! Get personalized major recommendations that perfectly align with your unique personality and career aspirations."
-                                            : "Complete Step 1 first to unlock this powerful tool. Your personality profile will guide you to the perfect academic path."
+                                            ? t('home.step2CardDescActive')
+                                            : t('home.step2CardDescInactive')
                                         }
                                     </Typography>
 
@@ -1200,41 +1219,50 @@ const Home: React.FC = () => {
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
                                             mb: 3,
-                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
+                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                                            textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                         }}>
-                                            {hasMbti ? "Your journey continues with:" : "Unlock these features:"}
+                                            {hasMbti ? t('home.journeyContinuesWith') : t('home.unlockFeatures')}
                                         </Typography>
                                         {[
-                                            'Comprehensive major analysis',
-                                            'University program matches',
-                                            'Career pathway mapping',
-                                            'Salary & job market insights',
-                                            'Personal career roadmap',
-                                            'Industry-specific guidance',
-                                            'Future career opportunities'
+                                            t('home.comprehensiveAnalysis'),
+                                            t('home.universityMatches'),
+                                            t('home.careerPathway'),
+                                            t('home.salaryInsights'),
+                                            t('home.personalRoadmap'),
+                                            t('home.industryGuidance'),
+                                            t('home.futureOpportunities')
                                         ].map((feature, index) => (
-                                            <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                                            <Box key={index} sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                mb: 1.5,
+                                                flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row'
+                                            }}>
                                                 <CheckCircle sx={{
                                                     fontSize: { xs: 20, sm: 24 },
-                                                    mr: 2,
+                                                    mr: i18n.language === 'ar' ? 0 : 2,
+                                                    ml: i18n.language === 'ar' ? 2 : 0,
                                                     color: hasMbti ? theme.palette.warning.light : theme.palette.grey[400]
                                                 }} />
                                                 <Typography variant="body2" sx={{
                                                     fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
-                                                    opacity: hasMbti ? 1 : 0.6
+                                                    opacity: hasMbti ? 1 : 0.6,
+                                                    textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                                 }}>{feature}</Typography>
                                             </Box>
                                         ))}
                                     </Box>
 
-                                    <Tooltip title="Complete the personality test first" disableHoverListener={hasMbti}>
+                                    <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasMbti}>
                                         <span>
                                             <Button
                                                 variant="contained"
                                                 fullWidth
                                                 size="large"
                                                 onClick={() => navigate('/major-matching-test')}
-                                                startIcon={hasMbti ? <ArrowForward /> : <Lock />}
+                                                startIcon={i18n.language === 'ar' ? undefined : (hasMbti ? <ArrowForward /> : <Lock />)}
+                                                endIcon={i18n.language === 'ar' ? (hasMbti ? <ArrowBack /> : <Lock />) : undefined}
                                                 sx={{
                                                     backgroundColor: hasMbti ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.1)',
                                                     backdropFilter: 'blur(10px)',
@@ -1251,7 +1279,7 @@ const Home: React.FC = () => {
                                                 }}
                                                 disabled={!hasMbti}
                                             >
-                                                {hasMbti ? 'Continue Your Journey' : 'Complete Step 1 First'}
+                                                {hasMbti ? t('home.continueJourney') : t('home.completeStep1First')}
                                             </Button>
                                         </span>
                                     </Tooltip>
@@ -1291,6 +1319,7 @@ const Home: React.FC = () => {
                             >
                                 <CardContent sx={{
                                     p: { xs: 3, sm: 4, md: 5 },
+                                    pr: i18n.language === 'ar' ? { xs: 4, sm: 5, md: 6 } : { xs: 3, sm: 4, md: 5 },
                                     height: '100%',
                                     display: 'flex',
                                     flexDirection: 'column',
@@ -1301,29 +1330,46 @@ const Home: React.FC = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                         mb: { xs: 3, sm: 4 },
-                                        flexDirection: { xs: 'column', sm: 'row' },
-                                        textAlign: { xs: 'center', sm: 'left' }
+                                        flexDirection: i18n.language === 'ar'
+                                            ? { xs: 'row-reverse', sm: 'row-reverse' }
+                                            : { xs: 'column', sm: 'row' },
+                                        textAlign: i18n.language === 'ar'
+                                            ? { xs: 'right', sm: 'right' }
+                                            : { xs: 'center', sm: 'left' }
                                     }}>
                                         <Avatar sx={{
                                             backgroundColor: 'rgba(255,255,255,0.2)',
-                                            mr: { xs: 0, sm: 3 },
-                                            mb: { xs: 2, sm: 0 },
+                                            mr: i18n.language === 'ar'
+                                                ? { xs: 0, sm: 0 }
+                                                : { xs: 0, sm: 3 },
+                                            ml: i18n.language === 'ar'
+                                                ? { xs: 2, sm: 3 }
+                                                : { xs: 0, sm: 0 },
+                                            mb: i18n.language === 'ar'
+                                                ? { xs: 0, sm: 0 }
+                                                : { xs: 2, sm: 0 },
                                             width: { xs: 60, sm: 70 },
                                             height: { xs: 60, sm: 70 },
-                                            animation: 'pulse 2s infinite'
+                                            animation: 'pulse 2s infinite',
+                                            flexShrink: 0
                                         }}>
                                             <SupportAgent sx={{ fontSize: { xs: 30, sm: 36 } }} />
                                         </Avatar>
-                                        <Box>
+                                        <Box sx={{
+                                            textAlign: i18n.language === 'ar'
+                                                ? { xs: 'right', sm: 'right' }
+                                                : { xs: 'center', sm: 'left' },
+                                            flex: 1
+                                        }}>
                                             <Typography variant="h5" component="h3" sx={{
                                                 fontWeight: 700,
                                                 mb: 1.5,
                                                 fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
                                             }}>
-                                                Step 3: AI Counselor
+                                                {t('home.step3')}
                                             </Typography>
                                             <Chip
-                                                label="PREMIUM • AI POWERED"
+                                                label={t('home.premiumAIPowered')}
                                                 sx={{
                                                     backgroundColor: theme.palette.info.main,
                                                     color: 'white',
@@ -1338,30 +1384,49 @@ const Home: React.FC = () => {
                                         mb: { xs: 3, sm: 4 },
                                         lineHeight: 1.7,
                                         flexGrow: 1,
-                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' }
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
+                                        textAlign: i18n.language === 'ar'
+                                            ? { xs: 'right', sm: 'right' }
+                                            : { xs: 'center', sm: 'left' }
                                     }}>
-                                        Complete your journey with personalized AI career counseling. Get expert guidance and strategic career planning tailored to your unique goals.
+                                        {t('home.step3CardDesc')}
                                     </Typography>
 
                                     <Box sx={{ mb: { xs: 3, sm: 4 } }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
                                             mb: 3,
-                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' }
-                                        }}>Your journey completes with:</Typography>
+                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                                            textAlign: i18n.language === 'ar'
+                                                ? { xs: 'right', sm: 'right' }
+                                                : { xs: 'center', sm: 'left' }
+                                        }}>{t('home.journeyCompletesWith')}</Typography>
                                         {[
-                                            'AI-powered career counseling',
-                                            'Personalized guidance sessions',
-                                            'Expert advice anytime'
+                                            t('home.aiCareerCounseling'),
+                                            t('home.personalizedGuidance'),
+                                            t('home.expertAdvice')
                                         ].map((feature, index) => (
-                                            <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 1.5 }}>
+                                            <Box key={index} sx={{
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                mb: 1.5,
+                                                flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row',
+                                                textAlign: i18n.language === 'ar' ? 'right' : 'left'
+                                            }}>
                                                 <CheckCircle sx={{
                                                     fontSize: { xs: 20, sm: 24 },
-                                                    mr: 2,
-                                                    color: theme.palette.success.light
+                                                    mr: i18n.language === 'ar' ? 0 : 2,
+                                                    ml: i18n.language === 'ar' ? 2 : 0,
+                                                    mt: 0.5,
+                                                    color: theme.palette.success.light,
+                                                    flexShrink: 0
                                                 }} />
                                                 <Typography variant="body2" sx={{
-                                                    fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' }
+                                                    fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                                                    textAlign: i18n.language === 'ar'
+                                                        ? { xs: 'right', sm: 'right' }
+                                                        : { xs: 'center', sm: 'left' },
+                                                    flex: 1
                                                 }}>{feature}</Typography>
                                             </Box>
                                         ))}
@@ -1388,7 +1453,7 @@ const Home: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        Start AI Counseling
+                                        {t('home.startAICounseling')}
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -1398,51 +1463,55 @@ const Home: React.FC = () => {
             </Container>
 
             {/* Features Section */}
-            <Box sx={{ backgroundColor: theme.palette.grey[50], py: 10 }}>
-                <Container maxWidth="lg">
-                    <Box sx={{ textAlign: 'center', mb: 10 }}>
+            <Box sx={{ backgroundColor: theme.palette.grey[50], py: { xs: 6, sm: 8, md: 10 } }}>
+                <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
+                    <Box sx={{ textAlign: 'center', mb: { xs: 6, sm: 8, md: 10 } }}>
                         <Typography variant="h2" component="h2" gutterBottom sx={{
                             fontWeight: 800,
                             color: theme.palette.text.primary,
-                            mb: 3
+                            mb: { xs: 2, sm: 3 },
+                            fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                         }}>
-                            Why Choose Major Match?
+                            {t('home.whyChoose')}
                         </Typography>
                         <Typography variant="h6" color="text.secondary" sx={{
                             maxWidth: 600,
                             mx: 'auto',
-                            lineHeight: 1.6
+                            lineHeight: 1.6,
+                            fontSize: { xs: '0.95rem', sm: '1.125rem', md: '1.25rem' },
+                            px: { xs: 2, sm: 0 }
                         }}>
-                            We combine cutting-edge psychology with modern technology to guide your academic journey
+                            {t('home.whyChooseDesc')}
                         </Typography>
                     </Box>
 
-                    <Grid container spacing={4} alignItems="stretch" justifyContent="center">
+                    <Grid container spacing={{ xs: 3, sm: 4 }} alignItems="stretch" justifyContent="center">
                         {features.map((feature, index) => (
                             <Grid item xs={12} sm={6} md={3} key={index}>
-                                <Box sx={{ textAlign: 'center', p: 4, height: '100%' }}>
+                                <Box sx={{ textAlign: 'center', p: { xs: 3, sm: 4 }, height: '100%' }}>
                                     <Avatar
                                         sx={{
                                             backgroundColor: feature.color,
-                                            width: 80,
-                                            height: 80,
+                                            width: { xs: 60, sm: 70, md: 80 },
+                                            height: { xs: 60, sm: 70, md: 80 },
                                             mx: 'auto',
-                                            mb: 4,
+                                            mb: { xs: 3, sm: 4 },
                                             boxShadow: `0 12px 24px ${feature.color}40`
                                         }}
                                     >
-                                        {React.cloneElement(feature.icon, { sx: { fontSize: 40 } })}
+                                        {React.cloneElement(feature.icon, { sx: { fontSize: { xs: 30, sm: 35, md: 40 } } })}
                                     </Avatar>
                                     <Typography variant="h5" component="h3" gutterBottom sx={{
                                         fontWeight: 700,
                                         color: theme.palette.text.primary,
-                                        mb: 2
+                                        mb: 2,
+                                        fontSize: { xs: '1.125rem', sm: '1.25rem', md: '1.5rem' }
                                     }}>
                                         {feature.title}
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" sx={{
                                         lineHeight: 1.6,
-                                        fontSize: '1.1rem'
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' }
                                     }}>
                                         {feature.description}
                                     </Typography>
@@ -1459,7 +1528,7 @@ const Home: React.FC = () => {
             <Box
                 sx={{
                     background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-                    py: 12,
+                    py: { xs: 6, sm: 8, md: 12 },
                     color: 'white',
                     position: 'relative',
                     overflow: 'hidden',
@@ -1478,8 +1547,8 @@ const Home: React.FC = () => {
                     <Fade in timeout={1000}>
                         <Box>
                             <Box sx={{
-                                fontSize: '6rem',
-                                mb: 4,
+                                fontSize: { xs: '4rem', sm: '5rem', md: '6rem' },
+                                mb: { xs: 3, sm: 4 },
                                 animation: 'bounce 2s infinite',
                                 filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))'
                             }}>
@@ -1487,23 +1556,23 @@ const Home: React.FC = () => {
                             </Box>
                             <Typography variant="h2" component="h2" gutterBottom sx={{
                                 fontWeight: 800,
-                                mb: 3,
-                                textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+                                mb: { xs: 2, sm: 3 },
+                                textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                                fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                             }}>
-                                Your Journey Awaits
+                                {t('home.journeyAwaits')}
                             </Typography>
                             <Typography variant="h6" sx={{
-                                mb: 6,
+                                mb: { xs: 4, sm: 5, md: 6 },
                                 opacity: 0.95,
                                 lineHeight: 1.6,
                                 maxWidth: '85%',
                                 mx: 'auto',
-                                fontWeight: 400
+                                fontWeight: 400,
+                                fontSize: { xs: '0.95rem', sm: '1.125rem', md: '1.25rem' },
+                                px: { xs: 2, sm: 0 }
                             }}>
-                                {hasMbti
-                                    ? "You've taken the first step! Now continue your journey to discover your perfect major and unlock your full potential."
-                                    : "Join thousands of students who've discovered their ideal academic path. Your journey to success starts with understanding yourself."
-                                }
+                                {t('home.journeyAwaitsDesc')}
                             </Typography>
 
                             <Box sx={{
@@ -1539,7 +1608,7 @@ const Home: React.FC = () => {
                                             },
                                         }}
                                     >
-                                        {hasMbti ? 'Continue Journey' : 'Start Your Journey'}
+                                        {hasMbti ? t('home.continueJourney') : t('home.startJourney')}
                                     </Button>
                                 </Slide>
 
@@ -1567,7 +1636,7 @@ const Home: React.FC = () => {
                                             },
                                         }}
                                     >
-                                        Create Free Account
+                                        {t('home.createAccount')}
                                     </Button>
                                 </Slide>
                             </Box>

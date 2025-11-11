@@ -14,21 +14,26 @@ import {
     ListItemButton,
     ListItemText,
     Divider,
-    useMediaQuery
+    useMediaQuery,
+    Menu,
+    MenuItem
 } from '@mui/material';
-import { School, Menu, Person } from '@mui/icons-material';
+import { School, Menu as MenuIcon, Person, Language } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const NavBar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const theme = useTheme();
+    const { t, i18n } = useTranslation();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const [hasMbti, setHasMbti] = useState<boolean>(() => {
         try { return localStorage.getItem('hasMbti') === '1'; } catch { return false; }
     });
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -88,6 +93,19 @@ const NavBar: React.FC = () => {
     const isActive = (path: string) => location.pathname === path;
     const go = (path: string) => { navigate(path); setMobileOpen(false); };
 
+    const handleLanguageChange = (lang: string) => {
+        i18n.changeLanguage(lang);
+        setLangMenuAnchor(null);
+    };
+
+    const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setLangMenuAnchor(event.currentTarget);
+    };
+
+    const handleLangMenuClose = () => {
+        setLangMenuAnchor(null);
+    };
+
     return (
         <AppBar position="sticky" color="default" elevation={0} sx={{ zIndex: (t) => t.zIndex.appBar }}>
             <Toolbar sx={{ py: 1.5 }}>
@@ -122,9 +140,9 @@ const NavBar: React.FC = () => {
                         onClick={() => navigate('/')}
                         sx={{ fontWeight: 600 }}
                     >
-                        Home
+                        {t('common.home')}
                     </Button>
-                    <Tooltip title="Log in to take the personality test" disableHoverListener={isAuthenticated}>
+                    <Tooltip title={t('common.login')} disableHoverListener={isAuthenticated}>
                         <span>
                             <Button
                                 color={isActive('/personality-test') ? 'primary' : 'inherit'}
@@ -132,11 +150,11 @@ const NavBar: React.FC = () => {
                                 sx={{ fontWeight: 600 }}
                                 disabled={!isAuthenticated}
                             >
-                                Personality Test
+                                {t('common.personalityTest')}
                             </Button>
                         </span>
                     </Tooltip>
-                    <Tooltip title="You need to complete the personality test first" disableHoverListener={hasMbti}>
+                    <Tooltip title={t('common.majorMatch')} disableHoverListener={hasMbti}>
                         <span>
                             <Button
                                 color={isActive('/major-matching-test') ? 'primary' : 'inherit'}
@@ -144,7 +162,7 @@ const NavBar: React.FC = () => {
                                 sx={{ fontWeight: 600 }}
                                 disabled={!hasMbti}
                             >
-                                Major Match
+                                {t('common.majorMatch')}
                             </Button>
                         </span>
                     </Tooltip>
@@ -156,24 +174,43 @@ const NavBar: React.FC = () => {
                                 sx={{ fontWeight: 600 }}
                                 startIcon={<Person />}
                             >
-                                Profile
+                                {t('common.profile')}
                             </Button>
                             <Button
                                 color={isActive('/chat') ? 'primary' : 'inherit'}
                                 onClick={() => navigate('/chat')}
                                 sx={{ fontWeight: 600 }}
                             >
-                                AI Chat
+                                {t('common.aiChat')}
                             </Button>
                         </>
                     )}
+                    <IconButton
+                        onClick={handleLangMenuOpen}
+                        sx={{ color: 'inherit' }}
+                        aria-label="change language"
+                    >
+                        <Language />
+                    </IconButton>
+                    <Menu
+                        anchorEl={langMenuAnchor}
+                        open={Boolean(langMenuAnchor)}
+                        onClose={handleLangMenuClose}
+                    >
+                        <MenuItem onClick={() => handleLanguageChange('en')} selected={i18n.language === 'en'}>
+                            English
+                        </MenuItem>
+                        <MenuItem onClick={() => handleLanguageChange('ar')} selected={i18n.language === 'ar'}>
+                            العربية
+                        </MenuItem>
+                    </Menu>
                     {isAuthenticated ? (
                         <Button
                             variant="outlined"
                             onClick={handleLogout}
                             sx={{ fontWeight: 700, borderWidth: '2px', '&:hover': { borderWidth: '2px' } }}
                         >
-                            Log out
+                            {t('common.logout')}
                         </Button>
                     ) : (
                         <>
@@ -182,19 +219,39 @@ const NavBar: React.FC = () => {
                                 onClick={() => navigate('/login')}
                                 sx={{ fontWeight: 700, borderWidth: '2px', '&:hover': { borderWidth: '2px' } }}
                             >
-                                Log in
+                                {t('common.login')}
                             </Button>
                             <Button
                                 variant="contained"
                                 onClick={() => navigate('/signup')}
                                 sx={{ fontWeight: 700 }}
                             >
-                                Sign up
+                                {t('common.signup')}
                             </Button>
                         </>
                     )}
                 </Stack>
 
+                {/* Language switcher for mobile */}
+                <IconButton
+                    onClick={handleLangMenuOpen}
+                    sx={{ display: { xs: 'inline-flex', md: 'none' }, mr: 1 }}
+                    aria-label="change language"
+                >
+                    <Language />
+                </IconButton>
+                <Menu
+                    anchorEl={langMenuAnchor}
+                    open={Boolean(langMenuAnchor)}
+                    onClose={handleLangMenuClose}
+                >
+                    <MenuItem onClick={() => handleLanguageChange('en')} selected={i18n.language === 'en'}>
+                        English
+                    </MenuItem>
+                    <MenuItem onClick={() => handleLanguageChange('ar')} selected={i18n.language === 'ar'}>
+                        العربية
+                    </MenuItem>
+                </Menu>
                 {/* Mobile menu button */}
                 <IconButton
                     color="inherit"
@@ -202,7 +259,7 @@ const NavBar: React.FC = () => {
                     sx={{ display: { xs: 'inline-flex', md: 'none' } }}
                     aria-label="open navigation menu"
                 >
-                    <Menu />
+                    <MenuIcon />
                 </IconButton>
             </Toolbar>
             {/* Mobile Drawer */}
@@ -214,29 +271,29 @@ const NavBar: React.FC = () => {
             >
                 <List>
                     <ListItemButton selected={isActive('/')} onClick={() => go('/')}>
-                        <ListItemText primary="Home" />
+                        <ListItemText primary={t('common.home')} />
                     </ListItemButton>
-                    <Tooltip title="Log in to take the personality test" disableHoverListener={isAuthenticated} placement="left">
+                    <Tooltip title={t('common.login')} disableHoverListener={isAuthenticated} placement="left">
                         <span>
                             <ListItemButton disabled={!isAuthenticated} selected={isActive('/personality-test')} onClick={() => go('/personality-test')}>
-                                <ListItemText primary="Personality Test" />
+                                <ListItemText primary={t('common.personalityTest')} />
                             </ListItemButton>
                         </span>
                     </Tooltip>
-                    <Tooltip title="You need to complete the personality test first" disableHoverListener={hasMbti} placement="left">
+                    <Tooltip title={t('common.majorMatch')} disableHoverListener={hasMbti} placement="left">
                         <span>
                             <ListItemButton disabled={!hasMbti} selected={isActive('/major-matching-test')} onClick={() => go('/major-matching-test')}>
-                                <ListItemText primary="Major Match" />
+                                <ListItemText primary={t('common.majorMatch')} />
                             </ListItemButton>
                         </span>
                     </Tooltip>
                     {isAuthenticated && (
                         <>
                             <ListItemButton selected={isActive('/profile')} onClick={() => go('/profile')}>
-                                <ListItemText primary="Profile" />
+                                <ListItemText primary={t('common.profile')} />
                             </ListItemButton>
                             <ListItemButton selected={isActive('/chat')} onClick={() => go('/chat')}>
-                                <ListItemText primary="AI Chat" />
+                                <ListItemText primary={t('common.aiChat')} />
                             </ListItemButton>
                         </>
                     )}
@@ -245,15 +302,15 @@ const NavBar: React.FC = () => {
                 <List>
                     {isAuthenticated ? (
                         <ListItemButton onClick={() => { setMobileOpen(false); handleLogout(); }}>
-                            <ListItemText primary="Log out" />
+                            <ListItemText primary={t('common.logout')} />
                         </ListItemButton>
                     ) : (
                         <>
                             <ListItemButton onClick={() => go('/login')}>
-                                <ListItemText primary="Log in" />
+                                <ListItemText primary={t('common.login')} />
                             </ListItemButton>
                             <ListItemButton onClick={() => go('/signup')}>
-                                <ListItemText primary="Sign up" />
+                                <ListItemText primary={t('common.signup')} />
                             </ListItemButton>
                         </>
                     )}
