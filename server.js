@@ -477,7 +477,9 @@ async function ensureMbtiSeedMongo() {
 		if (qCountAr === 0) {
 			try {
 				const qPathAr = path.join(__dirname, 'MBTI Questions - Arabic.txt');
+				console.log(`[Seed] Checking for Arabic questions file at: ${qPathAr}`);
 				if (fs.existsSync(qPathAr)) {
+					console.log(`[Seed] Arabic questions file found, loading...`);
 					const raw = fs.readFileSync(qPathAr, 'utf8');
 					const lines = raw.split(/\r?\n/).filter(l => l.trim());
 					const docs = [];
@@ -501,6 +503,7 @@ async function ensureMbtiSeedMongo() {
 							seededQAr = docs.length;
 							console.log(`[Seed] Seeded ${seededQAr} Arabic questions`);
 						} catch (insertError) {
+							console.error(`[Seed] Error inserting Arabic questions:`, insertError.message);
 							// If duplicate key error, try inserting one by one using replaceOne
 							if (insertError.code === 11000 || insertError.name === 'MongoServerError') {
 								console.log(`[Seed] Duplicate key error, trying to insert Arabic questions one by one...`);
@@ -1245,7 +1248,7 @@ app.get('/api/questions', authMiddleware, async (req, res) => {
 		const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
 		const language = lang === 'ar' ? 'ar' : 'en';
 		
-		console.log(`[API] Requesting questions in language: ${language}, query lang: ${req.query.lang}`);
+		console.log(`[API] Requesting personality questions in language: ${language}, query lang: ${req.query.lang}, accept-language: ${req.headers['accept-language']}`);
 		
 		if (!questionsCache[language] || questionsCache[language].length === 0) {
 			console.log(`[API] Cache empty for ${language}, seeding and loading...`);
@@ -1261,8 +1264,16 @@ app.get('/api/questions', authMiddleware, async (req, res) => {
 			}
 		}
 		
-		const questions = questionsCache[language] || questionsCache.en;
-		console.log(`[API] Returning ${questions.length} questions for language: ${language}`);
+		let questions = questionsCache[language] || [];
+		// If no questions found for requested language, fall back to English
+		if (questions.length === 0 && language !== 'en') {
+			console.warn(`[API] No questions found for language: ${language}, falling back to English`);
+			questions = questionsCache.en || [];
+		}
+		if (questions.length === 0) {
+			console.error(`[API] No questions available in any language!`);
+		}
+		console.log(`[API] Returning ${questions.length} personality questions for language: ${language}`);
 		
 		// Map questions to include text field (for backward compatibility)
 		const mappedQuestions = questions.map(q => ({
@@ -1642,9 +1653,10 @@ app.get('/api/major/questions', authMiddleware, async (req, res) => {
 		const lang = req.query.lang || req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
 		const language = lang === 'ar' ? 'ar' : 'en';
 		
-		console.log(`[API] Requesting major questions in language: ${language}, query lang: ${req.query.lang}`);
+		console.log(`[API] Requesting major questions in language: ${language}, query lang: ${req.query.lang}, accept-language: ${req.headers['accept-language']}`);
 
 		let list = await MajorQuestion.find({ language: language }).sort({ id: 1 }).lean();
+		console.log(`[API] Found ${list?.length || 0} major questions for language: ${language}`);
 		if (!Array.isArray(list) || list.length < 10) {
 			// Try structured seeding first
 			try {
@@ -1716,10 +1728,12 @@ app.get('/api/major/questions', authMiddleware, async (req, res) => {
 		// Fallback to English if requested language not available
 		if (!Array.isArray(list) || list.length === 0) {
 			if (language !== 'en') {
+				console.warn(`[API] No major questions found for language: ${language}, falling back to English`);
 				list = await MajorQuestion.find({ language: 'en' }).sort({ id: 1 }).lean();
 			}
 		}
 		
+		console.log(`[API] Returning ${list?.length || 0} major questions for language: ${language}`);
 		res.json((list || []).map(q => ({ id: q.id, category: q.category, topic: q.topic, question: q.question })));
 	} catch (e) {
 		res.status(500).json({ error: 'Server error' });

@@ -117,10 +117,14 @@ const MajorMatchingTest: React.FC = () => {
 
     // Reload questions when language changes
     useEffect(() => {
-        if (questions.length > 0 && hasSubscription && !showPaymentPrompt) {
-            loadQuestions();
+        if (hasSubscription && !showPaymentPrompt) {
+            // Small delay to ensure i18n is ready
+            const timer = setTimeout(() => {
+                loadQuestions();
+            }, 100);
+            return () => clearTimeout(timer);
         }
-    }, [i18n.language]);
+    }, [i18n.language, hasSubscription, showPaymentPrompt]);
 
     // Timer effect
     useEffect(() => {
@@ -185,10 +189,11 @@ const MajorMatchingTest: React.FC = () => {
         try {
             const currentLang = i18n.language || 'en';
             const lang = currentLang === 'ar' ? 'ar' : 'en';
+            console.log('[MajorMatchingTest] Loading questions with language:', lang, 'i18n.language:', i18n.language);
             const res = await fetch(`/api/major/questions?lang=${lang}`, {
                 credentials: 'include'
             });
-            console.log('Questions response status:', res.status);
+            console.log('[MajorMatchingTest] Questions response status:', res.status);
 
             if (res.status === 401) {
                 navigate('/login');

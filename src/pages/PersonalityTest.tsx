@@ -108,7 +108,12 @@ const PersonalityTest: React.FC = () => {
 
     // Load questions from backend
     useEffect(() => {
-        fetchQuestions();
+        // Ensure i18n is ready before fetching
+        const timer = setTimeout(() => {
+            fetchQuestions();
+        }, 100); // Small delay to ensure i18n is initialized
+        
+        return () => clearTimeout(timer);
     }, [i18n.language]);
 
     // Timer effect
@@ -130,6 +135,7 @@ const PersonalityTest: React.FC = () => {
         try {
             const currentLang = i18n.language || 'en';
             const lang = currentLang === 'ar' ? 'ar' : 'en';
+            console.log('[PersonalityTest] Loading questions with language:', lang, 'i18n.language:', i18n.language);
             const response = await fetch(`/api/questions?lang=${lang}`, { credentials: 'include' });
             if (!response.ok) {
                 if (response.status === 401) {
@@ -139,6 +145,11 @@ const PersonalityTest: React.FC = () => {
                 throw new Error('Failed to load questions');
             }
             const questionsData = await response.json();
+            console.log('[PersonalityTest] Received questions:', questionsData.length, 'questions');
+            console.log('[PersonalityTest] First question sample:', questionsData[0]);
+            if (questionsData.length === 0) {
+                console.warn('[PersonalityTest] No questions received from API!');
+            }
             setQuestions(questionsData);
             // Initialize answers array
             setAnswers(questionsData.map((q: Question) => ({ questionId: q.id, value: null })));
