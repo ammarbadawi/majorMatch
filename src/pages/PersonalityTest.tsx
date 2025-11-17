@@ -112,7 +112,7 @@ const PersonalityTest: React.FC = () => {
         const timer = setTimeout(() => {
             fetchQuestions();
         }, 100); // Small delay to ensure i18n is initialized
-        
+
         return () => clearTimeout(timer);
     }, [i18n.language]);
 
@@ -211,10 +211,10 @@ const PersonalityTest: React.FC = () => {
             }
 
             const result = await response.json();
-            // Mark MBTI as completed locally for immediate UI enablement
+            // Mark personality test as completed locally for immediate UI enablement
             try {
-                localStorage.setItem('hasMbti', '1');
-                window.dispatchEvent(new CustomEvent('mbti-completed'));
+                localStorage.setItem('hasPersonality', '1');
+                window.dispatchEvent(new CustomEvent('personality-completed'));
             } catch { }
             // Navigate to results with the personality data
             navigate('/personality-results', {
@@ -736,7 +736,7 @@ const PersonalityTest: React.FC = () => {
                             <Paper
                                 elevation={2}
                                 sx={{
-                                    p: 3,
+                                    p: { xs: 2, sm: 3 },
                                     mb: 4,
                                     background: `linear-gradient(135deg, ${alpha(theme.palette.grey[50], 0.8)} 0%, ${alpha(theme.palette.grey[100], 0.8)} 100%)`,
                                     borderRadius: 3
@@ -745,44 +745,64 @@ const PersonalityTest: React.FC = () => {
                                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, textAlign: 'center' }}>
                                     {t('personalityTest.responseScale')}
                                 </Typography>
-                                <Grid container spacing={2}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    gap: { xs: 0.5, sm: 1, md: 2 },
+                                    flexWrap: { xs: 'nowrap', sm: 'wrap' },
+                                    overflowX: { xs: 'auto', sm: 'visible' },
+                                    '&::-webkit-scrollbar': { display: 'none' },
+                                    scrollbarWidth: 'none'
+                                }}>
                                     {answerOptions.map((opt) => (
-                                        <Grid item xs={12} sm={6} md={2.4} key={opt.value}>
-                                            <Box sx={{ textAlign: 'center' }}>
-                                                <Box
-                                                    sx={{
-                                                        width: { xs: 36, sm: 40 },
-                                                        height: { xs: 36, sm: 40 },
-                                                        borderRadius: '50%',
-                                                        border: `3px solid ${opt.color}`,
-                                                        backgroundColor: alpha(opt.color, 0.1),
-                                                        mx: 'auto',
-                                                        mb: 1,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        fontSize: { xs: '1rem', sm: '1.2rem' },
-                                                        fontWeight: 700,
-                                                        color: opt.color,
-                                                        transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {
-                                                            transform: 'scale(1.1)',
-                                                            boxShadow: `0 0 20px ${alpha(opt.color, 0.3)}`
-                                                        }
-                                                    }}
-                                                >
-                                                    {opt.value}
-                                                </Box>
-                                                <Typography variant="caption" sx={{ fontWeight: 700, display: 'block' }}>
-                                                    {opt.label}
-                                                </Typography>
-                                                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-                                                    {opt.description}
-                                                </Typography>
+                                        <Box key={opt.value} sx={{
+                                            flex: { xs: '1 1 0', sm: 'none' },
+                                            minWidth: { xs: 0, sm: 'auto' },
+                                            textAlign: 'center'
+                                        }}>
+                                            <Box
+                                                sx={{
+                                                    width: { xs: 32, sm: 40 },
+                                                    height: { xs: 32, sm: 40 },
+                                                    borderRadius: '50%',
+                                                    border: `3px solid ${opt.color}`,
+                                                    backgroundColor: alpha(opt.color, 0.1),
+                                                    mx: 'auto',
+                                                    mb: 1,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontSize: { xs: '0.9rem', sm: '1.2rem' },
+                                                    fontWeight: 700,
+                                                    color: opt.color,
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    flexShrink: 0,
+                                                    '&:hover': {
+                                                        transform: 'scale(1.1)',
+                                                        boxShadow: `0 0 20px ${alpha(opt.color, 0.3)}`
+                                                    }
+                                                }}
+                                            >
+                                                {opt.value}
                                             </Box>
-                                        </Grid>
+                                            <Typography variant="caption" sx={{
+                                                fontWeight: 700,
+                                                display: 'block',
+                                                fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                                                lineHeight: 1.2
+                                            }}>
+                                                {opt.label}
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary" sx={{
+                                                fontSize: { xs: '0.6rem', sm: '0.7rem' },
+                                                display: { xs: 'none', sm: 'block' }
+                                            }}>
+                                                {opt.description}
+                                            </Typography>
+                                        </Box>
                                     ))}
-                                </Grid>
+                                </Box>
                             </Paper>
 
                             {/* Questions */}
@@ -873,7 +893,16 @@ const PersonalityTest: React.FC = () => {
                                                     </Typography>
 
                                                     {/* Answer Options */}
-                                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: { xs: 1.5, sm: 2 }, flexWrap: 'wrap' }}>
+                                                    <Box sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        gap: { xs: 1, sm: 2 },
+                                                        flexWrap: { xs: 'nowrap', sm: 'wrap' },
+                                                        overflowX: { xs: 'auto', sm: 'visible' },
+                                                        pb: { xs: 1, sm: 0 },
+                                                        '&::-webkit-scrollbar': { display: 'none' },
+                                                        scrollbarWidth: 'none'
+                                                    }}>
                                                         {answerOptions.map((option) => {
                                                             const selected = qAnswer === option.value;
                                                             return (
@@ -881,8 +910,10 @@ const PersonalityTest: React.FC = () => {
                                                                     <Box
                                                                         onClick={() => handleAnswerChangeFor(q.id, option.value)}
                                                                         sx={{
-                                                                            width: { xs: 44, sm: 50 },
-                                                                            height: { xs: 44, sm: 50 },
+                                                                            width: { xs: 40, sm: 50 },
+                                                                            height: { xs: 40, sm: 50 },
+                                                                            minWidth: { xs: 40, sm: 50 },
+                                                                            flexShrink: 0,
                                                                             borderRadius: '50%',
                                                                             border: `3px solid ${option.color}`,
                                                                             backgroundColor: selected
@@ -893,7 +924,7 @@ const PersonalityTest: React.FC = () => {
                                                                             display: 'flex',
                                                                             alignItems: 'center',
                                                                             justifyContent: 'center',
-                                                                            fontSize: { xs: '1rem', sm: '1.2rem' },
+                                                                            fontSize: { xs: '0.95rem', sm: '1.2rem' },
                                                                             fontWeight: 700,
                                                                             color: option.color,
                                                                             position: 'relative',
@@ -961,30 +992,52 @@ const PersonalityTest: React.FC = () => {
                             </Grid>
 
                             {/* Navigation */}
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 6, flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' }}>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                mt: { xs: 4, md: 6 },
+                                flexDirection: { xs: 'column', sm: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+                                gap: { xs: 2, sm: 0 }
+                            }}>
                                 <Button
                                     variant="outlined"
                                     onClick={handlePreviousPage}
                                     disabled={currentPage === 0 || submitting}
                                     startIcon={i18n.language === 'ar' ? undefined : <ArrowBack />}
                                     endIcon={i18n.language === 'ar' ? <ArrowBack sx={{ transform: 'scaleX(-1)' }} /> : undefined}
+                                    fullWidth={isXs}
                                     sx={{
-                                        py: 1.5,
-                                        px: 4,
-                                        fontSize: '1rem',
+                                        py: { xs: 2, sm: 1.5 },
+                                        px: { xs: 3, sm: 4 },
+                                        minHeight: { xs: '48px', sm: 'auto' },
+                                        fontSize: { xs: '1.1rem', sm: '1rem' },
                                         fontWeight: 700,
                                         borderWidth: '2px',
-                                        borderRadius: 3,
+                                        borderRadius: { xs: 4, sm: 3 },
+                                        textTransform: 'none',
+                                        letterSpacing: { xs: '0.5px', sm: 'normal' },
+                                        transition: 'all 0.2s ease-in-out',
                                         '&:hover': {
                                             borderWidth: '2px',
-                                            transform: i18n.language === 'ar' ? 'translateX(2px)' : 'translateX(-2px)'
+                                            transform: { xs: 'scale(0.98)', sm: i18n.language === 'ar' ? 'translateX(2px)' : 'translateX(-2px)' }
+                                        },
+                                        '&:active': {
+                                            transform: { xs: 'scale(0.95)', sm: 'none' }
+                                        },
+                                        '&.Mui-disabled': {
+                                            opacity: 0.5
                                         }
                                     }}
                                 >
                                     {t('personalityTest.previous')}
                                 </Button>
 
-                                <Box sx={{ textAlign: 'center' }}>
+                                <Box sx={{
+                                    textAlign: 'center',
+                                    display: { xs: 'none', sm: 'block' },
+                                    width: { xs: '100%', sm: 'auto' }
+                                }}>
                                     {isPageComplete() && (
                                         <Zoom in={true} timeout={500}>
                                             <Chip
@@ -994,14 +1047,36 @@ const PersonalityTest: React.FC = () => {
                                                     backgroundColor: theme.palette.success.main,
                                                     color: 'white',
                                                     fontWeight: 700,
-                                                    fontSize: '1rem',
-                                                    px: 2,
-                                                    py: 1
+                                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                                    px: { xs: 1.5, sm: 2 },
+                                                    py: { xs: 0.75, sm: 1 }
                                                 }}
                                             />
                                         </Zoom>
                                     )}
                                 </Box>
+
+                                {/* Mobile page complete indicator */}
+                                {isPageComplete() && isXs && (
+                                    <Box sx={{ width: '100%', display: { xs: 'block', sm: 'none' } }}>
+                                        <Zoom in={true} timeout={500}>
+                                            <Chip
+                                                icon={<CheckCircle />}
+                                                label={t('personalityTest.pageComplete')}
+                                                sx={{
+                                                    backgroundColor: theme.palette.success.main,
+                                                    color: 'white',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.95rem',
+                                                    px: 2,
+                                                    py: 1,
+                                                    width: '100%',
+                                                    justifyContent: 'center'
+                                                }}
+                                            />
+                                        </Zoom>
+                                    </Box>
+                                )}
 
                                 <Button
                                     variant="contained"
@@ -1010,22 +1085,34 @@ const PersonalityTest: React.FC = () => {
                                     startIcon={i18n.language === 'ar' ? <ArrowForward sx={{ transform: 'scaleX(-1)' }} /> : undefined}
                                     endIcon={i18n.language === 'ar' ? undefined : (submitting ? <CircularProgress size={20} color="inherit" /> :
                                         currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward />)}
+                                    fullWidth={isXs}
                                     sx={{
-                                        py: 1.5,
-                                        px: 4,
-                                        fontSize: '1rem',
+                                        py: { xs: 2, sm: 1.5 },
+                                        px: { xs: 3, sm: 4 },
+                                        minHeight: { xs: '48px', sm: 'auto' },
+                                        fontSize: { xs: '1.1rem', sm: '1rem' },
                                         fontWeight: 700,
-                                        borderRadius: 3,
+                                        borderRadius: { xs: 4, sm: 3 },
+                                        textTransform: 'none',
+                                        letterSpacing: { xs: '0.5px', sm: 'normal' },
                                         background: isPageComplete()
                                             ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`
                                             : theme.palette.grey[300],
-                                        boxShadow: isPageComplete() ? theme.shadows[4] : 'none',
+                                        boxShadow: isPageComplete() ? { xs: theme.shadows[6], sm: theme.shadows[4] } : 'none',
+                                        transition: 'all 0.2s ease-in-out',
                                         '&:hover': {
                                             background: isPageComplete()
                                                 ? `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`
                                                 : theme.palette.grey[300],
-                                            transform: i18n.language === 'ar' ? 'translateX(-2px)' : 'translateX(2px)',
-                                            boxShadow: isPageComplete() ? theme.shadows[8] : 'none'
+                                            transform: { xs: 'translateY(-2px)', sm: i18n.language === 'ar' ? 'translateX(-2px)' : 'translateX(2px)' },
+                                            boxShadow: isPageComplete() ? { xs: theme.shadows[10], sm: theme.shadows[8] } : 'none'
+                                        },
+                                        '&:active': {
+                                            transform: { xs: 'translateY(0px) scale(0.98)', sm: 'none' }
+                                        },
+                                        '&.Mui-disabled': {
+                                            opacity: 0.5,
+                                            transform: 'none'
                                         }
                                     }}
                                 >

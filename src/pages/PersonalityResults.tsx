@@ -155,18 +155,26 @@ const PersonalityResults: React.FC = () => {
       }
     }
 
+    // Parse strengths from "Your Strengths" section
+    const strengthsSection = content.match(/Your Strengths\s*\n(.*?)(?=\n•|\n________________________________|$)/s);
+    if (strengthsSection) {
+      const strengthsText = strengthsSection[1].trim();
+      // Handle both formats: tab-separated on one line, or one per line
+      if (strengthsText.includes('\t') || strengthsText.match(/\s{2,}/)) {
+        // Tab-separated or multiple spaces format
+        strengths = strengthsText.split(/\s{2,}|\t+/).filter(s => s.trim().length > 0);
+      } else {
+        // One per line format
+        strengths = strengthsText.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+      }
+    }
+
     const sections = content.split('###').map(s => s.trim());
     sections.forEach(section => {
       if (section.includes('Key Traits') || section.includes('You Embody')) {
         const matches = section.match(/• ([^•\n]+)/g);
         if (matches) {
           traits = matches.map(match => match.replace('• ', '').split(' – ')[0]);
-        }
-      }
-      if (section.includes('Your Strengths') || section.includes('Strengths')) {
-        const matches = section.match(/✔ ([^✔\n]+)/g);
-        if (matches) {
-          strengths = matches.map(match => match.replace('✔ ', '').trim());
         }
       }
       if (section.includes('Your Life Quote') || section.includes('Life Quote')) {
@@ -192,6 +200,14 @@ const PersonalityResults: React.FC = () => {
   };
 
   const parsedData = parsePersonalityContent(personalityData.content);
+
+  // Remove "Your Strengths" section from the full content display
+  const getContentWithoutStrengths = (content: string) => {
+    // Remove the "Your Strengths" section and everything until the next section
+    return content.replace(/Your Strengths\s*\n.*?(?=\n________________________________|\nWatch Out For|\nYour Moral Compass|\nYou in Friendships|\nCompatibility|\nCareer Growth|\nFamous People|\nYour Life Quote|$)/s, '');
+  };
+
+  const contentWithoutStrengths = getContentWithoutStrengths(personalityData.content);
 
   const formatMbtiDisplay = (type: string) => {
     const safe = String(type || '').replace('‑', '-');
@@ -403,7 +419,7 @@ const PersonalityResults: React.FC = () => {
                 </Typography>
                 <Divider sx={{ mb: 3 }} />
                 <Typography variant="body1" sx={{ lineHeight: 1.8, fontSize: { xs: '0.95rem', sm: '1.1rem' }, whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
-                  {personalityData.content}
+                  {contentWithoutStrengths}
                 </Typography>
               </CardContent>
             </Card>

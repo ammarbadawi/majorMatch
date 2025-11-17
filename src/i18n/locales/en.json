@@ -32,7 +32,7 @@
   "home": {
     "title": "Begin Your Journey to Success",
     "academicJourneyStartsHere": "🗺️ Your Academic journey Starts Here",
-    "subtitle": "Follow our proven three-step journey: Discover your unique personality, unlock your perfect major match, then get personalized AI career guidance. Thousands of students have found their path - now it's your turn.",
+    "subtitle": "Follow our proven three-step journey: Discover your unique personality, unlock your perfect major match, then get personalized AI career guidance. Many students have found their path - now it's your turn.",
     "startJourney": "Start Your Journey",
     "step1": "Step 1: Discover Yourself",
     "step1Desc": "Take our comprehensive 60-question personality assessment to understand your unique traits and strengths.",
@@ -61,7 +61,7 @@
     "whyChoose": "Why Choose Major Match?",
     "whyChooseDesc": "We combine cutting-edge psychology with modern technology to guide your academic journey",
     "journeyAwaits": "Your Journey Awaits",
-    "journeyAwaitsDesc": "Join thousands of students who've discovered their ideal academic path. Your journey to success starts with understanding yourself.",
+    "journeyAwaitsDesc": "Join many students who've discovered their ideal academic path. Your journey to success starts with understanding yourself.",
     "createAccount": "Create Free Account",
     "continueJourney": "Continue Journey",
     "journeyTimeline": "Your Journey Timeline",
@@ -102,8 +102,8 @@
     "futureSuccess": "Future Success",
     "quote": "\"The best way to predict your future is to create it.\" - Start your journey today!",
     "journeyTools": "Your Journey Tools",
-    "twoPowerfulTools": "Two Powerful Tools for Your Success",
-    "twoPowerfulToolsDesc": "Each tool builds upon the other, creating a comprehensive journey from self-discovery to career clarity. Start with understanding yourself, then discover where you belong.",
+    "threePowerfulTools": "Three Powerful Tools for Your Success",
+    "threePowerfulToolsDesc": "Each tool builds upon the other, creating a comprehensive journey from self-discovery to career clarity. Start with understanding yourself, then discover where you belong.",
     "freeStartHere": "FREE • START HERE",
     "step1CardDesc": "Begin your journey with our comprehensive 60-question personality assessment. This is your foundation - understanding who you are is the first step to discovering where you belong in the academic world.",
     "journeyBeginsWith": "Your journey begins with:",
@@ -138,7 +138,9 @@
     "noAccount": "Don't have an account?",
     "signIn": "Sign In",
     "invalidCredentials": "Invalid email or password",
-    "appName": "Major Match"
+    "appName": "Major Match",
+    "orContinue": "Or continue with",
+    "googleError": "We couldn't sign you in with Google. Please try again."
   },
   "signup": {
     "title": "Create Your Account",
@@ -164,72 +166,72 @@
     "passwordMustContainSpecial": "Password must contain at least one special character",
     "passwordMustBe8Chars": "Password must be at least 8 characters long"
   },
-    "personalityTest": {
-        "title": "Personality Assessment",
-        "subtitle": "Answer 60 questions to discover your personality type",
-        "question": "Question",
-        "of": "of",
-        "next": "Next",
-        "previous": "Previous",
-        "submit": "Submit Answers",
-        "progress": "Progress",
-        "stronglyDisagree": "Strongly Disagree",
-        "stronglyDisagreeDesc": "This doesn't describe me at all",
-        "disagree": "Disagree",
-        "disagreeDesc": "This rarely applies to me",
-        "neutral": "Neutral",
-        "neutralDesc": "Sometimes this applies",
-        "agree": "Agree",
-        "agreeDesc": "This often applies to me",
-        "stronglyAgree": "Strongly Agree",
-        "stronglyAgreeDesc": "This perfectly describes me",
-        "dimensions": {
-            "IE": {
-                "name": "Energy",
-                "description": "How you gain and expend energy"
-            },
-            "SN": {
-                "name": "Perception",
-                "description": "How you process information"
-            },
-            "TF": {
-                "name": "Decision",
-                "description": "How you make decisions"
-            },
-            "JP": {
-                "name": "Structure",
-                "description": "How you approach life"
-            },
-            "AT": {
-                "name": "Identity",
-                "description": "How you express yourself"
-            },
-            "unknown": {
-                "name": "Unknown",
-                "description": "Unknown dimension"
-            }
-        },
-        "timeSpent": "Time Spent",
-        "page": "Page",
-        "complete": "Complete",
-        "minRemaining": "min remaining",
-        "testInsights": "Test Insights",
-        "questionsAnswered": "Questions Answered",
-        "remaining": "Remaining",
-        "minLeft": "Min Left",
-        "howWellDescribes": "How well does each statement describe you?",
-        "beHonest": "Be honest and choose the option that best reflects your true self",
-        "responseScale": "Response Scale",
-        "answered": "Answered",
-        "pageComplete": "Page Complete",
-        "processing": "Processing...",
-        "completeTest": "Complete Test",
-        "nextPage": "Next Page",
-        "progressOverview": "Test Progress Overview",
-        "oops": "Oops! Something went wrong",
-        "tryAgain": "Try Again",
-        "noQuestions": "No questions available",
-        "quote": "\"The best way to find out who you are is to discover who you're not.\""
+  "personalityTest": {
+    "title": "Personality Assessment",
+    "subtitle": "Answer 60 questions to discover your personality type",
+    "question": "Question",
+    "of": "of",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit Answers",
+    "progress": "Progress",
+    "stronglyDisagree": "Strongly Disagree",
+    "stronglyDisagreeDesc": "This doesn't describe me at all",
+    "disagree": "Disagree",
+    "disagreeDesc": "This rarely applies to me",
+    "neutral": "Neutral",
+    "neutralDesc": "Sometimes this applies",
+    "agree": "Agree",
+    "agreeDesc": "This often applies to me",
+    "stronglyAgree": "Strongly Agree",
+    "stronglyAgreeDesc": "This perfectly describes me",
+    "dimensions": {
+      "IE": {
+        "name": "Energy",
+        "description": "How you gain and expend energy"
+      },
+      "SN": {
+        "name": "Perception",
+        "description": "How you process information"
+      },
+      "TF": {
+        "name": "Decision",
+        "description": "How you make decisions"
+      },
+      "JP": {
+        "name": "Structure",
+        "description": "How you approach life"
+      },
+      "AT": {
+        "name": "Identity",
+        "description": "How you express yourself"
+      },
+      "unknown": {
+        "name": "Unknown",
+        "description": "Unknown dimension"
+      }
+    },
+    "timeSpent": "Time Spent",
+    "page": "Page",
+    "complete": "Complete",
+    "minRemaining": "min remaining",
+    "testInsights": "Test Insights",
+    "questionsAnswered": "Questions Answered",
+    "remaining": "Remaining",
+    "minLeft": "Min Left",
+    "howWellDescribes": "How well does each statement describe you?",
+    "beHonest": "Be honest and choose the option that best reflects your true self",
+    "responseScale": "Response Scale",
+    "answered": "Answered",
+    "pageComplete": "Page Complete",
+    "processing": "Processing...",
+    "completeTest": "Complete Test",
+    "nextPage": "Next Page",
+    "progressOverview": "Test Progress Overview",
+    "oops": "Oops! Something went wrong",
+    "tryAgain": "Try Again",
+    "noQuestions": "No questions available",
+    "quote": "\"The best way to find out who you are is to discover who you're not.\""
   },
   "personalityResults": {
     "title": "Your Personality Results",
@@ -359,7 +361,7 @@
     "lastLogin": "Last login:",
     "editProfile": "Edit Profile",
     "personalityAssessment": "Personality Assessment",
-    "personalityTestDescription": "Your MBTI personality type and insights",
+    "personalityTestDescription": "Your personality type and insights",
     "retakeTest": "Retake test",
     "personalityTestCompleted": "Personality Test Completed",
     "viewDetailedResults": "View your detailed personality assessment results",
@@ -408,11 +410,23 @@
     "error": "An error occurred. Please try again.",
     "appName": "Major Match AI",
     "beta": "BETA",
-    "initialMessage": "Hi! I am your Major Match AI assistant. Ask me anything about majors, careers, or your MBTI results.",
-    "placeholderText": "Ask about majors, careers, or your MBTI...",
+    "initialMessage": "Hi! I am your Major Match AI assistant. Ask me anything about majors, careers, or your personality results.",
+    "placeholderText": "Ask about majors, careers, or your personality...",
     "pleaseLogIn": "Please log in to use the AI assistant.",
     "networkError": "Network error. Please try again.",
-    "aiCanMakeMistakes": "AI can make mistakes. Verify important information."
+    "aiCanMakeMistakes": "AI can make mistakes. Verify important information.",
+    "conversations": "Conversations",
+    "newChat": "New chat",
+    "defaultConversationTitle": "New chat",
+    "rename": "Rename",
+    "delete": "Delete",
+    "newChatHelper": "Start a conversation to see it here.",
+    "noMessagesYet": "No messages yet",
+    "emptyStateTitle": "Ask anything about your academic journey",
+    "emptyStateDescription": "Use the message box below to ask why you matched with a major, how to prepare for it, or how your personality influences your path.",
+    "renameConversationPrompt": "Enter a name for this chat",
+    "deleteConversationConfirm": "Delete this conversation? This cannot be undone.",
+    "singleConversationNotice": "Your current AI chat version supports just one ongoing conversation. All new messages will continue within this thread."
   },
   "forgotPassword": {
     "title": "Forgot Password?",
@@ -516,4 +530,3 @@
     "failedToCancelSubscription": "Failed to cancel subscription"
   }
 }
-

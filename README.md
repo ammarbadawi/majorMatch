@@ -10,16 +10,19 @@ An interactive MBTI (Myers-Briggs Type Indicator) personality test built with Re
 - **Backend API**: Node.js server that processes answers and calculates personality types
 - **Real MBTI Data**: Uses authentic personality descriptions and analysis
 - **User Accounts**: Email/password signup and login with secure session cookies
+- **Google Sign-In**: Optional single-click login powered by Google Identity Services
 - **Major Matching (Premium)**: Import majors and mappings from spreadsheets and calculate personalized recommendations
 
 ## Tech Stack
 
 ### Frontend
+
 - React 18 with TypeScript
 - Material-UI (MUI) for components and styling
 - React Router for navigation
 
 ### Backend
+
 - Node.js with Express
 - MongoDB (Mongoose) for persistent storage
 - JWT auth with httpOnly cookies
@@ -28,30 +31,40 @@ An interactive MBTI (Myers-Briggs Type Indicator) personality test built with Re
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher recommended)
 - npm or yarn
 
 ### Installation
 
 1. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 2. **Environment variables (optional but recommended)**
    Create a `.env` file in the project root:
+
    ```bash
    JWT_SECRET=change_me_in_production
    MONGODB_URI=mongodb://127.0.0.1:27017/major_match
    PORT=3001
+   # Google Identity Services (required for Google Sign-In)
+   GOOGLE_CLIENT_ID=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
+   REACT_APP_GOOGLE_CLIENT_ID=YOUR_WEB_CLIENT_ID.apps.googleusercontent.com
    # OpenAI
    OPENAI_API_KEY=sk-...
    ```
 
+   Both Google values must match the same OAuth client configured in the Google Cloud Console.
+
 3. **Start the backend server**
+
    ```bash
    npm run server
    ```
+
    The server will start on `http://localhost:3001`
 
 4. **Start the React frontend** (in a new terminal)
@@ -68,7 +81,7 @@ You can run both frontend and backend simultaneously:
 # Terminal 1: Backend
 npm run server-dev
 
-# Terminal 2: Frontend  
+# Terminal 2: Frontend
 npm start
 ```
 
@@ -88,7 +101,7 @@ majorMatch/
 │   └── index.tsx
 ├── server.js               # Express backend server
 ├── MBTI Questions.txt      # Optional: legacy local file, not used by Mongo backend
-├── MBTI personalities.txt  # Optional: legacy local file, not used by Mongo backend
+├── MBTI personalities Updated.txt  # MBTI personality data file used for seeding
 ├── package.json
 └── README.md
 ```
@@ -96,11 +109,12 @@ majorMatch/
 ## API Endpoints
 
 ### MBTI
+
 - `GET /api/questions` — Returns all MBTI questions
 - `POST /api/calculate` — Calculates personality type from answers
   - Body:
     ```json
-    { "answers": [ { "questionId": 1, "value": 4 } ] }
+    { "answers": [{ "questionId": 1, "value": 4 }] }
     ```
   - Response:
     ```json
@@ -109,18 +123,24 @@ majorMatch/
 - `GET /api/personality/:type` — Returns detailed information for a specific personality type
 
 ### Auth
+
 - `POST /api/auth/signup` — Create account
   - Body: `{ firstName, lastName, email, password, university? }`
   - Sets a secure httpOnly cookie `token`
 - `POST /api/auth/login` — Sign in
   - Body: `{ email, password }`
   - Sets a secure httpOnly cookie `token`
+- `POST /api/auth/google` — Sign in with Google ID token
+  - Body: `{ credential }` where `credential` is the JWT from Google Identity Services
+  - Sets a secure httpOnly cookie `token`
 - `POST /api/auth/logout` — Clears session cookie
 - `GET /api/me` — Returns current user profile (requires auth)
 
 ### Admin APIs to load data
+
 - `POST /api/admin/mbti/questions/bulk` — Replace MBTI questions with the provided array
 - `POST /api/admin/mbti/personalities/bulk` — Replace MBTI personalities
+- `POST /api/admin/personality/reload` — Reload personalities from "MBTI personalities Updated.txt" file (updates existing records)
 - `POST /api/admin/majors/bulk` — Replace majors master list
 - `POST /api/admin/mapping/bulk` — Replace major mapping data
 - `POST /api/major/calculate` — Calculate major matches
@@ -133,9 +153,7 @@ majorMatch/
   - Body:
     ```json
     {
-      "messages": [
-        { "role": "user", "content": "What majors fit an INFP?" }
-      ],
+      "messages": [{ "role": "user", "content": "What majors fit an INFP?" }],
       "model": "gpt-4o-mini",
       "temperature": 0.7
     }
@@ -148,6 +166,7 @@ majorMatch/
 Set `OPENAI_API_KEY` in `.env` and restart the backend server.
 
 > Notes:
+>
 > - Mapping matches on the selected option text (case-insensitive). If the same option maps to multiple majors, scores are accumulated.
 > - Results are normalized to 0–100% based on the top score.
 
@@ -179,7 +198,7 @@ All 32 MBTI types are supported (16 base types × 2 identity variants):
 **Analysts**: INTJ, INTP, ENTJ, ENTP  
 **Diplomats**: INFJ, INFP, ENFJ, ENFP  
 **Sentinels**: ISTJ, ISFJ, ESTJ, ESFJ  
-**Explorers**: ISTP, ISFP, ESTP, ESFP  
+**Explorers**: ISTP, ISFP, ESTP, ESFP
 
 Each with Assertive (-A) and Turbulent (-T) variants.
 
@@ -233,5 +252,3 @@ Notes:
 This project is part of the Major Match platform. Please refer to the main project license.
 
 ---
-
- 

@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 const axios = require("axios");
+const { OAuth2Client } = require("google-auth-library");
 // Initialize Stripe only if API key is provided
 let stripe = null;
 if (
@@ -39,6 +40,10 @@ const WHISH_CURRENCY = (process.env.WHISH_CURRENCY || "USD").toUpperCase();
 const WHISH_INSTRUCTIONS =
   process.env.WHISH_INSTRUCTIONS ||
   "Send the exact amount and keep your transaction reference. Verification may take up to 24 hours.";
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
+const googleClient = GOOGLE_CLIENT_ID
+  ? new OAuth2Client(GOOGLE_CLIENT_ID)
+  : null;
 
 // Email (nodemailer) setup
 let mailer = null;
@@ -127,7 +132,23 @@ const userSchema = new mongoose.Schema({
   first_name: { type: String, required: true },
   last_name: { type: String, required: true },
   email: { type: String, required: true, unique: true, index: true },
-  password_hash: { type: String, required: true },
+  password_hash: {
+    type: String,
+    default: null,
+    required: function () {
+      return (this.auth_provider || "local") === "local";
+    },
+  },
+  auth_provider: {
+    type: String,
+    enum: ["local", "google", "hybrid"],
+    default: "local",
+  },
+  google_id: {
+    type: String,
+    default: null,
+  },
+  avatar_url: { type: String, default: null },
   university: { type: String, default: null },
   created_at: { type: Date, default: Date.now },
   last_login: { type: Date, default: null },
@@ -141,6 +162,7 @@ const userSchema = new mongoose.Schema({
   reset_expires: { type: Date, default: null },
   reset_last_sent_at: { type: Date, default: null },
 });
+userSchema.index({ google_id: 1 }, { unique: true, sparse: true });
 const User = mongoose.model("User", userSchema);
 
 const personalityResultSchema = new mongoose.Schema({
@@ -154,7 +176,7 @@ const PersonalityResult = mongoose.model(
   personalityResultSchema
 );
 
-const mbtiQuestionSchema = new mongoose.Schema({
+const personalityQuestionSchema = new mongoose.Schema({
   id: { type: Number, required: true },
   text: { type: String, required: true },
   text_ar: { type: String, default: null },
@@ -163,21 +185,24 @@ const mbtiQuestionSchema = new mongoose.Schema({
   language: { type: String, default: "en" },
 });
 // Compound unique index on id + language (allows same id for different languages)
-mbtiQuestionSchema.index({ id: 1, language: 1 }, { unique: true });
-const MbtiQuestion = mongoose.model("MbtiQuestion", mbtiQuestionSchema);
+personalityQuestionSchema.index({ id: 1, language: 1 }, { unique: true });
+const PersonalityQuestion = mongoose.model(
+  "PersonalityQuestion",
+  personalityQuestionSchema
+);
 
 // Drop old unique index on id only if it exists (run after connection)
 mongoose.connection.once("open", async () => {
   try {
-    const indexes = await MbtiQuestion.collection.getIndexes();
+    const indexes = await PersonalityQuestion.collection.getIndexes();
     if (indexes.id_1 && indexes.id_1.unique) {
       console.log("[Schema] Dropping old unique index on id only...");
-      await MbtiQuestion.collection.dropIndex("id_1");
+      await PersonalityQuestion.collection.dropIndex("id_1");
       console.log("[Schema] Old index dropped successfully");
     }
     // Ensure compound index exists
     try {
-      await MbtiQuestion.collection.createIndex(
+      await PersonalityQuestion.collection.createIndex(
         { id: 1, language: 1 },
         { unique: true, background: true }
       );
@@ -195,14 +220,11 @@ mongoose.connection.once("open", async () => {
   }
 });
 
-const mbtiPersonalitySchema = new mongoose.Schema({
+const personalitySchema = new mongoose.Schema({
   type: { type: String, required: true, unique: true, index: true },
   content: { type: String, required: true },
 });
-const MbtiPersonality = mongoose.model(
-  "MbtiPersonality",
-  mbtiPersonalitySchema
-);
+const Personality = mongoose.model("Personality", personalitySchema);
 
 const majorQuestionSchema = new mongoose.Schema({
   id: { type: Number, required: true },
@@ -283,6 +305,26 @@ const manualPaymentSchema = new mongoose.Schema({
 const ManualPayment = mongoose.model("ManualPayment", manualPaymentSchema);
 
 // Chat history schema
+const chatMessageSchema = new mongoose.Schema(
+  {
+    role: {
+      type: String,
+      enum: ["user", "assistant", "system"],
+      required: true,
+    },
+    content: { type: String, required: true },
+    created_at: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
+
+const chatConversationSchema = new mongoose.Schema({
+  title: { type: String, default: "New chat" },
+  messages: { type: [chatMessageSchema], default: [] },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
+});
+
 const chatHistorySchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -290,15 +332,159 @@ const chatHistorySchema = new mongoose.Schema({
     required: true,
     index: true,
   },
+  // Legacy single-thread storage (kept for backward compatibility)
   messages: {
     type: [mongoose.Schema.Types.Mixed],
-    required: true,
+    default: [],
+  },
+  conversations: {
+    type: [chatConversationSchema],
     default: [],
   },
   updated_at: { type: Date, default: Date.now },
 });
 chatHistorySchema.index({ user_id: 1 }, { unique: true });
 const ChatHistory = mongoose.model("ChatHistory", chatHistorySchema);
+
+const DEFAULT_CHAT_TITLE = "New chat";
+
+function createEmptyConversation(title = DEFAULT_CHAT_TITLE) {
+  const now = new Date();
+  return {
+    _id: new mongoose.Types.ObjectId(),
+    title: title || DEFAULT_CHAT_TITLE,
+    messages: [],
+    created_at: now,
+    updated_at: now,
+  };
+}
+
+function findConversationById(history, conversationId) {
+  if (!history || !conversationId) return null;
+  const list = Array.isArray(history.conversations)
+    ? history.conversations
+    : [];
+  const targetId = String(conversationId);
+  return (
+    list.find(
+      (conv) => conv && conv._id && conv._id.toString() === targetId
+    ) || null
+  );
+}
+
+function sanitizeIncomingMessages(rawMessages = []) {
+  return rawMessages
+    .filter(
+      (m) =>
+        m &&
+        (String(m.role).toLowerCase() === "user" ||
+          String(m.role).toLowerCase() === "assistant")
+    )
+    .map((m) => ({
+      role: String(m.role).toLowerCase() === "assistant" ? "assistant" : "user",
+      content: String(m.content || ""),
+      created_at: m.created_at ? new Date(m.created_at) : new Date(),
+    }))
+    .filter((m) => m.content.trim().length);
+}
+
+function normalizeMessagesForClient(messages = []) {
+  return messages.map((m) => ({
+    role:
+      String(m.role).toLowerCase() === "assistant"
+        ? "assistant"
+        : String(m.role).toLowerCase() === "system"
+        ? "system"
+        : "user",
+    content: String(m.content || ""),
+    created_at: m.created_at || null,
+  }));
+}
+
+function summarizeConversation(conversation) {
+  if (!conversation) return null;
+  const plain =
+    typeof conversation.toObject === "function"
+      ? conversation.toObject()
+      : conversation;
+  const msgs = Array.isArray(plain.messages) ? plain.messages : [];
+  const last = msgs.length ? msgs[msgs.length - 1] : null;
+  return {
+    id: plain._id ? plain._id.toString() : null,
+    title: plain.title || DEFAULT_CHAT_TITLE,
+    created_at: plain.created_at || null,
+    updated_at: plain.updated_at || null,
+    preview: last ? String(last.content || "") : "",
+  };
+}
+
+function formatConversationResponse(conversation) {
+  if (!conversation) return null;
+  const summary = summarizeConversation(conversation);
+  const plain =
+    typeof conversation.toObject === "function"
+      ? conversation.toObject()
+      : conversation;
+  return {
+    ...summary,
+    messages: normalizeMessagesForClient(plain.messages || []),
+  };
+}
+
+function migrateLegacyChatHistory(history) {
+  if (!history) return false;
+  let mutated = false;
+
+  if (!Array.isArray(history.conversations)) {
+    history.conversations = [];
+    mutated = true;
+  }
+
+  if (
+    history.messages &&
+    Array.isArray(history.messages) &&
+    history.messages.length
+  ) {
+    const legacyMessages = sanitizeIncomingMessages(history.messages);
+    if (legacyMessages.length) {
+      const target =
+        history.conversations[0] || createEmptyConversation("First chat");
+      if (!history.conversations.length) {
+        history.conversations.push(target);
+      }
+      target.messages = legacyMessages;
+      target.updated_at = new Date();
+    }
+    history.messages = [];
+    mutated = true;
+  }
+
+  if (!history.conversations.length) {
+    history.conversations.push(createEmptyConversation());
+    mutated = true;
+  }
+
+  return mutated;
+}
+
+async function getOrCreateChatHistory(userId) {
+  let history = await ChatHistory.findOne({ user_id: userId });
+  if (!history) {
+    history = new ChatHistory({
+      user_id: userId,
+      messages: [],
+      conversations: [createEmptyConversation()],
+    });
+    await history.save();
+    return history;
+  }
+  const mutated = migrateLegacyChatHistory(history);
+  if (mutated) {
+    history.updated_at = new Date();
+    await history.save();
+  }
+  return history;
+}
 
 // Auth helpers
 function generateToken(user) {
@@ -401,11 +587,11 @@ async function sendPasswordResetEmail(toEmail, code) {
 }
 
 // Auto-seed from local files into MongoDB (runs once if collections are empty)
-async function ensureMbtiSeedMongo() {
+async function ensurePersonalitySeedMongo() {
   try {
     // Aggressively drop old unique index on id only - this is critical for multi-language support
     try {
-      const indexes = await MbtiQuestion.collection.getIndexes();
+      const indexes = await PersonalityQuestion.collection.getIndexes();
       console.log("[Seed] Current indexes:", Object.keys(indexes));
       console.log("[Seed] Index details:", JSON.stringify(indexes, null, 2));
 
@@ -413,7 +599,7 @@ async function ensureMbtiSeedMongo() {
       if (indexes.id_1) {
         console.log("[Seed] Found id_1 index, attempting to drop...");
         try {
-          await MbtiQuestion.collection.dropIndex("id_1");
+          await PersonalityQuestion.collection.dropIndex("id_1");
           console.log("[Seed] Successfully dropped id_1 index");
         } catch (dropErr) {
           console.warn(
@@ -422,7 +608,7 @@ async function ensureMbtiSeedMongo() {
           );
           // Try dropping by specification
           try {
-            await MbtiQuestion.collection.dropIndex({ id: 1 });
+            await PersonalityQuestion.collection.dropIndex({ id: 1 });
             console.log(
               "[Seed] Successfully dropped id_1 index by specification"
             );
@@ -452,7 +638,7 @@ async function ensureMbtiSeedMongo() {
               `[Seed] Found problematic unique index on id: ${indexName}, attempting to drop...`
             );
             try {
-              await MbtiQuestion.collection.dropIndex(indexName);
+              await PersonalityQuestion.collection.dropIndex(indexName);
               console.log(`[Seed] Successfully dropped index: ${indexName}`);
             } catch (e) {
               console.warn(
@@ -474,12 +660,12 @@ async function ensureMbtiSeedMongo() {
     try {
       // Drop existing compound index if it exists to recreate it cleanly
       try {
-        await MbtiQuestion.collection.dropIndex("id_1_language_1");
+        await PersonalityQuestion.collection.dropIndex("id_1_language_1");
       } catch (e) {
         // Index might not exist, that's fine
       }
       // Create the compound index
-      await MbtiQuestion.collection.createIndex(
+      await PersonalityQuestion.collection.createIndex(
         { id: 1, language: 1 },
         { unique: true, background: true }
       );
@@ -493,14 +679,14 @@ async function ensureMbtiSeedMongo() {
     }
 
     // Migrate existing questions without language field to 'en'
-    const questionsWithoutLang = await MbtiQuestion.countDocuments({
+    const questionsWithoutLang = await PersonalityQuestion.countDocuments({
       language: { $exists: false },
     });
     if (questionsWithoutLang > 0) {
       console.log(
         `[Seed] Found ${questionsWithoutLang} questions without language field, migrating to 'en'...`
       );
-      await MbtiQuestion.updateMany(
+      await PersonalityQuestion.updateMany(
         { language: { $exists: false } },
         { $set: { language: "en" } }
       );
@@ -509,17 +695,13 @@ async function ensureMbtiSeedMongo() {
       );
     }
 
-    const qCountEn = await MbtiQuestion.countDocuments({ language: "en" });
-    const qCountAr = await MbtiQuestion.countDocuments({ language: "ar" });
-    const pCount = await MbtiPersonality.countDocuments({});
-    const MIN_ENGLISH_QUESTIONS = parseInt(
-      process.env.MBTI_MIN_EN_QUESTIONS || "60",
-      10
-    );
-    const MIN_ARABIC_QUESTIONS = parseInt(
-      process.env.MBTI_MIN_AR_QUESTIONS || "60",
-      10
-    );
+    const qCountEn = await PersonalityQuestion.countDocuments({
+      language: "en",
+    });
+    const qCountAr = await PersonalityQuestion.countDocuments({
+      language: "ar",
+    });
+    const pCount = await Personality.countDocuments({});
     const needsEnglishReseed = qCountEn < MIN_ENGLISH_QUESTIONS;
     const needsArabicReseed = qCountAr < MIN_ARABIC_QUESTIONS;
     if (needsEnglishReseed) {
@@ -541,7 +723,7 @@ async function ensureMbtiSeedMongo() {
       );
     }
 
-    // Always try to upsert from the updated MBTI personalities file if it exists
+    // Always try to upsert from the updated personality types file if it exists
     try {
       const updatedPath = path.join(
         __dirname,
@@ -556,7 +738,7 @@ async function ensureMbtiSeedMongo() {
           if (currentType && buffer.length) {
             const content = buffer.join("\n").trim();
             if (content) {
-              await MbtiPersonality.updateOne(
+              await Personality.updateOne(
                 { type: currentType },
                 { $set: { content } },
                 { upsert: true }
@@ -565,26 +747,36 @@ async function ensureMbtiSeedMongo() {
           }
           buffer = [];
         };
+        let count = 0;
         for (const rawLine of lines) {
           const line = String(rawLine || "").trim();
           // Match headers like: The Soul (INFP A) or The Visionary (INFJ‑A) or The Strategist (ENTJ-A)
-          const m = line.match(/\(([A-Z]{4})\s*[‑-]?\s*([AT])\)/);
+          // Handle space, hyphen, or en-dash separator
+          const m = line.match(/\(([A-Z]{4})\s*[‑\-]?\s*([AT])\)/);
           if (m) {
             await flush();
             currentType = `${m[1]}-${m[2]}`;
             buffer.push(rawLine);
+            count++;
           } else {
             buffer.push(rawLine);
           }
         }
         await flush();
         try {
-          await loadMbtiCache();
-        } catch (_) {}
-        console.log("MBTI personalities upserted from updated file");
+          await loadPersonalityCache();
+          console.log(
+            `[Startup Seed] Personality types upserted from updated file: ${count} types processed`
+          );
+        } catch (e) {
+          console.error(
+            "[Startup Seed] Error loading personality cache:",
+            e.message
+          );
+        }
       }
     } catch (e) {
-      console.warn("MBTI updated file upsert skipped:", e.message);
+      console.warn("Personality updated file upsert skipped:", e.message);
     }
 
     // Seed English questions if missing or below minimum threshold
@@ -615,7 +807,7 @@ async function ensureMbtiSeedMongo() {
           }
           if (docs.length) {
             try {
-              await MbtiQuestion.insertMany(docs);
+              await PersonalityQuestion.insertMany(docs);
               seededQ = docs.length;
               console.log(`[Seed] Seeded ${seededQ} English questions`);
             } catch (insertError) {
@@ -630,7 +822,7 @@ async function ensureMbtiSeedMongo() {
                 let inserted = 0;
                 for (const doc of docs) {
                   try {
-                    await MbtiQuestion.updateOne(
+                    await PersonalityQuestion.updateOne(
                       { id: doc.id, language: "en" },
                       { $set: doc },
                       { upsert: true }
@@ -651,7 +843,7 @@ async function ensureMbtiSeedMongo() {
             }
           }
         } else {
-          console.warn("MBTI Questions.txt file not found");
+          console.warn("Personality Questions.txt file not found");
         }
       } catch (e) {
         console.error("Error seeding English questions:", e.message);
@@ -698,7 +890,7 @@ async function ensureMbtiSeedMongo() {
           );
           if (docs.length) {
             // Delete all existing Arabic questions first to avoid index conflicts
-            const deletedCount = await MbtiQuestion.deleteMany({
+            const deletedCount = await PersonalityQuestion.deleteMany({
               language: "ar",
             });
             console.log(
@@ -711,7 +903,7 @@ async function ensureMbtiSeedMongo() {
             // Now insert all Arabic questions fresh
             console.log(`[Seed] Inserting ${docs.length} Arabic questions...`);
             try {
-              await MbtiQuestion.insertMany(docs, { ordered: false });
+              await PersonalityQuestion.insertMany(docs, { ordered: false });
               seededQAr = docs.length;
               console.log(
                 `[Seed] Successfully inserted ${seededQAr} Arabic questions`
@@ -731,13 +923,13 @@ async function ensureMbtiSeedMongo() {
                 let errors = 0;
                 for (const doc of docs) {
                   try {
-                    await MbtiQuestion.create(doc);
+                    await PersonalityQuestion.create(doc);
                     inserted++;
                   } catch (e) {
                     if (e.code === 11000) {
                       // Duplicate key - try update instead
                       try {
-                        await MbtiQuestion.updateOne(
+                        await PersonalityQuestion.updateOne(
                           { id: doc.id, language: "ar" },
                           { $set: doc },
                           { upsert: true }
@@ -770,7 +962,7 @@ async function ensureMbtiSeedMongo() {
           }
         } else {
           console.error(
-            `[Seed] CRITICAL: MBTI Questions - Arabic.txt file not found at ${qPathAr}`
+            `[Seed] CRITICAL: Personality Questions - Arabic.txt file not found at ${qPathAr}`
           );
           console.error(
             `[Seed] Please ensure the Arabic questions file exists in the server directory`
@@ -803,57 +995,60 @@ async function ensureMbtiSeedMongo() {
 
     let seededP = 0;
     try {
-      // Prefer updated file for initial seeding; fallback to legacy file if not present
-      const candidates = [
-        path.join(__dirname, "MBTI personalities Updated.txt"),
-        path.join(__dirname, "MBTI personalities.txt"),
-      ];
-      let picked = null;
-      for (const p of candidates) {
-        if (fs.existsSync(p)) {
-          picked = p;
-          break;
-        }
-      }
-      if (picked) {
+      // Use updated file for initial seeding - use upsert to update existing records
+      const picked = path.join(__dirname, "MBTI personalities Updated.txt");
+      if (fs.existsSync(picked)) {
         const data = fs.readFileSync(picked, "utf8");
         const lines = data.split(/\r?\n/);
         let currentType = null;
         let buffer = [];
-        const docs = [];
-        const flush = () => {
+        const flush = async () => {
           if (currentType && buffer.length) {
             const content = buffer.join("\n").trim();
-            if (content) docs.push({ type: currentType, content });
+            if (content) {
+              await Personality.updateOne(
+                { type: currentType },
+                { $set: { content } },
+                { upsert: true }
+              );
+              seededP++;
+            }
           }
           buffer = [];
         };
         for (const rawLine of lines) {
           const line = String(rawLine || "").trim();
-          const m = line.match(/\(([A-Z]{4})\s*[‑-]?\s*([AT])\)/);
+          // Match headers like: The Soul (INFP A) or The Visionary (INFJ‑A) or The Strategist (ENTJ-A)
+          // Handle space, hyphen, or en-dash separator
+          const m = line.match(/\(([A-Z]{4})\s*[‑\-]?\s*([AT])\)/);
           if (m) {
-            flush();
+            await flush();
             currentType = `${m[1]}-${m[2]}`;
             buffer.push(rawLine);
           } else {
             buffer.push(rawLine);
           }
         }
-        flush();
-        if (docs.length) {
-          await MbtiPersonality.insertMany(docs);
-          seededP = docs.length;
+        await flush();
+        if (seededP > 0) {
+          console.log(
+            `[Seed] Upserted ${seededP} personality types from MBTI personalities Updated.txt`
+          );
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("[Seed] Error seeding personalities:", e.message);
+    }
 
     if (needsEnglishReseed && seededQ === 0) {
-      const currentEn = await MbtiQuestion.countDocuments({ language: "en" });
+      const currentEn = await PersonalityQuestion.countDocuments({
+        language: "en",
+      });
       if (currentEn === 0) {
         console.warn(
           "[Seed] English questions still missing after reseed attempt, inserting fallback question"
         );
-        await MbtiQuestion.insertMany([
+        await PersonalityQuestion.insertMany([
           {
             id: 1,
             text: "You enjoy social gatherings.",
@@ -869,12 +1064,14 @@ async function ensureMbtiSeedMongo() {
       }
     }
     if (needsArabicReseed && seededQAr === 0) {
-      const currentAr = await MbtiQuestion.countDocuments({ language: "ar" });
+      const currentAr = await PersonalityQuestion.countDocuments({
+        language: "ar",
+      });
       if (currentAr === 0) {
         console.warn(
           "[Seed] Arabic questions still missing after reseed attempt, inserting fallback question"
         );
-        await MbtiQuestion.insertMany([
+        await PersonalityQuestion.insertMany([
           {
             id: 1,
             text: "تستمتع بالتجمعات الاجتماعية.",
@@ -890,27 +1087,31 @@ async function ensureMbtiSeedMongo() {
       }
     }
     if (!seededP) {
-      await MbtiPersonality.insertMany([
+      await Personality.insertMany([
         { type: "INFP-T", content: "Default INFP-T description." },
       ]);
     }
-    const totalQuestions = await MbtiQuestion.countDocuments({});
-    const enCount = await MbtiQuestion.countDocuments({ language: "en" });
-    const arCount = await MbtiQuestion.countDocuments({ language: "ar" });
+    const totalQuestions = await PersonalityQuestion.countDocuments({});
+    const enCount = await PersonalityQuestion.countDocuments({
+      language: "en",
+    });
+    const arCount = await PersonalityQuestion.countDocuments({
+      language: "ar",
+    });
     console.log(
-      `[Seed] MBTI seed complete: total questions=${totalQuestions} (en=${enCount}, ar=${arCount}), personalities=${await MbtiPersonality.countDocuments(
+      `[Seed] Personality seed complete: total questions=${totalQuestions} (en=${enCount}, ar=${arCount}), personalities=${await Personality.countDocuments(
         {}
       )}`
     );
 
     // Reload cache after seeding
     try {
-      await loadMbtiCache();
+      await loadPersonalityCache();
     } catch (e) {
       console.error("[Seed] Error reloading cache after seeding:", e.message);
     }
   } catch (e) {
-    console.warn("MBTI auto-seed skipped:", e.message);
+    console.warn("Personality auto-seed skipped:", e.message);
   }
 }
 
@@ -1236,7 +1437,7 @@ async function ensureMajorSeedMongo() {
           ria_sec: 2,
           academic_strengths: 3,
           core_values: 2,
-          mbti_traits: 1,
+          personality_traits: 1,
         };
         for (const entry of entries) {
           if (!entry.isDirectory()) continue;
@@ -1270,8 +1471,8 @@ async function ensureMajorSeedMongo() {
               (item.core_values || []).forEach((v) =>
                 addMap(v, majorName, weight.core_values, "Core Value")
               );
-              (item.mbti_traits || []).forEach((v) =>
-                addMap(v, majorName, weight.mbti_traits, "MBTI")
+              (item.personality_traits || []).forEach((v) =>
+                addMap(v, majorName, weight.personality_traits, "Personality")
               );
             });
           } catch (e) {}
@@ -1347,37 +1548,119 @@ async function ensureMajorSeedMongo() {
   }
 }
 
+const MIN_ENGLISH_QUESTIONS = parseInt(
+  process.env.PERSONALITY_MIN_EN_QUESTIONS || "60",
+  10
+);
+const MIN_ARABIC_QUESTIONS = parseInt(
+  process.env.PERSONALITY_MIN_AR_QUESTIONS || "60",
+  10
+);
+const QUESTION_FILE_MAP = {
+  en: "MBTI Questions.txt",
+  ar: "MBTI Questions - Arabic.txt",
+};
+
 let questionsCache = { en: [], ar: [] };
 let personalitiesCache = {};
 
-async function loadMbtiCache() {
+function parseQuestionFile(language) {
+  const fileName = QUESTION_FILE_MAP[language] || QUESTION_FILE_MAP.en;
+  const filePath = path.join(__dirname, fileName);
+  if (!fs.existsSync(filePath)) {
+    console.warn(
+      `[Questions] Could not find ${fileName} while enforcing minimum for ${language}`
+    );
+    return [];
+  }
+  const raw = fs.readFileSync(filePath, "utf8");
+  const lines = raw.split(/\r?\n/).filter((line) => line.trim());
+  const docs = [];
+  for (const line of lines) {
+    const parts = line.split("\t");
+    if (parts.length < 3) continue;
+    const id = parseInt(parts[0], 10);
+    const text = String(parts[1] || "").trim();
+    const scoring = parts[2];
+    const [dimension, direction] = (scoring || "")
+      .split(" → ")
+      .map((part) => String(part || "").trim());
+    if (!id || !text || !dimension || !direction) continue;
+    docs.push({ id, text, dimension, direction, language });
+  }
+  return docs;
+}
+
+async function ensureQuestionCount(language) {
+  const target =
+    language === "ar" ? MIN_ARABIC_QUESTIONS : MIN_ENGLISH_QUESTIONS;
+  let current = questionsCache[language] || [];
+  if (current.length >= target) return current;
+
+  console.warn(
+    `[Questions] ${language.toUpperCase()} cache has ${current.length} questions. Enforcing minimum ${target}.`
+  );
+  const docs = parseQuestionFile(language);
+  if (!docs.length) {
+    console.warn(
+      `[Questions] Falling back skipped: no parsed docs available for ${language}`
+    );
+    return current;
+  }
+
+  let upserts = 0;
+  for (const doc of docs) {
+    try {
+      await PersonalityQuestion.updateOne(
+        { id: doc.id, language },
+        { $set: doc },
+        { upsert: true }
+      );
+      upserts++;
+    } catch (e) {
+      console.error(
+        `[Questions] Failed to upsert ${language} question ${doc.id}:`,
+        e.message
+      );
+    }
+  }
+  console.log(
+    `[Questions] Ensured ${upserts} ${language} questions from fallback file`
+  );
+
+  const refreshed = await PersonalityQuestion.find({ language })
+    .sort({ id: 1 })
+    .lean();
+  questionsCache[language] = Array.isArray(refreshed) ? refreshed : [];
+  return questionsCache[language];
+}
+
+async function loadPersonalityCache() {
   try {
-    const qRowsEn = await MbtiQuestion.find({ language: "en" })
+    let qRowsEn = await PersonalityQuestion.find({ language: "en" })
       .sort({ id: 1 })
       .lean();
-    const qRowsAr = await MbtiQuestion.find({ language: "ar" })
+    if (!Array.isArray(qRowsEn)) qRowsEn = [];
+    if (qRowsEn.length < MIN_ENGLISH_QUESTIONS) {
+      qRowsEn = await ensureQuestionCount("en");
+    }
+    let qRowsAr = await PersonalityQuestion.find({ language: "ar" })
       .sort({ id: 1 })
       .lean();
+    if (!Array.isArray(qRowsAr)) qRowsAr = [];
+    if (qRowsAr.length < MIN_ARABIC_QUESTIONS) {
+      qRowsAr = await ensureQuestionCount("ar");
+    }
     questionsCache.en = Array.isArray(qRowsEn) ? qRowsEn : [];
     questionsCache.ar = Array.isArray(qRowsAr) ? qRowsAr : [];
 
-    // Verify we got valid arrays
-    if (!Array.isArray(questionsCache.en)) {
-      console.warn(`[Cache] English questions is not an array, resetting...`);
-      questionsCache.en = [];
-    }
-    if (!Array.isArray(questionsCache.ar)) {
-      console.warn(`[Cache] Arabic questions is not an array, resetting...`);
-      questionsCache.ar = [];
-    }
-
-    const pRows = await MbtiPersonality.find({}).lean();
+    const pRows = await Personality.find({}).lean();
     personalitiesCache = {};
     (pRows || []).forEach((r) => {
       personalitiesCache[r.type] = { type: r.type, content: r.content };
     });
     console.log(
-      `[Cache] Loaded ${questionsCache.en.length} MBTI questions (en) and ${questionsCache.ar.length} MBTI questions (ar) from mongo`
+      `[Cache] Loaded ${questionsCache.en.length} personality questions (en) and ${questionsCache.ar.length} personality questions (ar) from mongo`
     );
     console.log(
       `[Cache] Loaded ${
@@ -1410,7 +1693,7 @@ async function loadMbtiCache() {
       );
     }
   } catch (e) {
-    console.error(`[Cache] Error loading MBTI cache:`, e.message);
+    console.error(`[Cache] Error loading personality cache:`, e.message);
     console.error(e.stack);
     // Ensure cache is at least initialized as empty arrays
     if (!questionsCache.en) questionsCache.en = [];
@@ -1421,8 +1704,8 @@ async function loadMbtiCache() {
 
 // No file-based seeding for majors/mappings/questions. Use admin bulk endpoints instead.
 
-// Calculate MBTI
-function calculateMBTIType(answers, language = "en") {
+// Calculate Personality Type
+function calculatePersonalityType(answers, language = "en") {
   const scores = {
     I: 0,
     E: 0,
@@ -1813,6 +2096,25 @@ app.post(
 );
 
 // Routes
+app.get("/api/stats/summary", async (req, res) => {
+  try {
+    const [userCount, personalityResultCount, majorResultCount] =
+      await Promise.all([
+        User.countDocuments({}),
+        PersonalityResult.countDocuments({}),
+        MajorTest.countDocuments({}),
+      ]);
+    res.json({
+      userCount,
+      personalityResultCount,
+      majorResultCount,
+    });
+  } catch (e) {
+    console.error("[API] Error in /api/stats/summary:", e);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 app.get("/api/questions", authMiddleware, async (req, res) => {
   try {
     const lang =
@@ -1838,7 +2140,9 @@ app.get("/api/questions", authMiddleware, async (req, res) => {
       );
       // Query database directly - much faster than seeding
       try {
-        const directQuery = await MbtiQuestion.find({ language: language })
+        const directQuery = await PersonalityQuestion.find({
+          language: language,
+        })
           .sort({ id: 1 })
           .lean();
         if (Array.isArray(directQuery) && directQuery.length > 0) {
@@ -1850,7 +2154,7 @@ app.get("/api/questions", authMiddleware, async (req, res) => {
           console.warn(`[API] No questions found in database for ${language}`);
           // Try reloading the full cache (this will update both languages)
           try {
-            await loadMbtiCache();
+            await loadPersonalityCache();
             console.log(
               `[API] Cache reloaded, ${language} now has ${
                 questionsCache[language]?.length || 0
@@ -1869,6 +2173,11 @@ app.get("/api/questions", authMiddleware, async (req, res) => {
     }
 
     let questions = questionsCache[language] || [];
+    const minQuestions =
+      language === "ar" ? MIN_ARABIC_QUESTIONS : MIN_ENGLISH_QUESTIONS;
+    if ((questions?.length || 0) < minQuestions) {
+      questions = await ensureQuestionCount(language);
+    }
 
     // If still no questions or very few, check database count (but don't do expensive operations)
     if (questions.length < 10) {
@@ -1938,8 +2247,8 @@ app.post("/api/calculate", authMiddleware, async (req, res) => {
       questionsCache[language].length === 0 ||
       !Object.keys(personalitiesCache).length
     )
-      await loadMbtiCache();
-    const type = calculateMBTIType(answers, language);
+      await loadPersonalityCache();
+    const type = calculatePersonalityType(answers, language);
     const personality = personalitiesCache[type];
     if (!personality)
       return res.status(404).json({ error: "Personality type not found" });
@@ -1961,7 +2270,7 @@ app.get("/api/personality/:type", async (req, res, next) => {
     const param = String(req.params.type || "");
     // Avoid shadowing the '/api/personality/latest' route
     if (param === "latest") return next();
-    if (!Object.keys(personalitiesCache).length) await loadMbtiCache();
+    if (!Object.keys(personalitiesCache).length) await loadPersonalityCache();
     const p = personalitiesCache[param];
     if (!p)
       return res.status(404).json({ error: "Personality type not found" });
@@ -1971,7 +2280,47 @@ app.get("/api/personality/:type", async (req, res, next) => {
   }
 });
 
-// Latest MBTI result for the current user
+// Admin endpoint to check personality data in database
+app.get("/api/admin/personality/check", authMiddleware, async (req, res) => {
+  try {
+    const { type } = req.query;
+    if (type) {
+      // Check specific type
+      const fromDb = await Personality.findOne({ type }).lean();
+      const fromCache = personalitiesCache[type];
+      res.json({
+        type,
+        inDatabase: !!fromDb,
+        inCache: !!fromCache,
+        dbContent: fromDb ? fromDb.content.substring(0, 200) + "..." : null,
+        cacheContent: fromCache
+          ? fromCache.content.substring(0, 200) + "..."
+          : null,
+        dbLength: fromDb ? fromDb.content.length : 0,
+        cacheLength: fromCache ? fromCache.content.length : 0,
+      });
+    } else {
+      // List all types
+      const allFromDb = await Personality.find({}).select("type").lean();
+      const allFromCache = Object.keys(personalitiesCache);
+      res.json({
+        database: {
+          count: allFromDb.length,
+          types: allFromDb.map((p) => p.type),
+        },
+        cache: {
+          count: allFromCache.length,
+          types: allFromCache,
+        },
+        match: allFromDb.length === allFromCache.length,
+      });
+    }
+  } catch (e) {
+    res.status(500).json({ error: "Server error", details: e.message });
+  }
+});
+
+// Latest personality result for the current user
 app.get("/api/personality/latest", authMiddleware, async (req, res) => {
   try {
     const latest = await PersonalityResult.findOne({ user_id: req.user.id })
@@ -2047,6 +2396,87 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 });
 
+app.post("/api/auth/google", async (req, res) => {
+  try {
+    if (!googleClient || !GOOGLE_CLIENT_ID) {
+      return res
+        .status(500)
+        .json({ error: "Google Sign-In is not configured on the server" });
+    }
+    const { credential } = req.body || {};
+    if (!credential)
+      return res.status(400).json({ error: "Missing Google credential" });
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email || !payload.sub) {
+      return res.status(401).json({ error: "Google authentication failed" });
+    }
+
+    const email = String(payload.email).toLowerCase();
+    const googleId = payload.sub;
+    const emailVerified =
+      payload.email_verified === undefined ? true : !!payload.email_verified;
+    const firstName =
+      payload.given_name ||
+      (payload.name ? payload.name.split(" ")[0] : "Google");
+    const lastName =
+      payload.family_name ||
+      (payload.name
+        ? payload.name.split(" ").slice(1).join(" ") || "User"
+        : "User");
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        password_hash: null,
+        university: null,
+        is_verified: emailVerified,
+        auth_provider: "google",
+        google_id: googleId,
+        avatar_url: payload.picture || null,
+      });
+    } else {
+      if (!user.google_id) {
+        user.google_id = googleId;
+      }
+      if (payload.picture && !user.avatar_url) {
+        user.avatar_url = payload.picture;
+      }
+      if (user.auth_provider === "local" && user.password_hash) {
+        user.auth_provider = "hybrid";
+      }
+      if (emailVerified && !user.is_verified) {
+        user.is_verified = true;
+      }
+    }
+
+    user.last_login = new Date();
+    await user.save();
+
+    const token = generateToken(user);
+    res.cookie("token", token, { httpOnly: true, sameSite: "lax" });
+    res.json({
+      id: user._id,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      university: user.university,
+      authProvider: user.auth_provider,
+      avatarUrl: user.avatar_url,
+    });
+  } catch (e) {
+    console.error("Google auth failed:", e.message || e);
+    res.status(401).json({ error: "Google authentication failed" });
+  }
+});
+
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -2055,6 +2485,11 @@ app.post("/api/auth/login", async (req, res) => {
     const user = await User.findOne({ email: String(email).toLowerCase() });
     if (!user)
       return res.status(401).json({ error: "Invalid email or password" });
+    if (!user.password_hash) {
+      return res.status(400).json({
+        error: "Password sign-in disabled for this account. Use Google Sign-In.",
+      });
+    }
     const ok = bcrypt.compareSync(password, user.password_hash);
     if (!ok)
       return res.status(401).json({ error: "Invalid email or password" });
@@ -2079,6 +2514,8 @@ app.post("/api/auth/login", async (req, res) => {
       firstName: user.first_name,
       lastName: user.last_name,
       university: user.university,
+      authProvider: user.auth_provider,
+      avatarUrl: user.avatar_url,
     });
   } catch (e) {
     res.status(500).json({ error: "Server error" });
@@ -2153,6 +2590,8 @@ app.get("/api/me", authMiddleware, async (req, res) => {
     lastName: user.last_name,
     email: user.email,
     university: user.university,
+    authProvider: user.auth_provider,
+    avatarUrl: user.avatar_url,
   });
 });
 
@@ -2214,6 +2653,13 @@ app.put("/api/profile/change-password", authMiddleware, async (req, res) => {
 
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (!user.password_hash) {
+      return res.status(400).json({
+        error:
+          "Password changes are not available for Google Sign-In accounts.",
+      });
+    }
 
     // Verify current password
     const ok = bcrypt.compareSync(currentPassword, user.password_hash);
@@ -2326,6 +2772,9 @@ app.post("/api/auth/reset-password", async (req, res) => {
 
     // Update password and clear reset fields
     user.password_hash = bcrypt.hashSync(newPassword, 10);
+    if (user.auth_provider === "google") {
+      user.auth_provider = "hybrid";
+    }
     user.reset_token_hash = null;
     user.reset_expires = null;
     await user.save();
@@ -2380,30 +2829,418 @@ app.post("/api/admin/mapping/bulk", authMiddleware, async (req, res) => {
   }
 });
 
-app.post("/api/admin/mbti/questions/bulk", authMiddleware, async (req, res) => {
+// Force reload mappings from files
+app.post("/api/admin/mapping/reload", authMiddleware, async (req, res) => {
   try {
-    const qs = req.body.questions;
-    if (!Array.isArray(qs))
-      return res.status(400).json({ error: "questions must be an array" });
-    await MbtiQuestion.deleteMany({});
-    if (qs.length)
-      await MbtiQuestion.insertMany(
-        qs.map((q) => ({
-          id: parseInt(q.id),
-          text: String(q.text),
-          dimension: String(q.dimension),
-          direction: String(q.direction),
-        }))
-      );
-    await loadMbtiCache();
-    res.json({ ok: true, count: qs.length });
+    const mappingRoots = [
+      process.env.MAPPING_ROOT_PATH,
+      path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping"),
+      path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping"),
+      path.join(__dirname, "Mapping"),
+      path.join(process.cwd(), "Mapping"),
+    ].filter(Boolean);
+    let rootDir = null;
+    for (const r of mappingRoots) {
+      if (r && fs.existsSync(r)) {
+        rootDir = r;
+        break;
+      }
+    }
+    if (!rootDir) {
+      return res.status(404).json({ error: "Mapping directory not found" });
+    }
+
+    const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+    const mappings = [];
+    const addMap = (optionValue, majorName, score, category) => {
+      if (!optionValue || !majorName) return;
+      mappings.push({
+        category: category || "derived",
+        option_value: String(optionValue),
+        major_name: String(majorName),
+        score: parseInt(score || 1) || 1,
+      });
+    };
+    const weight = {
+      ria_sec: 2,
+      academic_strengths: 3,
+      core_values: 2,
+      personality_traits: 1,
+    };
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const dir = path.join(rootDir, entry.name);
+      const algo =
+        fs.readdirSync(dir).find((f) => /Algorithm .*\.txt$/i.test(f)) || null;
+      if (!algo) continue;
+      try {
+        const content = fs.readFileSync(path.join(dir, algo), "utf8");
+        const list = JSON.parse(content);
+        if (!Array.isArray(list)) continue;
+        list.forEach((item) => {
+          const majorName = item.parent_major;
+          if (!majorName) return;
+          (item.ria_sec || []).forEach((v) =>
+            addMap(v, majorName, weight.ria_sec, "RIASEC")
+          );
+          (item.academic_strengths || []).forEach((v) =>
+            addMap(v, majorName, weight.academic_strengths, "Academic Strength")
+          );
+          (item.core_values || []).forEach((v) =>
+            addMap(v, majorName, weight.core_values, "Core Value")
+          );
+          (item.personality_traits || []).forEach((v) =>
+            addMap(v, majorName, weight.personality_traits, "Personality")
+          );
+        });
+      } catch (e) {
+        console.warn(`Failed to parse ${algo}:`, e.message);
+      }
+    }
+
+    // Clear and reload
+    await MajorMapping.deleteMany({});
+    if (mappings.length) {
+      await MajorMapping.insertMany(mappings);
+    }
+    res.json({
+      ok: true,
+      count: mappings.length,
+      message: "Mappings reloaded from files",
+    });
   } catch (e) {
-    res.status(500).json({ error: "Server error" });
+    console.error("Mapping reload error:", e);
+    res.status(500).json({ error: "Server error", details: e.message });
+  }
+});
+
+// Comprehensive reload endpoint for all major-related data from Mapping folder
+app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
+  try {
+    const mappingRoots = [
+      process.env.MAPPING_ROOT_PATH,
+      path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping"),
+      path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping"),
+      path.join(__dirname, "Mapping"),
+      path.join(process.cwd(), "Mapping"),
+    ].filter(Boolean);
+    
+    let rootDir = null;
+    for (const r of mappingRoots) {
+      if (r && fs.existsSync(r)) {
+        rootDir = r;
+        break;
+      }
+    }
+    
+    if (!rootDir) {
+      return res.status(404).json({ 
+        error: "Mapping directory not found",
+        checked: mappingRoots 
+      });
+    }
+
+    const results = {
+      majors: { updated: 0, created: 0 },
+      mappings: { count: 0 },
+      questions: { en: 0, ar: 0 },
+      descriptions: { updated: 0 }
+    };
+
+    // 1. Reload Major Questions (English)
+    try {
+      const qCandidatesEn = [
+        process.env.MAJOR_QUESTIONS_PATH,
+        path.join(rootDir, "Question 2.txt"),
+        path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2.txt"),
+        path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2.txt"),
+      ].filter(Boolean);
+      
+      for (const p of qCandidatesEn) {
+        if (p && fs.existsSync(p)) {
+          const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length) {
+            const docs = parsed.map((q, idx) => ({
+              id: parseInt(q.id ?? idx + 1),
+              category: String(q.category || "General"),
+              topic: q.topic ? String(q.topic) : null,
+              question: String(q.question || q.text || ""),
+              language: "en",
+            }));
+            await MajorQuestion.deleteMany({ language: "en" });
+            await MajorQuestion.insertMany(docs);
+            results.questions.en = docs.length;
+            console.log(`[Major Reload] Loaded ${docs.length} English major questions from ${p}`);
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn(`[Major Reload] Error loading English questions:`, e.message);
+    }
+
+    // 2. Reload Major Questions (Arabic)
+    try {
+      const qCandidatesAr = [
+        process.env.MAJOR_QUESTIONS_PATH_AR,
+        path.join(rootDir, "Question 2 - Arabic.txt"),
+        path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2 - Arabic.txt"),
+        path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2 - Arabic.txt"),
+      ].filter(Boolean);
+      
+      for (const p of qCandidatesAr) {
+        if (p && fs.existsSync(p)) {
+          const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length) {
+            const docs = parsed.map((q, idx) => ({
+              id: parseInt(q.id ?? idx + 1),
+              category: String(q.category || "General"),
+              topic: q.topic ? String(q.topic) : null,
+              question: String(q.question || q.text || ""),
+              language: "ar",
+            }));
+            await MajorQuestion.deleteMany({ language: "ar" });
+            await MajorQuestion.insertMany(docs, { ordered: false }).catch(async (insertError) => {
+              // If duplicate key error, try inserting one by one
+              if (insertError.code === 11000) {
+                let inserted = 0;
+                for (const doc of docs) {
+                  try {
+                    await MajorQuestion.replaceOne(
+                      { id: doc.id, language: "ar" },
+                      doc,
+                      { upsert: true }
+                    );
+                    inserted++;
+                  } catch (e) {
+                    console.warn(`[Major Reload] Error upserting Arabic question ${doc.id}:`, e.message);
+                  }
+                }
+                results.questions.ar = inserted;
+              } else {
+                throw insertError;
+              }
+            });
+            if (results.questions.ar === 0) {
+              results.questions.ar = docs.length;
+            }
+            console.log(`[Major Reload] Loaded ${results.questions.ar} Arabic major questions from ${p}`);
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn(`[Major Reload] Error loading Arabic questions:`, e.message);
+    }
+
+    // 3. Reload Majors, Descriptions, and Mappings
+    const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+    const majorsSet = new Set();
+    const mappings = [];
+    const descriptions = {};
+    
+    const addMap = (optionValue, majorName, score, category) => {
+      if (!optionValue || !majorName) return;
+      mappings.push({
+        category: category || "derived",
+        option_value: String(optionValue),
+        major_name: String(majorName),
+        score: parseInt(score || 1) || 1,
+      });
+    };
+    
+    const weight = {
+      ria_sec: 2,
+      academic_strengths: 3,
+      core_values: 2,
+      personality_traits: 1,
+    };
+    
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const dir = path.join(rootDir, entry.name);
+      const algo =
+        fs.readdirSync(dir).find((f) => /Algorithm .*\.txt$/i.test(f)) || null;
+      const descFile =
+        fs.readdirSync(dir).find((f) => /Description\.txt$/i.test(f)) || null;
+      
+      if (!algo) continue;
+      
+      // Parse algorithm file for majors and mappings
+      try {
+        const content = fs.readFileSync(path.join(dir, algo), "utf8");
+        const list = JSON.parse(content);
+        if (!Array.isArray(list)) continue;
+        list.forEach((item) => {
+          const majorName = item.parent_major;
+          if (!majorName) return;
+          majorsSet.add(majorName);
+          (item.ria_sec || []).forEach((v) =>
+            addMap(v, majorName, weight.ria_sec, "RIASEC")
+          );
+          (item.academic_strengths || []).forEach((v) =>
+            addMap(v, majorName, weight.academic_strengths, "Academic Strength")
+          );
+          (item.core_values || []).forEach((v) =>
+            addMap(v, majorName, weight.core_values, "Core Value")
+          );
+          (item.personality_traits || []).forEach((v) =>
+            addMap(v, majorName, weight.personality_traits, "Personality")
+          );
+        });
+      } catch (e) {
+        console.warn(`[Major Reload] Failed to parse ${algo}:`, e.message);
+      }
+
+      // Parse major descriptions if available
+      try {
+        if (descFile) {
+          const raw = fs.readFileSync(path.join(dir, descFile), "utf8");
+          const lines = raw.split(/\r?\n/);
+          let currentMajor = null;
+          let buffer = [];
+          const flush = () => {
+            if (currentMajor) {
+              const text = buffer.join("\n").trim();
+              if (text) descriptions[currentMajor] = text;
+            }
+            currentMajor = null;
+            buffer = [];
+          };
+          for (const line of lines) {
+            const mHdr = line.match(/^\s*-\s*([^–\-]+?)\s*[–\-]\s*(.*)$/);
+            if (mHdr) {
+              flush();
+              currentMajor = String(mHdr[1] || "").trim();
+              const tagline = String(mHdr[2] || "").trim();
+              if (tagline) buffer.push(tagline);
+              continue;
+            }
+            buffer.push(line);
+          }
+          flush();
+        }
+      } catch (e) {
+        console.warn(`[Major Reload] Failed to parse ${descFile}:`, e.message);
+      }
+    }
+
+    // Update/Create majors
+    if (majorsSet.size > 0) {
+      for (const majorName of majorsSet) {
+        const existing = await Major.findOne({ name: majorName });
+        if (existing) {
+          // Update existing major with description if available
+          if (descriptions[majorName]) {
+            await Major.updateOne(
+              { _id: existing._id },
+              { $set: { description: descriptions[majorName] } }
+            );
+            results.descriptions.updated++;
+          }
+          results.majors.updated++;
+        } else {
+          // Create new major
+          await Major.create({
+            name: majorName,
+            description: descriptions[majorName] || "",
+            avg_salary: "",
+            job_outlook: "",
+            work_environment: "",
+          });
+          results.majors.created++;
+        }
+      }
+    }
+
+    // Reload mappings
+    await MajorMapping.deleteMany({});
+    if (mappings.length) {
+      await MajorMapping.insertMany(mappings);
+      results.mappings.count = mappings.length;
+    }
+
+    // Backfill missing descriptions for existing majors
+    try {
+      const existingMajors = await Major.find({}).lean();
+      for (const m of existingMajors) {
+        if (
+          (!m.description || !String(m.description).trim()) &&
+          descriptions[m.name]
+        ) {
+          await Major.updateOne(
+            { _id: m._id },
+            { $set: { description: descriptions[m.name] } }
+          );
+          results.descriptions.updated++;
+        }
+      }
+    } catch (e) {
+      console.warn(`[Major Reload] Error backfilling descriptions:`, e.message);
+    }
+
+    res.json({
+      ok: true,
+      message: "All major data reloaded from Mapping folder",
+      results: {
+        majors: {
+          total: majorsSet.size,
+          updated: results.majors.updated,
+          created: results.majors.created
+        },
+        mappings: {
+          count: results.mappings.count
+        },
+        questions: {
+          english: results.questions.en,
+          arabic: results.questions.ar
+        },
+        descriptions: {
+          updated: results.descriptions.updated
+        }
+      },
+      rootDir: rootDir
+    });
+  } catch (e) {
+    console.error("[Major Reload] Error:", e);
+    res.status(500).json({ 
+      error: "Server error", 
+      details: e.message,
+      stack: process.env.NODE_ENV === "development" ? e.stack : undefined
+    });
   }
 });
 
 app.post(
-  "/api/admin/mbti/personalities/bulk",
+  "/api/admin/personality/questions/bulk",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const qs = req.body.questions;
+      if (!Array.isArray(qs))
+        return res.status(400).json({ error: "questions must be an array" });
+      await PersonalityQuestion.deleteMany({});
+      if (qs.length)
+        await PersonalityQuestion.insertMany(
+          qs.map((q) => ({
+            id: parseInt(q.id),
+            text: String(q.text),
+            dimension: String(q.dimension),
+            direction: String(q.direction),
+          }))
+        );
+      await loadPersonalityCache();
+      res.json({ ok: true, count: qs.length });
+    } catch (e) {
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+app.post(
+  "/api/admin/personality/personalities/bulk",
   authMiddleware,
   async (req, res) => {
     try {
@@ -2412,12 +3249,12 @@ app.post(
         return res
           .status(400)
           .json({ error: "personalities must be an array" });
-      await MbtiPersonality.deleteMany({});
+      await Personality.deleteMany({});
       if (ps.length)
-        await MbtiPersonality.insertMany(
+        await Personality.insertMany(
           ps.map((p) => ({ type: p.type, content: p.content }))
         );
-      await loadMbtiCache();
+      await loadPersonalityCache();
       res.json({ ok: true, count: ps.length });
     } catch (e) {
       res.status(500).json({ error: "Server error" });
@@ -2425,30 +3262,119 @@ app.post(
   }
 );
 
+// Force reload personalities from "MBTI personalities Updated.txt" file
+app.post("/api/admin/personality/reload", authMiddleware, async (req, res) => {
+  try {
+    const updatedPath = path.join(__dirname, "MBTI personalities Updated.txt");
+    console.log(`[Personality Reload] Looking for file at: ${updatedPath}`);
+
+    if (!fs.existsSync(updatedPath)) {
+      console.error(`[Personality Reload] File not found at: ${updatedPath}`);
+      return res.status(404).json({
+        error: "MBTI personalities Updated.txt file not found",
+        path: updatedPath,
+      });
+    }
+
+    console.log(`[Personality Reload] Reading file...`);
+    const data = fs.readFileSync(updatedPath, "utf8");
+    const lines = data.split(/\r?\n/);
+    console.log(`[Personality Reload] File has ${lines.length} lines`);
+
+    let currentType = null;
+    let buffer = [];
+    let count = 0;
+    const typesFound = [];
+
+    const flush = async () => {
+      if (currentType && buffer.length) {
+        const content = buffer.join("\n").trim();
+        if (content) {
+          const result = await Personality.updateOne(
+            { type: currentType },
+            { $set: { content } },
+            { upsert: true }
+          );
+          count++;
+          typesFound.push(currentType);
+          console.log(
+            `[Personality Reload] Updated ${currentType} (matched: ${result.matchedCount}, modified: ${result.modifiedCount})`
+          );
+        }
+      }
+      buffer = [];
+    };
+
+    for (const rawLine of lines) {
+      const line = String(rawLine || "").trim();
+      // Match headers like: The Soul (INFP A) or The Visionary (INFJ‑A) or The Strategist (ENTJ-A)
+      // Handle space, hyphen, or en-dash separator: \s* matches spaces, [‑\-]? matches optional dash/en-dash
+      const m = line.match(/\(([A-Z]{4})\s*[‑\-]?\s*([AT])\)/);
+      if (m) {
+        await flush();
+        currentType = `${m[1]}-${m[2]}`; // m[1] is the type (INFP), m[2] is A or T
+        buffer.push(rawLine);
+      } else {
+        buffer.push(rawLine);
+      }
+    }
+    await flush();
+
+    console.log(
+      `[Personality Reload] Processed ${count} personality types: ${typesFound.join(
+        ", "
+      )}`
+    );
+
+    await loadPersonalityCache();
+    console.log(
+      `[Personality Reload] Cache reloaded. Cache now has ${
+        Object.keys(personalitiesCache).length
+      } types`
+    );
+
+    res.json({
+      ok: true,
+      count: count,
+      types: typesFound,
+      message: "Personalities reloaded from MBTI personalities Updated.txt",
+    });
+  } catch (e) {
+    console.error("Personality reload error:", e);
+    console.error("Stack:", e.stack);
+    res
+      .status(500)
+      .json({ error: "Server error", details: e.message, stack: e.stack });
+  }
+});
+
 // Major test questions endpoints
 app.get("/api/major/questions", authMiddleware, async (req, res) => {
   try {
-    // Require MBTI completion before allowing major test
+    // Require personality test completion before allowing major test
     const latest = await PersonalityResult.findOne({ user_id: req.user.id })
       .sort({ created_at: -1 })
       .lean();
-    if (!latest) return res.status(403).json({ error: "MBTI test required" });
+    if (!latest)
+      return res.status(403).json({ error: "Personality test required" });
 
+    // TEMPORARILY DISABLED FOR DEMO - Subscription check bypassed
+    // TODO: Re-enable subscription check after demo
     // Whitelist: allow specific email without subscription
-    const isWhitelisted =
-      String(req.user?.email || "").toLowerCase() === "ammarbadawi18@gmail.com";
-    if (!isWhitelisted) {
-      // Check subscription status
-      const subscription = await Subscription.findOne({
-        user_id: req.user.id,
-        status: { $in: ["active", "trialing"] },
-      }).lean();
-      if (!subscription) {
-        return res
-          .status(402)
-          .json({ error: "Subscription required to access major test" });
-      }
-    }
+    // const isWhitelisted =
+    //   String(req.user?.email || "").toLowerCase() === "ammarbadawi18@gmail.com";
+    // if (!isWhitelisted) {
+    //   // Check subscription status
+    //   const subscription = await Subscription.findOne({
+    //     user_id: req.user.id,
+    //     status: { $in: ["active", "trialing"] },
+    //   }).lean();
+    //   if (!subscription) {
+    //     return res
+    //       .status(402)
+    //       .json({ error: "Subscription required to access major test" });
+    //   }
+    // }
 
     // Get language from query parameter or Accept-Language header
     const lang =
@@ -2732,58 +3658,325 @@ app.get("/api/debug/seed-major-questions", async (req, res) => {
   }
 });
 
+// Request logging middleware for major calculate
+app.use("/api/major/calculate", (req, res, next) => {
+  if (req.method === "POST") {
+    const timestamp = new Date().toISOString();
+    process.stdout.write(
+      `\n\n[REQUEST] ${timestamp} - POST /api/major/calculate\n`
+    );
+    console.error(`[REQUEST] ${timestamp} - POST /api/major/calculate`);
+    console.log(`[REQUEST] ${timestamp} - POST /api/major/calculate`);
+  }
+  next();
+});
+
 // Major calculation
 app.post("/api/major/calculate", authMiddleware, async (req, res) => {
+  // Use both console.log and console.error to ensure visibility
+  // Also use process.stdout.write for immediate output
+  process.stdout.write(
+    "\n\n[MAJOR CALC] ========== STARTING MAJOR CALCULATION ==========\n"
+  );
+  console.error(
+    "[MAJOR CALC] ========== STARTING MAJOR CALCULATION =========="
+  );
+  console.log(
+    "\n\n[MAJOR CALC] ========== STARTING MAJOR CALCULATION =========="
+  );
+  process.stdout.write(`[MAJOR CALC] User ID: ${req.user.id}\n`);
+  process.stdout.write(`[MAJOR CALC] Timestamp: ${new Date().toISOString()}\n`);
+  console.log(`[MAJOR CALC] User ID: ${req.user.id}`);
+  console.log(`[MAJOR CALC] Timestamp: ${new Date().toISOString()}`);
   try {
-    // Block calculation until MBTI is completed
+    // Block calculation until personality test is completed
     const latestCheck = await PersonalityResult.findOne({
       user_id: req.user.id,
     })
       .sort({ created_at: -1 })
       .lean();
-    if (!latestCheck)
-      return res.status(403).json({ error: "MBTI test required" });
-
-    // Whitelist: allow specific email without subscription
-    const isWhitelisted =
-      String(req.user?.email || "").toLowerCase() === "ammarbadawi18@gmail.com";
-    if (!isWhitelisted) {
-      // Check subscription status
-      const subscription = await Subscription.findOne({
-        user_id: req.user.id,
-        status: { $in: ["active", "trialing"] },
-      }).lean();
-      if (!subscription) {
-        return res
-          .status(402)
-          .json({ error: "Subscription required to access major test" });
-      }
+    if (!latestCheck) {
+      console.log("[MAJOR CALC] ERROR: Personality test required");
+      return res.status(403).json({ error: "Personality test required" });
     }
+    console.log(`[MAJOR CALC] Personality type found: ${latestCheck.type}`);
+
+    // TEMPORARILY DISABLED FOR DEMO - Subscription check bypassed
+    // TODO: Re-enable subscription check after demo
+    // Whitelist: allow specific email without subscription
+    // const isWhitelisted =
+    //   String(req.user?.email || "").toLowerCase() === "ammarbadawi18@gmail.com";
+    // if (!isWhitelisted) {
+    //   // Check subscription status
+    //   const subscription = await Subscription.findOne({
+    //     user_id: req.user.id,
+    //     status: { $in: ["active", "trialing"] },
+    //   }).lean();
+    //   if (!subscription) {
+    //     return res
+    //       .status(402)
+    //       .json({ error: "Subscription required to access major test" });
+    //   }
+    // }
 
     const { answers } = req.body;
-    if (!answers || typeof answers !== "object")
+    console.log(
+      `[MAJOR CALC] Received ${Object.keys(answers || {}).length} answers`
+    );
+    if (!answers || typeof answers !== "object") {
+      console.log("[MAJOR CALC] ERROR: Invalid answers");
       return res.status(400).json({ error: "Invalid answers" });
+    }
     const mapping = await MajorMapping.find({}).lean();
+    console.log(`[MAJOR CALC] Database: ${MONGODB_URI}`);
+    console.log(`[MAJOR CALC] Mapping entries loaded: ${mapping.length}`);
     if (mapping.length === 0)
       return res.status(400).json({ error: "Major mapping not loaded" });
     const majorsList = await Major.find({}).lean();
+    console.log(`[MAJOR CALC] Majors loaded: ${majorsList.length}`);
     if (majorsList.length === 0)
       return res.status(400).json({ error: "Majors list not loaded" });
+
+    // Check for duplicate Tourism/Hospitality entries in Business & Management
+    const tourismInBusiness = mapping
+      .filter(
+        (m) =>
+          m.major_name === "Tourism & Event Mgmt." ||
+          m.major_name === "Hospitality Management"
+      )
+      .filter((m) => {
+        // Check if it's from Business & Management category (would have Business-related traits)
+        const businessTraits = [
+          "business & economics",
+          "accounting",
+          "finance",
+          "marketing",
+        ];
+        return businessTraits.some(
+          (trait) =>
+            m.option_value && m.option_value.toLowerCase().includes(trait)
+        );
+      });
+    if (tourismInBusiness.length > 0) {
+      console.log(
+        `[MAJOR CALC] ⚠️  WARNING: Found ${tourismInBusiness.length} Tourism/Hospitality entries that might be duplicates from Business & Management`
+      );
+    }
     const tally = new Map();
+    const scoreBreakdown = new Map(); // Track which traits contribute to which majors
+
+    // Translation map: Arabic topic names -> English mapping values
+    // This is needed because questions can be in Arabic but mapping is in English
+    const topicTranslationMap = new Map([
+      // Academic Strengths
+      ["الرياضيات", "Mathematics"],
+      ["الفيزياء", "Physics"],
+      ["الكيمياء", "Chemistry"],
+      ["الأحياء", "Biology"],
+      ["البرمجة والمنطق", "Programming & Logic"],
+      ["الكتابة والتواصل", "Writing & Communication"],
+      ["القراءة والتحليل", "Reading & Analysis"],
+      ["العلوم الاجتماعية", "Social Sciences"],
+      ["التفكير البصري المكاني", "Visual-Spatial Thinking"],
+      ["التصميم والإبداع", "Design & Creativity"],
+      ["الأعمال والاقتصاد", "Business & Economics"],
+      ["اللغات الأجنبية", "Foreign Languages"],
+      ["القيادة والخطابة العامة", "Leadership & Public Speaking"],
+      ["البحث والتحقيق", "Research & Investigation"],
+      // Core Values
+      ["الإبداع", "Creativity"],
+      ["الاستقرار", "Stability"],
+      ["مساعدة الآخرين", "Helping Others"],
+      ["القيادة", "Leadership"],
+      ["ال prestigio", "Prestige"], // Note: typo in Arabic file
+      ["prestigio", "Prestige"], // Handle both
+      ["التحدي الفكري", "Intellectual Challenge"],
+      ["العمل الجماعي", "Teamwork"],
+      ["الاستقلالية", "Independence"],
+      ["الابتكار", "Innovation"],
+      ["التأثير", "Impact"],
+      ["الكفاءة والنظام", "Efficiency & Order"],
+      ["التقدير الثقافي", "Cultural Appreciation"],
+      ["الطبيعة والبيئة", "Nature & Environment"],
+      ["المكافأة المالية", "Financial Reward"],
+      // Categories (for fallback)
+      ["القوة الأكاديمية", "Academic Strength"],
+      ["القيمة الأساسية", "Core Value"],
+    ]);
+
+    // Function to translate Arabic topics to English
+    const translateTopic = (topic) => {
+      if (!topic) return topic;
+      const normalized = String(topic).trim();
+      // Check if it's already English (contains Latin characters)
+      if (/[a-zA-Z]/.test(normalized)) {
+        return normalized; // Already English
+      }
+      // Try to translate from Arabic
+      return (
+        topicTranslationMap.get(normalized) ||
+        topicTranslationMap.get(normalized.toLowerCase()) ||
+        topic
+      );
+    };
+
+    // Calculate inverse frequency weighting: traits that appear in many majors get lower weight
+    // This prevents generic traits (like "E", "Teamwork", "Leadership & Public Speaking") from dominating
+    const traitFrequency = new Map(); // key: "category::value" -> Set of major names
+    for (const r of mapping) {
+      const key = `${String(r.category || "").toLowerCase()}::${String(
+        r.option_value || ""
+      ).toLowerCase()}`;
+      if (!traitFrequency.has(key)) traitFrequency.set(key, new Set());
+      traitFrequency.get(key).add(r.major_name);
+    }
+    const maxFrequency = Math.max(
+      ...Array.from(traitFrequency.values()).map((s) => s.size),
+      1
+    );
+    console.log(`[MAJOR CALC] Max trait frequency: ${maxFrequency}`);
+
+    // Inverse frequency weight: rare traits get higher weight, common traits get lower weight
+    // Very aggressive formula to heavily penalize very common traits and boost rare ones
+    // Formula: weight = 0.15 + (1 - frequency/maxFrequency) * 1.5
+    // This gives very common traits (appearing in many majors) weight of 0.15-0.3, rare traits weight up to 1.65
+    // This significantly reduces the impact of generic traits like "E", "Teamwork", "Leadership & Public Speaking"
+    // And boosts unique traits like "Programming & Logic" that strongly indicate specific majors
+    const getInverseFrequencyWeight = (category, value) => {
+      const key = `${String(category || "").toLowerCase()}::${String(
+        value || ""
+      ).toLowerCase()}`;
+      const frequency = traitFrequency.get(key)?.size || 1;
+      const normalizedFreq = frequency / maxFrequency;
+      // Very aggressive: common traits get 0.15-0.3x weight, rare traits get up to 1.65x
+      return 0.15 + (1 - normalizedFreq) * 1.5; // Range: 0.15 (very common) to 1.65 (very rare)
+    };
+
+    // Track strong positive signals for context-aware scoring
+    const strongSignals = new Map(); // trait -> total positive weight
+    const negativeSignals = new Map(); // trait -> total negative weight
+
+    // Major-specific core trait multipliers
+    // These traits are essential for these majors and should get extra weight
+    const coreTraitMultipliers = new Map([
+      // Computing majors: Programming & Logic is critical
+      ["computer science & data", new Map([["programming & logic", 1.5]])],
+      [
+        "computer & communications eng.",
+        new Map([["programming & logic", 1.5]]),
+      ],
+      ["computer engineering", new Map([["programming & logic", 1.4]])],
+      ["information technology", new Map([["programming & logic", 1.4]])],
+      ["software engineering", new Map([["programming & logic", 1.5]])],
+      ["cybersecurity", new Map([["programming & logic", 1.4]])],
+      ["animation & multimedia", new Map([["programming & logic", 1.3]])],
+      // Engineering: Mathematics and Physics are important but Programming can offset negatives
+      [
+        "computer & communications eng.",
+        new Map([
+          ["programming & logic", 1.5],
+          ["mathematics", 0.7],
+        ]),
+      ],
+      [
+        "computer engineering",
+        new Map([
+          ["programming & logic", 1.4],
+          ["mathematics", 0.7],
+        ]),
+      ],
+      // Business: Leadership and Business & Economics are core
+      [
+        "entrepreneurship & innovation",
+        new Map([
+          ["leadership", 1.3],
+          ["business & economics", 1.2],
+          ["programming & logic", 1.2],
+        ]),
+      ],
+      [
+        "business administration & mgmt.",
+        new Map([
+          ["leadership", 1.3],
+          ["business & economics", 1.2],
+        ]),
+      ],
+    ]);
 
     function addScoreForValue(rawVal, category, factor = 1) {
-      const value = String(rawVal).trim().toLowerCase();
+      const value = String(rawVal || "")
+        .trim()
+        .toLowerCase();
       const cat = String(category || "")
         .trim()
         .toLowerCase();
       if (!value) return;
       const f = Number.isFinite(factor) ? factor : 1;
+      // Only process if factor is meaningful (not zero or NaN)
+      if (!Number.isFinite(f) || f === 0) return;
+
+      // Track strong signals for context-aware scoring
+      if (f > 0) {
+        strongSignals.set(value, (strongSignals.get(value) || 0) + f);
+      } else if (f < 0) {
+        negativeSignals.set(
+          value,
+          (negativeSignals.get(value) || 0) + Math.abs(f)
+        );
+      }
+
+      // Apply inverse frequency weighting to reduce impact of common traits
+      const rarityWeight = getInverseFrequencyWeight(cat, value);
+      let adjustedFactor = f * rarityWeight;
+      const traitFreq = traitFrequency.get(`${cat}::${value}`)?.size || 0;
+
       for (const r of mapping) {
-        const rVal = String(r.option_value || "").toLowerCase();
-        const rCat = String(r.category || "").toLowerCase();
+        const rVal = String(r.option_value || "")
+          .trim()
+          .toLowerCase();
+        const rCat = String(r.category || "")
+          .trim()
+          .toLowerCase();
+        // Exact match on value, and category must match if provided
         if (rVal === value && (!cat || rCat === cat)) {
+          const majorNameLower = String(r.major_name || "").toLowerCase();
+
+          // Apply major-specific core trait multiplier
+          let coreMultiplier = 1.0;
+          const majorMultipliers = coreTraitMultipliers.get(majorNameLower);
+          if (majorMultipliers) {
+            const traitMultiplier = majorMultipliers.get(value);
+            if (traitMultiplier) {
+              coreMultiplier = traitMultiplier;
+              // Only apply multiplier for positive signals
+              if (f > 0) {
+                adjustedFactor = f * rarityWeight * coreMultiplier;
+              }
+            }
+          }
+
           const base = parseInt(r.score || 1) || 1;
-          tally.set(r.major_name, (tally.get(r.major_name) || 0) + base * f);
+          const currentScore = tally.get(r.major_name) || 0;
+          const scoreDelta = base * adjustedFactor;
+          const newScore = currentScore + scoreDelta;
+          tally.set(r.major_name, newScore);
+
+          // Track breakdown for debugging
+          const majorName = r.major_name;
+          if (!scoreBreakdown.has(majorName)) {
+            scoreBreakdown.set(majorName, []);
+          }
+          scoreBreakdown.get(majorName).push({
+            trait: value,
+            category: cat,
+            baseScore: base,
+            likertFactor: f,
+            rarityWeight: rarityWeight.toFixed(3),
+            coreMultiplier:
+              coreMultiplier !== 1.0 ? coreMultiplier.toFixed(2) : "1.00",
+            traitFrequency: traitFreq,
+            contribution: scoreDelta.toFixed(3),
+          });
         }
       }
     }
@@ -2819,12 +4012,35 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
           ).toLowerCase()}`;
           const denom = topicCounts.get(key) || 1;
           const normalizedW = w / denom; // average contribution per topic
-          addScoreForValue(q.topic || q.category, q.category, normalizedW);
+          // Prefer topic over category for more specific matching
+          // Only use category as fallback if topic is not available
+          let matchValue = q.topic ? q.topic : q.category;
+          // Translate Arabic topics to English for mapping
+          const translatedValue = translateTopic(matchValue);
+          const translatedCategory = translateTopic(q.category);
+
+          if (translatedValue !== matchValue) {
+            console.log(
+              `[MAJOR CALC] Q${qid}: Translated "${matchValue}" -> "${translatedValue}"`
+            );
+          }
+
+          if (translatedValue) {
+            console.log(
+              `[MAJOR CALC] Q${qid}: "${q.question?.substring(
+                0,
+                50
+              )}..." -> ${choice} (weight: ${w}, normalized: ${normalizedW.toFixed(
+                3
+              )}, matching: "${translatedValue}")`
+            );
+            addScoreForValue(translatedValue, translatedCategory, normalizedW);
+          }
         }
       });
     } catch (e) {}
 
-    // Blend latest MBTI result for logged-in user if available
+    // Blend latest personality result for logged-in user if available
     try {
       const token =
         req.cookies.token ||
@@ -2838,11 +4054,80 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
         if (type) {
           const four = String(type).split("-")[0];
           const letters = four.split("");
-          const MBTI_BLEND = 0.5; // reduce MBTI influence and avoid cross-category double counting
-          letters.forEach((v) => addScoreForValue(v, "MBTI", MBTI_BLEND));
+          console.log(
+            `[MAJOR CALC] Adding personality type: ${type} (letters: ${letters.join(
+              ", "
+            )})`
+          );
+          const PERSONALITY_BLEND = 0.5; // reduce personality influence and avoid cross-category double counting
+          letters.forEach((v) =>
+            addScoreForValue(v, "Personality", PERSONALITY_BLEND)
+          );
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.log(`[MAJOR CALC] Error processing questions: ${e.message}`);
+    }
+
+    // Post-processing: Mitigate negative scores for computing majors when core traits are strong
+    // If user strongly agrees with Programming & Logic, reduce the impact of negative Mathematics/Physics
+    // for computing-related majors
+    const programmingStrength = strongSignals.get("programming & logic") || 0;
+    if (programmingStrength > 1.0) {
+      // User has strong positive signal for Programming & Logic
+      const computingMajors = [
+        "Computer Science & Data",
+        "Computer & Communications Eng.",
+        "Computer Engineering",
+        "Information Technology",
+        "Software Engineering",
+        "Cybersecurity",
+        "Animation & Multimedia",
+      ];
+
+      computingMajors.forEach((majorName) => {
+        const currentScore = tally.get(majorName) || 0;
+        if (currentScore > 0) {
+          // Check if this major was hurt by negative Mathematics or Physics
+          const mathNegative = negativeSignals.get("mathematics") || 0;
+          const physicsNegative = negativeSignals.get("physics") || 0;
+
+          // If Programming is strong (>= 1.5) and there are math/physics negatives, apply mitigation
+          if (
+            programmingStrength >= 1.5 &&
+            (mathNegative > 0 || physicsNegative > 0)
+          ) {
+            // Reduce the impact of negatives by 40% for computing majors when Programming is very strong
+            const mitigationFactor = 0.4;
+            let mitigation = 0;
+
+            // Find negative contributions from Mathematics and Physics for this major
+            const breakdown = scoreBreakdown.get(majorName) || [];
+            breakdown.forEach((item) => {
+              if (
+                (item.trait === "mathematics" || item.trait === "physics") &&
+                parseFloat(item.contribution) < 0
+              ) {
+                mitigation +=
+                  Math.abs(parseFloat(item.contribution)) * mitigationFactor;
+              }
+            });
+
+            if (mitigation > 0) {
+              const newScore = currentScore + mitigation;
+              tally.set(majorName, newScore);
+              console.log(
+                `[MAJOR CALC] Applied negative mitigation for ${majorName}: +${mitigation.toFixed(
+                  3
+                )} (Programming strength: ${programmingStrength.toFixed(2)})`
+              );
+            }
+          }
+        }
+      });
+    }
+
+    // Log detailed breakdown for top majors
     const enriched = majorsList.map((m) => ({
       name: m.name,
       match: tally.get(m.name) || 0,
@@ -2853,9 +4138,71 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
     }));
     enriched.sort((a, b) => b.match - a.match);
     const positives = enriched.filter((e) => e.match > 0);
-    const top = (positives.length ? positives : enriched).slice(0, 3);
-    const maxScore = top[0]?.match > 0 ? top[0].match : 1;
-    const normalized = top.map((e) => ({
+    const top = (positives.length ? positives : enriched).slice(0, 10); // Show top 10 for debugging
+
+    process.stdout.write("\n========== MAJOR SCORING BREAKDOWN ==========\n");
+    console.error("\n========== MAJOR SCORING BREAKDOWN ==========");
+    console.log("\n========== MAJOR SCORING BREAKDOWN ==========");
+    top.forEach((major, idx) => {
+      const msg = `\n#${idx + 1} ${major.name}: ${major.match.toFixed(
+        3
+      )} points`;
+      process.stdout.write(msg + "\n");
+      console.error(msg);
+      console.log(
+        `\n#${idx + 1} ${major.name}: ${major.match.toFixed(3)} points`
+      );
+      const breakdown = scoreBreakdown.get(major.name) || [];
+      if (breakdown.length > 0) {
+        // Group by trait and sum contributions
+        const byTrait = new Map();
+        breakdown.forEach((item) => {
+          const key = `${item.category}::${item.trait}`;
+          if (!byTrait.has(key)) {
+            byTrait.set(key, {
+              trait: item.trait,
+              category: item.category,
+              frequency: item.traitFrequency,
+              rarityWeight: item.rarityWeight,
+              coreMultiplier: item.coreMultiplier,
+              totalContribution: 0,
+            });
+          }
+          byTrait.get(key).totalContribution += parseFloat(item.contribution);
+        });
+
+        // Sort by contribution
+        const sorted = Array.from(byTrait.values())
+          .sort(
+            (a, b) =>
+              Math.abs(b.totalContribution) - Math.abs(a.totalContribution)
+          )
+          .slice(0, 10); // Top 10 contributing traits
+
+        sorted.forEach((item) => {
+          const coreMult =
+            item.coreMultiplier && parseFloat(item.coreMultiplier) !== 1.0
+              ? `, core: ${item.coreMultiplier}x`
+              : "";
+          console.log(
+            `  - ${item.category}::"${item.trait}" (freq: ${
+              item.frequency
+            }, rarity: ${
+              item.rarityWeight
+            }x${coreMult}) -> +${item.totalContribution.toFixed(3)}`
+          );
+        });
+      } else {
+        console.log(`  (No matching traits found)`);
+      }
+    });
+    process.stdout.write("==========================================\n\n");
+    console.error("==========================================\n");
+    console.log("==========================================\n");
+
+    const top3 = top.slice(0, 3);
+    const maxScore = top3[0]?.match > 0 ? top3[0].match : 1;
+    const normalized = top3.map((e) => ({
       ...e,
       match: Math.max(0, Math.round((e.match / maxScore) * 100)),
     }));
@@ -2863,10 +4210,22 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
       if (req.cookies.token) {
         const { id } = jwt.verify(req.cookies.token, JWT_SECRET);
         await MajorTest.create({ user_id: id, raw_answers: answers });
+        console.log("[MAJOR CALC] Test results saved to database");
       }
-    } catch (e) {}
+    } catch (e) {
+      console.log(`[MAJOR CALC] Error saving test: ${e.message}`);
+    }
+
+    console.log("\n[MAJOR CALC] Final top 3 results:");
+    normalized.forEach((r, idx) => {
+      console.log(`  ${idx + 1}. ${r.name}: ${r.match}%`);
+    });
+    console.log("[MAJOR CALC] ========== CALCULATION COMPLETE ==========\n\n");
+
     res.json({ results: normalized });
   } catch (e) {
+    console.error("[MAJOR CALC] FATAL ERROR:", e);
+    console.error("[MAJOR CALC] Stack:", e.stack);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -2911,22 +4270,179 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
         // Calculate major scores from stored answers
         const tally = new Map();
 
+        // Translation map: Arabic topic names -> English mapping values (same as calculate endpoint)
+        const topicTranslationMap = new Map([
+          ["الرياضيات", "Mathematics"],
+          ["الفيزياء", "Physics"],
+          ["الكيمياء", "Chemistry"],
+          ["الأحياء", "Biology"],
+          ["البرمجة والمنطق", "Programming & Logic"],
+          ["الكتابة والتواصل", "Writing & Communication"],
+          ["القراءة والتحليل", "Reading & Analysis"],
+          ["العلوم الاجتماعية", "Social Sciences"],
+          ["التفكير البصري المكاني", "Visual-Spatial Thinking"],
+          ["التصميم والإبداع", "Design & Creativity"],
+          ["الأعمال والاقتصاد", "Business & Economics"],
+          ["اللغات الأجنبية", "Foreign Languages"],
+          ["القيادة والخطابة العامة", "Leadership & Public Speaking"],
+          ["البحث والتحقيق", "Research & Investigation"],
+          ["الإبداع", "Creativity"],
+          ["الاستقرار", "Stability"],
+          ["مساعدة الآخرين", "Helping Others"],
+          ["القيادة", "Leadership"],
+          ["ال prestigio", "Prestige"],
+          ["prestigio", "Prestige"],
+          ["التحدي الفكري", "Intellectual Challenge"],
+          ["العمل الجماعي", "Teamwork"],
+          ["الاستقلالية", "Independence"],
+          ["الابتكار", "Innovation"],
+          ["التأثير", "Impact"],
+          ["الكفاءة والنظام", "Efficiency & Order"],
+          ["التقدير الثقافي", "Cultural Appreciation"],
+          ["الطبيعة والبيئة", "Nature & Environment"],
+          ["المكافأة المالية", "Financial Reward"],
+          ["القوة الأكاديمية", "Academic Strength"],
+          ["القيمة الأساسية", "Core Value"],
+        ]);
+        const translateTopic = (topic) => {
+          if (!topic) return topic;
+          const normalized = String(topic).trim();
+          if (/[a-zA-Z]/.test(normalized)) return normalized;
+          return (
+            topicTranslationMap.get(normalized) ||
+            topicTranslationMap.get(normalized.toLowerCase()) ||
+            topic
+          );
+        };
+
+        // Calculate inverse frequency weighting: traits that appear in many majors get lower weight
+        const traitFrequency = new Map(); // key: "category::value" -> Set of major names
+        for (const r of mapping) {
+          const key = `${String(r.category || "").toLowerCase()}::${String(
+            r.option_value || ""
+          ).toLowerCase()}`;
+          if (!traitFrequency.has(key)) traitFrequency.set(key, new Set());
+          traitFrequency.get(key).add(r.major_name);
+        }
+        const maxFrequency = Math.max(
+          ...Array.from(traitFrequency.values()).map((s) => s.size),
+          1
+        );
+
+        // Inverse frequency weight: rare traits get higher weight, common traits get lower weight
+        // Very aggressive formula to heavily penalize very common traits and boost rare ones
+        const getInverseFrequencyWeight = (category, value) => {
+          const key = `${String(category || "").toLowerCase()}::${String(
+            value || ""
+          ).toLowerCase()}`;
+          const frequency = traitFrequency.get(key)?.size || 1;
+          const normalizedFreq = frequency / maxFrequency;
+          // Very aggressive: common traits get 0.15-0.3x weight, rare traits get up to 1.65x
+          return 0.15 + (1 - normalizedFreq) * 1.5; // Range: 0.15 (very common) to 1.65 (very rare)
+        };
+
+        // Track strong positive signals for context-aware scoring
+        const strongSignals = new Map(); // trait -> total positive weight
+        const negativeSignals = new Map(); // trait -> total negative weight
+
+        // Major-specific core trait multipliers (same as calculate endpoint)
+        const coreTraitMultipliers = new Map([
+          ["computer science & data", new Map([["programming & logic", 1.5]])],
+          [
+            "computer & communications eng.",
+            new Map([["programming & logic", 1.5]]),
+          ],
+          ["computer engineering", new Map([["programming & logic", 1.4]])],
+          ["information technology", new Map([["programming & logic", 1.4]])],
+          ["software engineering", new Map([["programming & logic", 1.5]])],
+          ["cybersecurity", new Map([["programming & logic", 1.4]])],
+          ["animation & multimedia", new Map([["programming & logic", 1.3]])],
+          [
+            "computer & communications eng.",
+            new Map([
+              ["programming & logic", 1.5],
+              ["mathematics", 0.7],
+            ]),
+          ],
+          [
+            "computer engineering",
+            new Map([
+              ["programming & logic", 1.4],
+              ["mathematics", 0.7],
+            ]),
+          ],
+          [
+            "entrepreneurship & innovation",
+            new Map([
+              ["leadership", 1.3],
+              ["business & economics", 1.2],
+              ["programming & logic", 1.2],
+            ]),
+          ],
+          [
+            "business administration & mgmt.",
+            new Map([
+              ["leadership", 1.3],
+              ["business & economics", 1.2],
+            ]),
+          ],
+        ]);
+
         function addScoreForValue(rawVal, category, factor = 1) {
-          const value = String(rawVal).trim().toLowerCase();
+          const value = String(rawVal || "")
+            .trim()
+            .toLowerCase();
           const cat = String(category || "")
             .trim()
             .toLowerCase();
           if (!value) return;
           const f = Number.isFinite(factor) ? factor : 1;
+          // Only process if factor is meaningful (not zero or NaN)
+          if (!Number.isFinite(f) || f === 0) return;
+
+          // Track strong signals for context-aware scoring
+          if (f > 0) {
+            strongSignals.set(value, (strongSignals.get(value) || 0) + f);
+          } else if (f < 0) {
+            negativeSignals.set(
+              value,
+              (negativeSignals.get(value) || 0) + Math.abs(f)
+            );
+          }
+
+          // Apply inverse frequency weighting to reduce impact of common traits
+          const rarityWeight = getInverseFrequencyWeight(cat, value);
+          let adjustedFactor = f * rarityWeight;
+
           for (const r of mapping) {
-            const rVal = String(r.option_value || "").toLowerCase();
-            const rCat = String(r.category || "").toLowerCase();
+            const rVal = String(r.option_value || "")
+              .trim()
+              .toLowerCase();
+            const rCat = String(r.category || "")
+              .trim()
+              .toLowerCase();
+            // Exact match on value, and category must match if provided
             if (rVal === value && (!cat || rCat === cat)) {
+              const majorNameLower = String(r.major_name || "").toLowerCase();
+
+              // Apply major-specific core trait multiplier
+              let coreMultiplier = 1.0;
+              const majorMultipliers = coreTraitMultipliers.get(majorNameLower);
+              if (majorMultipliers) {
+                const traitMultiplier = majorMultipliers.get(value);
+                if (traitMultiplier) {
+                  coreMultiplier = traitMultiplier;
+                  // Only apply multiplier for positive signals
+                  if (f > 0) {
+                    adjustedFactor = f * rarityWeight * coreMultiplier;
+                  }
+                }
+              }
+
               const base = parseInt(r.score || 1) || 1;
-              tally.set(
-                r.major_name,
-                (tally.get(r.major_name) || 0) + base * f
-              );
+              const currentScore = tally.get(r.major_name) || 0;
+              const newScore = currentScore + base * adjustedFactor;
+              tally.set(r.major_name, newScore);
             }
           }
         }
@@ -2962,11 +4478,23 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
             ).toLowerCase()}`;
             const denom = topicCounts.get(key) || 1;
             const normalizedW = w / denom; // average contribution per topic
-            addScoreForValue(q.topic || q.category, q.category, normalizedW);
+            // Prefer topic over category for more specific matching
+            // Only use category as fallback if topic is not available
+            let matchValue = q.topic ? q.topic : q.category;
+            // Translate Arabic topics to English for mapping
+            const translatedValue = translateTopic(matchValue);
+            const translatedCategory = translateTopic(q.category);
+            if (translatedValue) {
+              addScoreForValue(
+                translatedValue,
+                translatedCategory,
+                normalizedW
+              );
+            }
           }
         });
 
-        // Blend latest MBTI result for logged-in user if available
+        // Blend latest personality result for logged-in user if available
         try {
           const latest = await PersonalityResult.findOne({
             user_id: req.user.id,
@@ -2977,10 +4505,49 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
           if (type) {
             const four = String(type).split("-")[0];
             const letters = four.split("");
-            const MBTI_BLEND = 0.5; // reduce MBTI influence and avoid cross-category double counting
-            letters.forEach((v) => addScoreForValue(v, "MBTI", MBTI_BLEND));
+            const PERSONALITY_BLEND = 0.5; // reduce personality influence and avoid cross-category double counting
+            letters.forEach((v) =>
+              addScoreForValue(v, "Personality", PERSONALITY_BLEND)
+            );
           }
         } catch (e) {}
+
+        // Post-processing: Mitigate negative scores for computing majors when core traits are strong
+        // (Simplified version for profile endpoint - no detailed breakdown tracking)
+        const programmingStrength =
+          strongSignals.get("programming & logic") || 0;
+        if (programmingStrength > 1.0) {
+          const computingMajors = [
+            "Computer Science & Data",
+            "Computer & Communications Eng.",
+            "Computer Engineering",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity",
+            "Animation & Multimedia",
+          ];
+
+          computingMajors.forEach((majorName) => {
+            const currentScore = tally.get(majorName) || 0;
+            if (currentScore > 0) {
+              const mathNegative = negativeSignals.get("mathematics") || 0;
+              const physicsNegative = negativeSignals.get("physics") || 0;
+
+              if (
+                programmingStrength >= 1.5 &&
+                (mathNegative > 0 || physicsNegative > 0)
+              ) {
+                // Estimate mitigation: reduce negative impact by 30% when Programming is very strong
+                const estimatedNegativeImpact =
+                  (mathNegative + physicsNegative) * 0.3;
+                if (estimatedNegativeImpact > 0) {
+                  const newScore = currentScore + estimatedNegativeImpact;
+                  tally.set(majorName, newScore);
+                }
+              }
+            }
+          });
+        }
 
         // Get top majors
         const enriched = majorsList.map((m) => ({
@@ -3019,7 +4586,7 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
     let formattedPersonalityResult = null;
     if (personalityResult) {
       // Load personality cache if needed
-      if (!Object.keys(personalitiesCache).length) await loadMbtiCache();
+      if (!Object.keys(personalitiesCache).length) await loadPersonalityCache();
 
       const personalityData = personalitiesCache[personalityResult.type];
       formattedPersonalityResult = {
@@ -3054,7 +4621,7 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
   }
 });
 
-// Helper: build major-test/MBTI context for AI grounding
+// Helper: build major-test/personality context for AI grounding
 async function buildMajorAiContext(userId) {
   try {
     // Latest major test answers
@@ -3067,15 +4634,16 @@ async function buildMajorAiContext(userId) {
     const rawAnswers = latestTest.raw_answers || {};
 
     // Load dependencies
-    const [mapping, majorsList, questions, latestMbti] = await Promise.all([
-      MajorMapping.find({}).lean(),
-      Major.find({}).lean(),
-      MajorQuestion.find({}).lean(),
-      PersonalityResult.findOne({ user_id: userId })
-        .sort({ created_at: -1 })
-        .lean()
-        .catch(() => null),
-    ]);
+    const [mapping, majorsList, questions, latestPersonality] =
+      await Promise.all([
+        MajorMapping.find({}).lean(),
+        Major.find({}).lean(),
+        MajorQuestion.find({}).lean(),
+        PersonalityResult.findOne({ user_id: userId })
+          .sort({ created_at: -1 })
+          .lean()
+          .catch(() => null),
+      ]);
     if (
       !Array.isArray(mapping) ||
       mapping.length === 0 ||
@@ -3084,7 +4652,7 @@ async function buildMajorAiContext(userId) {
     ) {
       return {
         note: "Mapping or majors list not loaded",
-        mbti: latestMbti?.type || null,
+        personality: latestPersonality?.type || null,
       };
     }
 
@@ -3155,18 +4723,18 @@ async function buildMajorAiContext(userId) {
       };
     });
 
-    // MBTI blend (same as /api/major/calculate)
-    let mbtiType = latestMbti?.type || null;
-    if (mbtiType) {
-      const MBTI_BLEND = 0.5;
-      const letters = String(mbtiType).split("-")[0].split("");
+    // Personality blend (same as /api/major/calculate)
+    let personalityType = latestPersonality?.type || null;
+    if (personalityType) {
+      const PERSONALITY_BLEND = 0.5;
+      const letters = String(personalityType).split("-")[0].split("");
       for (const letter of letters) {
-        const key = `mbti::${String(letter).toLowerCase()}`;
+        const key = `personality::${String(letter).toLowerCase()}`;
         const rows = idx.get(key) || [];
         for (const r of rows) {
           const base = parseInt(r.score || 1) || 1;
-          const delta = base * MBTI_BLEND;
-          add(r.major_name, delta, "MBTI", letter);
+          const delta = base * PERSONALITY_BLEND;
+          add(r.major_name, delta, "Personality", letter);
         }
       }
     }
@@ -3204,21 +4772,21 @@ async function buildMajorAiContext(userId) {
       return arr.slice(0, 8);
     }
 
-    // Optionally include a short MBTI description snippet
-    let mbtiSnippet = null;
+    // Optionally include a short personality description snippet
+    let personalitySnippet = null;
     try {
       if (
-        mbtiType &&
-        personalitiesCache[mbtiType] &&
-        personalitiesCache[mbtiType].content
+        personalityType &&
+        personalitiesCache[personalityType] &&
+        personalitiesCache[personalityType].content
       ) {
-        const raw = String(personalitiesCache[mbtiType].content);
-        mbtiSnippet = raw.slice(0, 700);
+        const raw = String(personalitiesCache[personalityType].content);
+        personalitySnippet = raw.slice(0, 700);
       }
     } catch (_) {}
 
     return {
-      mbti: { type: mbtiType, snippet: mbtiSnippet },
+      personality: { type: personalityType, snippet: personalitySnippet },
       topMajors: normalizedTop.map((t) => ({
         name: t.name,
         match: t.match,
@@ -3235,10 +4803,12 @@ async function buildMajorAiContext(userId) {
 // OpenAI Chat endpoint
 app.post("/api/chat", authMiddleware, async (req, res) => {
   try {
-    if (!OPENAI_API_KEY)
+    if (!OPENAI_API_KEY) {
       return res
         .status(500)
         .json({ error: "Server not configured: missing OPENAI_API_KEY" });
+    }
+
     const body = req.body || {};
     const rawMessages = Array.isArray(body.messages) ? body.messages : [];
     const single = body.message ? String(body.message) : "";
@@ -3247,20 +4817,52 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
     const temperature = Number.isFinite(temperatureRaw)
       ? Math.min(Math.max(temperatureRaw, 0), 2)
       : 0.7;
+    const requestedConversationId = body.conversationId
+      ? String(body.conversationId)
+      : null;
+    const requestedTitle =
+      typeof body.conversationTitle === "string"
+        ? body.conversationTitle.trim()
+        : "";
 
     const userMessages = rawMessages.length
       ? rawMessages
       : single
       ? [{ role: "user", content: single }]
       : [];
-    if (!userMessages.length)
+    if (!userMessages.length) {
       return res.status(400).json({ error: "messages or message is required" });
+    }
+
+    const history = await getOrCreateChatHistory(req.user.id);
+    let conversation = requestedConversationId
+      ? findConversationById(history, requestedConversationId)
+      : null;
+    if (!conversation) {
+      conversation = history.conversations[0];
+    }
+    if (!conversation) {
+      const fallback = createEmptyConversation(
+        requestedTitle || DEFAULT_CHAT_TITLE
+      );
+      history.conversations.unshift(fallback);
+      conversation = history.conversations[0];
+    }
+
+    const sanitizedConversationMessages = sanitizeIncomingMessages(
+      userMessages
+    );
+    if (sanitizedConversationMessages.length) {
+      conversation.messages = sanitizedConversationMessages;
+    } else if (!Array.isArray(conversation.messages)) {
+      conversation.messages = [];
+    }
 
     // Lightweight domain-specific system instruction
     let systemContent =
-      "You are Major Match AI, a helpful assistant for students exploring majors and careers. Be concise and clear. Always ground your answers in the user's own test responses and MBTI when applicable.";
+      "You are Major Match AI, a helpful assistant for students exploring majors and careers. Be concise and clear. Always ground your answers in the user's own test responses and personality when applicable.";
 
-    // Build latest test/MBTI context for grounding
+    // Build latest test/personality context for grounding
     const majorContext = await buildMajorAiContext(req.user.id);
     const contextMessage = majorContext
       ? {
@@ -3271,9 +4873,37 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
         }
       : null;
 
+    let focusInstruction = null;
+    if (majorContext && Array.isArray(majorContext.topMajors)) {
+      const latestUserMessage = [...userMessages]
+        .reverse()
+        .find((m) => String(m.role).toLowerCase() === "user");
+      if (latestUserMessage && latestUserMessage.content) {
+        const normalizedContent = String(latestUserMessage.content).toLowerCase();
+        const askedWhy =
+          normalizedContent.includes("why") &&
+          (normalizedContent.includes("major") ||
+            normalizedContent.includes("recommend"));
+        if (askedWhy) {
+          const mentioned = majorContext.topMajors.find((m) =>
+            normalizedContent.includes(String(m.name || "").toLowerCase())
+          );
+          if (mentioned) {
+            focusInstruction = {
+              role: "system",
+              content: `The user specifically asked why they matched with "${mentioned.name}". Use their latest major test reasons and MBTI/personality result to explain the recommendation. Reference the strongest categories/topics from the reasons list and mention their personality type ${
+                majorContext.personality?.type || "unknown"
+              }. Keep the explanation grounded in their actual answers.`,
+            };
+          }
+        }
+      }
+    }
+
     const messages = [
       { role: "system", content: systemContent },
       ...(contextMessage ? [contextMessage] : []),
+      ...(focusInstruction ? [focusInstruction] : []),
       ...userMessages.map((m) => ({
         role: String(m.role || "user"),
         content: String(m.content || ""),
@@ -3305,36 +4935,22 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
         ? String(resp.data.choices[0].message.content).trim()
         : "";
 
-    // Save chat history (only user and assistant messages, exclude system messages)
-    try {
-      // Filter out system messages from the conversation history
-      const conversationMessages = rawMessages
-        .filter((m) => m.role === "user" || m.role === "assistant")
-        .map((m) => ({
-          role: String(m.role || "user"),
-          content: String(m.content || ""),
-        }));
+    const assistantMessage = {
+      role: "assistant",
+      content: text || "...",
+      created_at: new Date(),
+    };
+    conversation.messages.push(assistantMessage);
+    conversation.updated_at = new Date();
+    history.updated_at = new Date();
+    await history.save();
 
-      // Add the new assistant reply
-      const messagesToSave = [
-        ...conversationMessages,
-        { role: "assistant", content: text },
-      ];
-
-      await ChatHistory.findOneAndUpdate(
-        { user_id: req.user.id },
-        {
-          messages: messagesToSave,
-          updated_at: new Date(),
-        },
-        { upsert: true, new: true }
-      );
-    } catch (saveErr) {
-      console.warn("Failed to save chat history:", saveErr.message);
-      // Don't fail the request if saving history fails
-    }
-
-    return res.json({ reply: text });
+    const formattedConversation = formatConversationResponse(conversation);
+    return res.json({
+      reply: text,
+      conversationId: formattedConversation?.id,
+      conversation: formattedConversation,
+    });
   } catch (e) {
     const status = e.response && e.response.status ? e.response.status : 500;
     const detail =
@@ -3349,43 +4965,155 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
   }
 });
 
-// Get chat history endpoint
+// Get chat history endpoint (conversations + active thread)
 app.get("/api/chat/history", authMiddleware, async (req, res) => {
   try {
-    const history = await ChatHistory.findOne({ user_id: req.user.id });
-    if (!history) {
-      return res.json({ messages: [] });
-    }
-    return res.json({ messages: history.messages || [] });
+    const requestedConversationId = req.query.conversationId
+      ? String(req.query.conversationId)
+      : null;
+    const history = await getOrCreateChatHistory(req.user.id);
+    const conversations = Array.isArray(history.conversations)
+      ? [...history.conversations].sort(
+          (a, b) =>
+            new Date(b.updated_at || 0).getTime() -
+            new Date(a.updated_at || 0).getTime()
+        )
+      : [];
+    const summaries = conversations
+      .map((conv) => summarizeConversation(conv))
+      .filter(Boolean);
+
+    let activeConversation =
+      conversations.find(
+        (conv) =>
+          requestedConversationId &&
+          conv._id &&
+          conv._id.toString() === requestedConversationId
+      ) || conversations[0] || null;
+
+    return res.json({
+      conversations: summaries,
+      activeConversation: activeConversation
+        ? formatConversationResponse(activeConversation)
+        : null,
+    });
   } catch (e) {
     console.error("Failed to load chat history:", e);
     return res.status(500).json({ error: "Failed to load chat history" });
   }
 });
 
-// Save chat history endpoint (for manual saves if needed)
+// Create a new conversation
+app.post("/api/chat/conversations", authMiddleware, async (req, res) => {
+  try {
+    const title =
+      typeof req.body?.title === "string" && req.body.title.trim().length
+        ? req.body.title.trim()
+        : DEFAULT_CHAT_TITLE;
+    const history = await getOrCreateChatHistory(req.user.id);
+    const newConversation = createEmptyConversation(title);
+    history.conversations.unshift(newConversation);
+    history.updated_at = new Date();
+    await history.save();
+
+    return res.json({
+      conversation: formatConversationResponse(newConversation),
+    });
+  } catch (e) {
+    console.error("Failed to create conversation:", e);
+    return res.status(500).json({ error: "Failed to create conversation" });
+  }
+});
+
+// Rename conversation
+app.patch(
+  "/api/chat/conversations/:conversationId",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+      const title =
+        typeof req.body?.title === "string" && req.body.title.trim().length
+          ? req.body.title.trim()
+          : DEFAULT_CHAT_TITLE;
+      const history = await getOrCreateChatHistory(req.user.id);
+      const conversation = findConversationById(history, conversationId);
+      if (!conversation) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+      conversation.title = title;
+      conversation.updated_at = new Date();
+      history.updated_at = new Date();
+      await history.save();
+
+      return res.json({
+        conversation: formatConversationResponse(conversation),
+      });
+    } catch (e) {
+      console.error("Failed to rename conversation:", e);
+      return res.status(500).json({ error: "Failed to rename conversation" });
+    }
+  }
+);
+
+// Delete conversation
+app.delete(
+  "/api/chat/conversations/:conversationId",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+      const history = await getOrCreateChatHistory(req.user.id);
+      const beforeLength = history.conversations.length;
+      history.conversations = history.conversations.filter(
+        (conv) => !conv._id || conv._id.toString() !== conversationId
+      );
+      if (history.conversations.length === beforeLength) {
+        return res.status(404).json({ error: "Conversation not found" });
+      }
+      if (!history.conversations.length) {
+        history.conversations.push(createEmptyConversation());
+      }
+      history.updated_at = new Date();
+      history.markModified("conversations");
+      await history.save();
+
+      return res.json({ success: true });
+    } catch (e) {
+      console.error("Failed to delete conversation:", e);
+      return res.status(500).json({ error: "Failed to delete conversation" });
+    }
+  }
+);
+
+// Save chat history endpoint (manual save to a conversation)
 app.post("/api/chat/history", authMiddleware, async (req, res) => {
   try {
-    const { messages } = req.body;
+    const { messages, conversationId } = req.body || {};
     if (!Array.isArray(messages)) {
       return res.status(400).json({ error: "messages must be an array" });
     }
 
-    // Filter out system messages and validate structure
-    const messagesToSave = messages
-      .filter((m) => m.role === "user" || m.role === "assistant")
-      .map((m) => ({ role: m.role, content: String(m.content || "") }));
+    const history = await getOrCreateChatHistory(req.user.id);
+    let conversation = conversationId
+      ? history.conversations.id(String(conversationId))
+      : history.conversations[0];
+    if (!conversation) {
+      const fallback = createEmptyConversation();
+      history.conversations.unshift(fallback);
+      conversation = history.conversations[0];
+    }
 
-    await ChatHistory.findOneAndUpdate(
-      { user_id: req.user.id },
-      {
-        messages: messagesToSave,
-        updated_at: new Date(),
-      },
-      { upsert: true, new: true }
-    );
+    const sanitizedMessages = sanitizeIncomingMessages(messages);
+    conversation.messages = sanitizedMessages;
+    conversation.updated_at = new Date();
+    history.updated_at = new Date();
+    await history.save();
 
-    return res.json({ success: true });
+    return res.json({
+      success: true,
+      conversation: formatConversationResponse(conversation),
+    });
   } catch (e) {
     console.error("Failed to save chat history:", e);
     return res.status(500).json({ error: "Failed to save chat history" });
@@ -3402,15 +5130,33 @@ app.get("*", (req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`\n========================================`);
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(
+    `📝 Logging is ACTIVE - check this terminal for [MAJOR CALC] logs`
+  );
+  console.log(`========================================\n`);
+  process.stdout.write(`\n🚀 Server started on port ${PORT}\n`);
+  process.stdout.write(`📝 All [MAJOR CALC] logs will appear here\n\n`);
+});
+
+// Test endpoint to verify logging works
+app.get("/api/test-logging", (req, res) => {
+  console.log("[TEST] Logging test endpoint called");
+  process.stdout.write("[TEST] STDOUT test\n");
+  console.error("[TEST] STDERR test");
+  res.json({
+    message: "Check server console for test logs",
+    timestamp: new Date().toISOString(),
+  });
 });
 
 if (mongoose.connection) {
   mongoose.connection.once("open", async () => {
     try {
-      await ensureMbtiSeedMongo();
+      await ensurePersonalitySeedMongo();
       await ensureMajorSeedMongo();
-      await loadMbtiCache();
+      await loadPersonalityCache();
       console.log("Initial seed and cache load completed after DB open");
     } catch (e) {
       console.warn("Post-connection seed/cache failed:", e.message);

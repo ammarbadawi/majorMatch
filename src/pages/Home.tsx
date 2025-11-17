@@ -8,6 +8,7 @@ import {
     CardContent,
     Grid,
     Paper,
+    CircularProgress,
     Chip,
     Avatar,
     useTheme,
@@ -51,9 +52,11 @@ const Home: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const { t, i18n } = useTranslation();
-    const [hasMbti, setHasMbti] = useState<boolean>(() => {
-        try { return localStorage.getItem('hasMbti') === '1'; } catch { return false; }
+    const [hasPersonality, setHasPersonality] = useState<boolean>(() => {
+        try { return localStorage.getItem('hasPersonality') === '1'; } catch { return false; }
     });
+    const [studentCount, setStudentCount] = useState<string>('50K+');
+    const [ctaLoading, setCtaLoading] = useState(false);
 
     useEffect(() => {
         let cancelled = false;
@@ -64,14 +67,14 @@ const Home: React.FC = () => {
                     if (res.ok) {
                         const data = await res.json();
                         const has = Boolean(data?.hasResult);
-                        setHasMbti(has);
-                        try { if (has) localStorage.setItem('hasMbti', '1'); } catch { }
+                        setHasPersonality(has);
+                        try { if (has) localStorage.setItem('hasPersonality', '1'); } catch { }
                     } else {
-                        setHasMbti(false);
+                        setHasPersonality(false);
                     }
                 }
             } catch {
-                if (!cancelled) setHasMbti(false);
+                if (!cancelled) setHasPersonality(false);
             }
         };
         check();
@@ -79,17 +82,44 @@ const Home: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const onMbti = () => setHasMbti(true);
-        window.addEventListener('mbti-completed', onMbti);
-        return () => window.removeEventListener('mbti-completed', onMbti);
+        const onPersonality = () => setHasPersonality(true);
+        window.addEventListener('personality-completed', onPersonality);
+        return () => window.removeEventListener('personality-completed', onPersonality);
+    }, []);
+
+    useEffect(() => {
+        let cancelled = false;
+        const fetchStats = async () => {
+            try {
+                const res = await fetch('/api/stats/summary', { credentials: 'include' });
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!cancelled) {
+                    const count = Number(data?.userCount);
+                    if (Number.isFinite(count) && count >= 0) {
+                        setStudentCount(count.toLocaleString());
+                    }
+                }
+            } catch (error) {
+                if (!cancelled) {
+                    console.warn('[Home] Failed to load stats summary', error);
+                }
+            }
+        };
+
+        fetchStats();
+        const interval = window.setInterval(fetchStats, 5 * 60 * 1000);
+        return () => {
+            cancelled = true;
+            window.clearInterval(interval);
+        };
     }, []);
 
 
 
     const stats = [
         { number: '32', label: t('home.stats.personalityTypes'), icon: <Psychology /> },
-        { number: '50K+', label: t('home.stats.studentsHelped'), icon: <Groups /> },
-        { number: '200+', label: t('home.stats.universityPrograms'), icon: <School /> },
+        { number: studentCount, label: t('home.stats.studentsHelped'), icon: <Groups /> },
         { number: '95%', label: t('home.stats.satisfactionRate'), icon: <Star /> }
     ];
 
@@ -119,6 +149,44 @@ const Home: React.FC = () => {
             color: theme.palette.primary.main
         }
     ];
+
+    const handleStartJourney = async () => {
+        if (ctaLoading) return;
+        if (!hasPersonality) {
+            navigate('/personality-test');
+            return;
+        }
+        setCtaLoading(true);
+        try {
+            const latestRes = await fetch('/api/personality/latest', { credentials: 'include' });
+            if (!latestRes.ok) {
+                navigate('/personality-test');
+                return;
+            }
+            const latest = await latestRes.json();
+            if (!latest?.type) {
+                navigate('/personality-test');
+                return;
+            }
+            const personalityRes = await fetch(`/api/personality/${encodeURIComponent(latest.type)}`, { credentials: 'include' });
+            if (!personalityRes.ok) {
+                navigate('/personality-test');
+                return;
+            }
+            const personalityData = await personalityRes.json();
+            navigate('/personality-results', {
+                state: {
+                    personalityType: latest.type,
+                    personalityData
+                }
+            });
+        } catch (error) {
+            console.error('[Home] Unable to redirect to personality results:', error);
+            navigate('/personality-test');
+        } finally {
+            setCtaLoading(false);
+        }
+    };
 
 
 
@@ -214,8 +282,9 @@ const Home: React.FC = () => {
                                 <Button
                                     variant="contained"
                                     size="large"
-                                    onClick={() => navigate('/personality-test')}
-                                    startIcon={<PlayArrow />}
+                                    onClick={handleStartJourney}
+                                    startIcon={ctaLoading ? <CircularProgress size={20} color="inherit" /> : <PlayArrow />}
+                                    disabled={ctaLoading}
                                     sx={{
                                         backgroundColor: 'rgba(255,255,255,0.15)',
                                         color: 'white',
@@ -235,7 +304,7 @@ const Home: React.FC = () => {
                                         },
                                     }}
                                 >
-                                    {t('home.startJourney')}
+                                    {hasPersonality ? t('home.continueJourney') : t('home.startJourney')}
                                 </Button>
 
 
@@ -297,15 +366,26 @@ const Home: React.FC = () => {
                                             }}>
                                                 {t('home.step1Desc')}
                                             </Typography>
-                                            <Chip
-                                                label={t('home.free')}
+                                            <Button
+                                                variant="contained"
+                                                fullWidth
+                                                startIcon={<PlayArrow />}
+                                                onClick={() => navigate('/personality-test')}
                                                 sx={{
-                                                    backgroundColor: theme.palette.success.main,
-                                                    color: 'white',
+                                                    mt: 'auto',
+                                                    borderRadius: 999,
                                                     fontWeight: 700,
-                                                    fontSize: { xs: '0.75rem', sm: '0.8rem' }
+                                                    color: 'white',
+                                                    backgroundColor: 'rgba(255,255,255,0.2)',
+                                                    py: { xs: 1.5, sm: 2 },
+                                                    '&:hover': {
+                                                        backgroundColor: 'rgba(255,255,255,0.3)',
+                                                        transform: 'translateY(-2px)'
+                                                    }
                                                 }}
-                                            />
+                                            >
+                                                {t('home.startAssessment')}
+                                            </Button>
                                         </Card>
                                     </Slide>
                                 </Grid>
@@ -352,7 +432,7 @@ const Home: React.FC = () => {
                                                 textAlign: 'center',
                                                 position: 'relative',
                                                 overflow: 'hidden',
-                                                opacity: hasMbti ? 1 : 0.6,
+                                                opacity: hasPersonality ? 1 : 0.6,
                                                 display: 'flex',
                                                 flexDirection: 'column',
                                                 height: '100%',
@@ -391,15 +471,29 @@ const Home: React.FC = () => {
                                             }}>
                                                 {t('home.step2Desc')}
                                             </Typography>
-                                            <Chip
-                                                label={t('home.premium')}
-                                                sx={{
-                                                    backgroundColor: theme.palette.warning.main,
-                                                    color: 'white',
-                                                    fontWeight: 700,
-                                                    fontSize: { xs: '0.75rem', sm: '0.8rem' }
-                                                }}
-                                            />
+                                            <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasPersonality}>
+                                                <Box component="span" sx={{ width: '100%', mt: 'auto' }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        fullWidth
+                                                        disabled={!hasPersonality}
+                                                        startIcon={<School />}
+                                                        onClick={() => navigate('/major-matching-test')}
+                                                        sx={{
+                                                            borderRadius: 999,
+                                                            fontWeight: 700,
+                                                            color: hasPersonality ? 'white' : 'rgba(255,255,255,0.7)',
+                                                            backgroundColor: hasPersonality ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)',
+                                                            py: { xs: 1.5, sm: 2 },
+                                                            '&:hover': {
+                                                                backgroundColor: hasPersonality ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.1)'
+                                                            }
+                                                        }}
+                                                    >
+                                                        {hasPersonality ? t('home.startMajorMatching') : t('home.completeStep1First')}
+                                                    </Button>
+                                                </Box>
+                                            </Tooltip>
                                         </Card>
                                     </Slide>
                                 </Grid>
@@ -484,15 +578,26 @@ const Home: React.FC = () => {
                                             }}>
                                                 {t('home.step3Desc')}
                                             </Typography>
-                                            <Chip
-                                                label={t('home.premium')}
+                                            <Button
+                                                variant="contained"
+                                                fullWidth
+                                                startIcon={<SupportAgent />}
+                                                onClick={() => navigate('/chat')}
                                                 sx={{
-                                                    backgroundColor: theme.palette.info.main,
-                                                    color: 'white',
+                                                    mt: 'auto',
+                                                    borderRadius: 999,
                                                     fontWeight: 700,
-                                                    fontSize: { xs: '0.75rem', sm: '0.8rem' }
+                                                    color: 'white',
+                                                    backgroundColor: 'rgba(255,255,255,0.2)',
+                                                    py: { xs: 1.5, sm: 2 },
+                                                    '&:hover': {
+                                                        backgroundColor: 'rgba(255,255,255,0.3)',
+                                                        transform: 'translateY(-2px)'
+                                                    }
                                                 }}
-                                            />
+                                            >
+                                                {t('home.startAICounseling')}
+                                            </Button>
                                         </Card>
                                     </Slide>
                                 </Grid>
@@ -681,11 +786,11 @@ const Home: React.FC = () => {
                         }} />
 
                         {/* Step 2 */}
-                        <Step active={hasMbti} completed={false}>
+                        <Step active={hasPersonality} completed={false} expanded>
                             <StepLabel
                                 StepIconComponent={() => (
                                     <Avatar sx={{
-                                        backgroundColor: hasMbti ? theme.palette.secondary.main : theme.palette.grey[400],
+                                        backgroundColor: hasPersonality ? theme.palette.secondary.main : theme.palette.grey[400],
                                         width: { xs: 40, sm: 45, md: 50 },
                                         height: { xs: 40, sm: 45, md: 50 },
                                         border: '4px solid white',
@@ -698,7 +803,7 @@ const Home: React.FC = () => {
                                     '& .MuiStepLabel-label': {
                                         fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' },
                                         fontWeight: 700,
-                                        color: hasMbti ? theme.palette.text.primary : theme.palette.text.disabled
+                                        color: hasPersonality ? theme.palette.text.primary : theme.palette.text.disabled
                                     }
                                 }}
                             >
@@ -734,22 +839,22 @@ const Home: React.FC = () => {
                                             />
                                         ))}
                                     </Box>
-                                    <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasMbti}>
+                                    <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasPersonality}>
                                         <span>
                                             <Button
                                                 variant="contained"
                                                 onClick={() => navigate('/major-matching-test')}
                                                 startIcon={<School />}
-                                                disabled={!hasMbti}
+                                                disabled={!hasPersonality}
                                                 size={window.innerWidth < 600 ? 'small' : 'medium'}
                                                 sx={{
-                                                    backgroundColor: hasMbti ? theme.palette.secondary.main : theme.palette.grey[400],
+                                                    backgroundColor: hasPersonality ? theme.palette.secondary.main : theme.palette.grey[400],
                                                     '&:hover': {
-                                                        backgroundColor: hasMbti ? theme.palette.secondary.dark : theme.palette.grey[400]
+                                                        backgroundColor: hasPersonality ? theme.palette.secondary.dark : theme.palette.grey[400]
                                                     }
                                                 }}
                                             >
-                                                {hasMbti ? t('home.startMajorMatching') : t('home.completeStep1First')}
+                                                {hasPersonality ? t('home.startMajorMatching') : t('home.completeStep1First')}
                                             </Button>
                                         </span>
                                     </Tooltip>
@@ -966,7 +1071,7 @@ const Home: React.FC = () => {
                         mb: { xs: 2, sm: 3 },
                         fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
                     }}>
-                        {t('home.twoPowerfulTools')}
+                        {t('home.threePowerfulTools')}
                     </Typography>
                     <Typography variant="h6" color="text.secondary" sx={{
                         maxWidth: 700,
@@ -976,7 +1081,7 @@ const Home: React.FC = () => {
                         fontSize: { xs: '0.95rem', sm: '1.125rem', md: '1.25rem' },
                         px: { xs: 2, sm: 0 }
                     }}>
-                        {t('home.twoPowerfulToolsDesc')}
+                        {t('home.threePowerfulToolsDesc')}
                     </Typography>
                 </Box>
 
@@ -1016,7 +1121,8 @@ const Home: React.FC = () => {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     position: 'relative',
-                                    zIndex: 1
+                                    zIndex: 1,
+                                    gap: { xs: 2, sm: 3 }
                                 }}>
                                     <Box sx={{
                                         display: 'flex',
@@ -1066,7 +1172,7 @@ const Home: React.FC = () => {
                                         {t('home.step1CardDesc')}
                                     </Typography>
 
-                                    <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+                                    <Box sx={{ mb: { xs: 3, sm: 4 }, flexGrow: 1 }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
                                             mb: 3,
@@ -1105,6 +1211,7 @@ const Home: React.FC = () => {
                                         onClick={() => navigate('/personality-test')}
                                         startIcon={<PlayArrow />}
                                         sx={{
+                                            mt: 'auto',
                                             backgroundColor: 'rgba(255,255,255,0.15)',
                                             backdropFilter: 'blur(10px)',
                                             border: '2px solid rgba(255,255,255,0.2)',
@@ -1139,10 +1246,10 @@ const Home: React.FC = () => {
                                     overflow: 'hidden',
                                     transform: 'translateY(0)',
                                     transition: 'transform 0.3s ease-in-out',
-                                    opacity: hasMbti ? 1 : 0.7,
+                                    opacity: hasPersonality ? 1 : 0.7,
                                     '&:hover': {
-                                        transform: hasMbti ? 'translateY(-8px)' : 'none',
-                                        boxShadow: hasMbti ? theme.shadows[12] : theme.shadows[6]
+                                        transform: hasPersonality ? 'translateY(-8px)' : 'none',
+                                        boxShadow: hasPersonality ? theme.shadows[12] : theme.shadows[6]
                                     },
                                     '&::before': {
                                         content: '""',
@@ -1162,7 +1269,8 @@ const Home: React.FC = () => {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     position: 'relative',
-                                    zIndex: 1
+                                    zIndex: 1,
+                                    gap: { xs: 2, sm: 3 }
                                 }}>
                                     <Box sx={{
                                         display: 'flex',
@@ -1178,7 +1286,7 @@ const Home: React.FC = () => {
                                             mb: { xs: 2, sm: 0 },
                                             width: { xs: 60, sm: 70 },
                                             height: { xs: 60, sm: 70 },
-                                            animation: hasMbti ? 'pulse 2s infinite' : 'none'
+                                            animation: hasPersonality ? 'pulse 2s infinite' : 'none'
                                         }}>
                                             <School sx={{ fontSize: { xs: 30, sm: 36 } }} />
                                         </Avatar>
@@ -1191,9 +1299,9 @@ const Home: React.FC = () => {
                                                 {t('home.step2')}
                                             </Typography>
                                             <Chip
-                                                label={hasMbti ? t('home.premiumReady') : t('home.premiumLocked')}
+                                                label={hasPersonality ? t('home.premiumReady') : t('home.premiumLocked')}
                                                 sx={{
-                                                    backgroundColor: hasMbti ? theme.palette.warning.main : theme.palette.grey[500],
+                                                    backgroundColor: hasPersonality ? theme.palette.warning.main : theme.palette.grey[500],
                                                     color: 'white',
                                                     fontWeight: 700,
                                                     fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.9rem' }
@@ -1203,26 +1311,30 @@ const Home: React.FC = () => {
                                     </Box>
 
                                     <Typography variant="body1" sx={{
-                                        mb: { xs: 3, sm: 4 },
                                         lineHeight: 1.7,
-                                        flexGrow: 1,
                                         fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
                                         textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                     }}>
-                                        {hasMbti
-                                            ? t('home.step2CardDescActive')
-                                            : t('home.step2CardDescInactive')
-                                        }
+                                        {t('home.step2CardDescActive')}
                                     </Typography>
+                                    {!hasPersonality && (
+                                        <Typography variant="body2" sx={{
+                                            color: 'rgba(255,255,255,0.85)',
+                                            fontSize: { xs: '0.85rem', sm: '0.95rem' },
+                                            textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
+                                        }}>
+                                            {t('home.step2CardDescInactive')}
+                                        </Typography>
+                                    )}
 
-                                    <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+                                    <Box sx={{ mb: { xs: 3, sm: 4 }, flexGrow: 1 }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
                                             mb: 3,
                                             fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
                                             textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                         }}>
-                                            {hasMbti ? t('home.journeyContinuesWith') : t('home.unlockFeatures')}
+                                            {hasPersonality ? t('home.journeyContinuesWith') : t('home.unlockFeatures')}
                                         </Typography>
                                         {[
                                             t('home.comprehensiveAnalysis'),
@@ -1243,28 +1355,28 @@ const Home: React.FC = () => {
                                                     fontSize: { xs: 20, sm: 24 },
                                                     mr: i18n.language === 'ar' ? 0 : 2,
                                                     ml: i18n.language === 'ar' ? 2 : 0,
-                                                    color: hasMbti ? theme.palette.warning.light : theme.palette.grey[400]
+                                                    color: hasPersonality ? theme.palette.warning.light : theme.palette.grey[400]
                                                 }} />
                                                 <Typography variant="body2" sx={{
                                                     fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
-                                                    opacity: hasMbti ? 1 : 0.6,
+                                                    opacity: hasPersonality ? 1 : 0.6,
                                                     textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                                 }}>{feature}</Typography>
                                             </Box>
                                         ))}
                                     </Box>
 
-                                    <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasMbti}>
-                                        <span>
+                                    <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasPersonality}>
+                                        <Box component="span" sx={{ width: '100%', mt: 'auto' }}>
                                             <Button
                                                 variant="contained"
                                                 fullWidth
                                                 size="large"
                                                 onClick={() => navigate('/major-matching-test')}
-                                                startIcon={i18n.language === 'ar' ? undefined : (hasMbti ? <ArrowForward /> : <Lock />)}
-                                                endIcon={i18n.language === 'ar' ? (hasMbti ? <ArrowBack /> : <Lock />) : undefined}
+                                                startIcon={i18n.language === 'ar' ? undefined : (hasPersonality ? <ArrowForward /> : <Lock />)}
+                                                endIcon={i18n.language === 'ar' ? (hasPersonality ? <ArrowBack /> : <Lock />) : undefined}
                                                 sx={{
-                                                    backgroundColor: hasMbti ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.1)',
+                                                    backgroundColor: hasPersonality ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.1)',
                                                     backdropFilter: 'blur(10px)',
                                                     border: '2px solid rgba(255,255,255,0.2)',
                                                     color: 'white',
@@ -1273,15 +1385,15 @@ const Home: React.FC = () => {
                                                     fontWeight: 700,
                                                     borderRadius: 2,
                                                     '&:hover': {
-                                                        backgroundColor: hasMbti ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)',
-                                                        transform: hasMbti ? 'scale(1.02)' : 'none'
+                                                        backgroundColor: hasPersonality ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)',
+                                                        transform: hasPersonality ? 'scale(1.02)' : 'none'
                                                     }
                                                 }}
-                                                disabled={!hasMbti}
+                                                disabled={!hasPersonality}
                                             >
-                                                {hasMbti ? t('home.continueJourney') : t('home.completeStep1First')}
+                                                {hasPersonality ? t('home.continueJourney') : t('home.completeStep1First')}
                                             </Button>
-                                        </span>
+                                        </Box>
                                     </Tooltip>
                                 </CardContent>
                             </Card>
@@ -1324,7 +1436,8 @@ const Home: React.FC = () => {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     position: 'relative',
-                                    zIndex: 1
+                                    zIndex: 1,
+                                    gap: { xs: 2, sm: 3 }
                                 }}>
                                     <Box sx={{
                                         display: 'flex',
@@ -1392,7 +1505,7 @@ const Home: React.FC = () => {
                                         {t('home.step3CardDesc')}
                                     </Typography>
 
-                                    <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+                                    <Box sx={{ mb: { xs: 3, sm: 4 }, flexGrow: 1 }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
                                             mb: 3,
@@ -1439,6 +1552,7 @@ const Home: React.FC = () => {
                                         onClick={() => navigate('/chat')}
                                         startIcon={<SupportAgent />}
                                         sx={{
+                                            mt: 'auto',
                                             backgroundColor: 'rgba(255,255,255,0.15)',
                                             backdropFilter: 'blur(10px)',
                                             border: '2px solid rgba(255,255,255,0.2)',
@@ -1608,7 +1722,7 @@ const Home: React.FC = () => {
                                             },
                                         }}
                                     >
-                                        {hasMbti ? t('home.continueJourney') : t('home.startJourney')}
+                                        {hasPersonality ? t('home.continueJourney') : t('home.startJourney')}
                                     </Button>
                                 </Slide>
 

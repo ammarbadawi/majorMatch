@@ -73,20 +73,5 @@
       "Cultural Appreciation"
     ],
     "mbti_traits": ["I", "J", "F"]
-  },
-  {
-    "parent_major": "Animation & Multimedia",
-    "ria_sec": ["A", "C"],
-    "academic_strengths": [
-      "Design & Creativity",
-      "Programming & Logic",
-      "Visual-Spatial Thinking"
-    ],
-    "core_values": [
-      "Creativity",
-      "Innovation",
-      "Cultural Expression"
-    ],
-    "mbti_traits": ["I", "N", "F", "P"]
   }
 ]

@@ -1,13 +1,5 @@
 [
   {
-    "parent_major": "Environmental Health",
-    "ria_sec": ["I", "S"],
-    "academic_strengths": ["Biology", "Chemistry", "Research & Investigation"],
-    "core_values": ["Health", "Nature & Environment", "Sustainability"],
-    "mbti_traits": ["I", "N", "F", "J"],
-    "description": "This major suits individuals who are detail-oriented, empathetic, and scientifically inclined. It combines life sciences with environmental awareness, ideal for those who want to protect public health and the planet through regulation and prevention."
-  },
-  {
     "parent_major": "Energy Technologies",
     "ria_sec": ["I", "R"],
     "academic_strengths": ["Physics", "Chemistry", "Research & Investigation"],

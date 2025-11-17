@@ -89,12 +89,5 @@
     "academic_strengths": ["Chemistry", "Biology", "Research & Investigation"],
     "core_values": ["Health", "Sustainability", "Efficiency & Order"],
     "mbti_traits": ["S", "J", "T"]
-  },
-  {
-    "parent_major": "Energy Technologies",
-    "ria_sec": ["I", "R"],
-    "academic_strengths": ["Physics", "Chemistry", "Research & Investigation"],
-    "core_values": ["Innovation", "Nature & Environment", "Impact"],
-    "mbti_traits": ["I", "N", "T", "J"]
   }
 ]

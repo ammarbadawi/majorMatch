@@ -47,19 +47,5 @@
     "academic_strengths": ["Mathematics", "Business & Economics", "Research & Investigation"],
     "core_values": ["Insight", "Impact", "Financial Reward"],
     "mbti_traits": ["I", "T", "J"]
-  },
-  {
-    "parent_major": "Hospitality Management",
-    "ria_sec": ["E", "S"],
-    "academic_strengths": ["Leadership & Public Speaking", "Foreign Languages", "Business & Economics"],
-    "core_values": ["Prestige", "Teamwork", "Service"],
-    "mbti_traits": ["E", "S", "F", "J"]
-  },
-  {
-    "parent_major": "Tourism & Event Mgmt.",
-    "ria_sec": ["E", "S"],
-    "academic_strengths": ["Leadership & Public Speaking", "Foreign Languages", "Writing & Communication"],
-    "core_values": ["Cultural Appreciation", "Teamwork", "Creativity"],
-    "mbti_traits": ["E", "S", "F", "P"]
   }
 ]

@@ -34,7 +34,8 @@ import {
     Lock,
     Visibility,
     VisibilityOff,
-    Person
+    Person,
+    Replay
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -417,7 +418,7 @@ const Profile: React.FC = () => {
                                                     ml: { xs: 1, sm: 0 }
                                                 }}
                                             >
-                                                <Edit />
+                                                <Replay />
                                             </IconButton>
                                         </Tooltip>
                                     </Box>
@@ -504,7 +505,7 @@ const Profile: React.FC = () => {
                                                     ml: { xs: 1, sm: 0 }
                                                 }}
                                             >
-                                                <Edit />
+                                                <Replay />
                                             </IconButton>
                                         </Tooltip>
                                     </Box>

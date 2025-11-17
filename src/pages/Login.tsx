@@ -11,7 +11,8 @@ import {
     IconButton,
     useTheme,
     Alert,
-    CircularProgress
+    CircularProgress,
+    Divider
 } from '@mui/material';
 import {
     Email,
@@ -22,6 +23,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
@@ -29,11 +31,13 @@ const Login: React.FC = () => {
     const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
+    const isGoogleAuthEnabled = Boolean(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
@@ -71,6 +75,36 @@ const Login: React.FC = () => {
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
+    };
+
+    const handleGoogleSuccess = async (response: CredentialResponse) => {
+        if (!response.credential) {
+            setError(t('login.googleError'));
+            return;
+        }
+        setError(null);
+        setGoogleLoading(true);
+        try {
+            const res = await fetch('/api/auth/google', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ credential: response.credential })
+            });
+            const data = await res.json().catch(() => ({ error: t('login.googleError') }));
+            if (!res.ok) {
+                throw new Error(data.error || t('login.googleError'));
+            }
+            navigate('/');
+        } catch (err: any) {
+            setError(err.message || t('login.googleError'));
+        } finally {
+            setGoogleLoading(false);
+        }
+    };
+
+    const handleGoogleError = () => {
+        setError(t('login.googleError'));
     };
 
     return (
@@ -256,6 +290,46 @@ const Login: React.FC = () => {
                             >
                                 {t('login.signIn')}
                             </Button>
+
+                            {isGoogleAuthEnabled && (
+                                <>
+                                    <Divider
+                                        sx={{
+                                            my: 3,
+                                            fontSize: { xs: '0.85rem', sm: '0.95rem' },
+                                            fontWeight: 600,
+                                            color: theme.palette.text.secondary
+                                        }}
+                                    >
+                                        {t('login.orContinue')}
+                                    </Divider>
+                                    <Box sx={{ mb: 4, position: 'relative' }}>
+                                        <GoogleLogin
+                                            onSuccess={handleGoogleSuccess}
+                                            onError={handleGoogleError}
+                                            width="100%"
+                                            theme="outline"
+                                            shape="rectangular"
+                                            text="signin_with"
+                                        />
+                                        {googleLoading && (
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    inset: 0,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    bgcolor: 'rgba(255,255,255,0.6)',
+                                                    borderRadius: 1
+                                                }}
+                                            >
+                                                <CircularProgress size={28} color="primary" />
+                                            </Box>
+                                        )}
+                                    </Box>
+                                </>
+                            )}
 
                             <Box sx={{ textAlign: 'center', mb: 2 }}>
                                 <Link

@@ -93,13 +93,17 @@ const MajorMatchingTest: React.FC = () => {
     const isXs = useMediaQuery(theme.breakpoints.down('sm'));
     const [currentPage, setCurrentPage] = useState(0);
     const [answers, setAnswers] = useState<{ [key: number]: string }>({});
-    const [showPaymentPrompt, setShowPaymentPrompt] = useState(true);
+    // TEMPORARILY DISABLED FOR DEMO - Start with payment prompt hidden
+    // TODO: Re-enable subscription check after demo - change back to true
+    const [showPaymentPrompt, setShowPaymentPrompt] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
-    const [hasSubscription, setHasSubscription] = useState(false);
+    // TEMPORARILY DISABLED FOR DEMO - Start with subscription enabled
+    // TODO: Re-enable subscription check after demo - change back to false
+    const [hasSubscription, setHasSubscription] = useState(true);
     const [timeSpent, setTimeSpent] = useState(0);
     const [hoveredQuestion, setHoveredQuestion] = useState<number | null>(null);
     const [showInsights, setShowInsights] = useState(false);
@@ -110,20 +114,33 @@ const MajorMatchingTest: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (!showPaymentPrompt && hasSubscription) {
-            checkMbtiThenLoad();
-        }
+        // TEMPORARILY DISABLED FOR DEMO - Always load test
+        // TODO: Re-enable subscription check after demo
+        checkMbtiThenLoad();
+
+        // Original code (commented out for demo):
+        // if (!showPaymentPrompt && hasSubscription) {
+        //     checkMbtiThenLoad();
+        // }
     }, [showPaymentPrompt, hasSubscription]);
 
     // Reload questions when language changes
     useEffect(() => {
-        if (hasSubscription && !showPaymentPrompt) {
-            // Small delay to ensure i18n is ready
-            const timer = setTimeout(() => {
-                loadQuestions();
-            }, 100);
-            return () => clearTimeout(timer);
-        }
+        // TEMPORARILY DISABLED FOR DEMO - Always reload questions
+        // TODO: Re-enable subscription check after demo
+        const timer = setTimeout(() => {
+            loadQuestions();
+        }, 100);
+        return () => clearTimeout(timer);
+
+        // Original code (commented out for demo):
+        // if (hasSubscription && !showPaymentPrompt) {
+        //     // Small delay to ensure i18n is ready
+        //     const timer = setTimeout(() => {
+        //         loadQuestions();
+        //     }, 100);
+        //     return () => clearTimeout(timer);
+        // }
     }, [i18n.language, hasSubscription, showPaymentPrompt]);
 
     // Timer effect
@@ -142,22 +159,28 @@ const MajorMatchingTest: React.FC = () => {
     }, [currentPage]);
 
     const checkSubscriptionStatus = async () => {
-        try {
-            const response = await fetch('/api/subscription-status', {
-                credentials: 'include',
-            });
+        // TEMPORARILY DISABLED FOR DEMO - Bypass subscription check
+        // TODO: Re-enable subscription check after demo
+        setHasSubscription(true);
+        setShowPaymentPrompt(false);
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Subscription status response:', data);
-                setHasSubscription(data.hasSubscription);
-                if (data.hasSubscription) {
-                    setShowPaymentPrompt(false);
-                }
-            }
-        } catch (error) {
-            console.error('Failed to check subscription status:', error);
-        }
+        // Original code (commented out for demo):
+        // try {
+        //     const response = await fetch('/api/subscription-status', {
+        //         credentials: 'include',
+        //     });
+        //
+        //     if (response.ok) {
+        //         const data = await response.json();
+        //         console.log('Subscription status response:', data);
+        //         setHasSubscription(data.hasSubscription);
+        //         if (data.hasSubscription) {
+        //             setShowPaymentPrompt(false);
+        //         }
+        //     }
+        // } catch (error) {
+        //     console.error('Failed to check subscription status:', error);
+        // }
     };
 
     const checkMbtiThenLoad = async () => {
@@ -174,11 +197,11 @@ const MajorMatchingTest: React.FC = () => {
                 return;
             }
             if (!res.ok) {
-                throw new Error('Failed to verify MBTI status');
+                throw new Error('Failed to verify personality test status');
             }
             await loadQuestions();
         } catch (e: any) {
-            setError(e.message || 'Failed to verify MBTI status');
+            setError(e.message || 'Failed to verify personality test status');
         } finally {
             setLoading(false);
         }
@@ -199,11 +222,13 @@ const MajorMatchingTest: React.FC = () => {
                 navigate('/login');
                 return;
             }
-            if (res.status === 402) {
-                setError(t('majorMatchingTest.subscriptionRequired'));
-                setShowPaymentPrompt(true);
-                return;
-            }
+            // TEMPORARILY DISABLED FOR DEMO - Skip subscription error
+            // TODO: Re-enable subscription check after demo
+            // if (res.status === 402) {
+            //     setError(t('majorMatchingTest.subscriptionRequired'));
+            //     setShowPaymentPrompt(true);
+            //     return;
+            // }
             if (res.status === 403) {
                 setError(t('majorMatchingTest.completePersonalityFirst'));
                 return;
@@ -369,7 +394,7 @@ const MajorMatchingTest: React.FC = () => {
                             edge="start"
                             color="inherit"
                             onClick={() => navigate('/')}
-                            sx={{ 
+                            sx={{
                                 mr: i18n.language === 'ar' ? 0 : 3,
                                 ml: i18n.language === 'ar' ? 3 : 0
                             }}
@@ -545,7 +570,7 @@ const MajorMatchingTest: React.FC = () => {
                             ))}
                         </Stack>
 
-                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} justifyContent="center">
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 2.5, sm: 3 }} justifyContent="center">
                             <Button
                                 variant="contained"
                                 size="large"
@@ -553,15 +578,23 @@ const MajorMatchingTest: React.FC = () => {
                                 onClick={handleStartTest}
                                 fullWidth
                                 sx={{
-                                    py: { xs: 1.75, sm: 2 },
-                                    px: { xs: 3, sm: 5 },
-                                    fontSize: { xs: '1rem', sm: '1.125rem' },
+                                    py: { xs: 2.25, sm: 2 },
+                                    px: { xs: 4, sm: 5 },
+                                    minHeight: { xs: '56px', sm: 'auto' },
+                                    fontSize: { xs: '1.125rem', sm: '1.125rem' },
                                     fontWeight: 700,
+                                    borderRadius: { xs: 4, sm: 3 },
+                                    textTransform: 'none',
+                                    letterSpacing: { xs: '0.5px', sm: 'normal' },
                                     background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
-                                    boxShadow: theme.shadows[6],
+                                    boxShadow: { xs: theme.shadows[8], sm: theme.shadows[6] },
+                                    transition: 'all 0.2s ease-in-out',
                                     '&:hover': {
-                                        transform: 'translateY(-2px)',
-                                        boxShadow: theme.shadows[10]
+                                        transform: { xs: 'translateY(-3px)', sm: 'translateY(-2px)' },
+                                        boxShadow: { xs: theme.shadows[12], sm: theme.shadows[10] }
+                                    },
+                                    '&:active': {
+                                        transform: { xs: 'translateY(-1px) scale(0.98)', sm: 'translateY(0px)' }
                                     }
                                 }}
                             >
@@ -573,13 +606,23 @@ const MajorMatchingTest: React.FC = () => {
                                 onClick={() => navigate('/')}
                                 fullWidth
                                 sx={{
-                                    py: { xs: 1.75, sm: 2 },
-                                    px: { xs: 3, sm: 5 },
-                                    fontSize: { xs: '1rem', sm: '1.125rem' },
+                                    py: { xs: 2.25, sm: 2 },
+                                    px: { xs: 4, sm: 5 },
+                                    minHeight: { xs: '56px', sm: 'auto' },
+                                    fontSize: { xs: '1.125rem', sm: '1.125rem' },
                                     fontWeight: 600,
+                                    borderRadius: { xs: 4, sm: 3 },
+                                    textTransform: 'none',
+                                    letterSpacing: { xs: '0.5px', sm: 'normal' },
                                     borderWidth: '2px',
+                                    transition: 'all 0.2s ease-in-out',
                                     '&:hover': {
-                                        borderWidth: '2px'
+                                        borderWidth: '2px',
+                                        transform: { xs: 'scale(0.98)', sm: 'none' },
+                                        backgroundColor: { xs: alpha(theme.palette.primary.main, 0.04), sm: 'transparent' }
+                                    },
+                                    '&:active': {
+                                        transform: { xs: 'scale(0.95)', sm: 'none' }
                                     }
                                 }}
                             >
@@ -1019,44 +1062,64 @@ const MajorMatchingTest: React.FC = () => {
                                 <Typography variant="h6" gutterBottom sx={{ fontWeight: 700, textAlign: 'center' }}>
                                     {t('majorMatchingTest.responseScale')}
                                 </Typography>
-                                <Grid container spacing={2}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    gap: { xs: 0.5, sm: 1, md: 2 },
+                                    flexWrap: { xs: 'nowrap', sm: 'wrap' },
+                                    overflowX: { xs: 'auto', sm: 'visible' },
+                                    '&::-webkit-scrollbar': { display: 'none' },
+                                    scrollbarWidth: 'none'
+                                }}>
                                     {likertOptions.map((opt, index) => (
-                                        <Grid item xs={12} sm={6} md={2.4} key={opt.value}>
-                                            <Box sx={{ textAlign: 'center' }}>
-                                                <Box
-                                                    sx={{
-                                                        width: 40,
-                                                        height: 40,
-                                                        borderRadius: '50%',
-                                                        border: `3px solid ${getLikertColor(opt.value)}`,
-                                                        backgroundColor: alpha(getLikertColor(opt.value), 0.1),
-                                                        mx: 'auto',
-                                                        mb: 1,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        fontSize: '1.2rem',
-                                                        fontWeight: 700,
-                                                        color: getLikertColor(opt.value),
-                                                        transition: 'all 0.3s ease-in-out',
-                                                        '&:hover': {
-                                                            transform: 'scale(1.1)',
-                                                            boxShadow: `0 0 20px ${alpha(getLikertColor(opt.value), 0.3)}`
-                                                        }
-                                                    }}
-                                                >
-                                                    {index + 1}
-                                                </Box>
-                                                <Typography variant="caption" sx={{ fontWeight: 700, display: 'block' }}>
-                                                    {opt.label}
-                                                </Typography>
-                                                <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.7rem' }}>
-                                                    {opt.description}
-                                                </Typography>
+                                        <Box key={opt.value} sx={{
+                                            flex: { xs: '1 1 0', sm: 'none' },
+                                            minWidth: { xs: 0, sm: 'auto' },
+                                            textAlign: 'center'
+                                        }}>
+                                            <Box
+                                                sx={{
+                                                    width: { xs: 32, sm: 40 },
+                                                    height: { xs: 32, sm: 40 },
+                                                    borderRadius: '50%',
+                                                    border: `3px solid ${getLikertColor(opt.value)}`,
+                                                    backgroundColor: alpha(getLikertColor(opt.value), 0.1),
+                                                    mx: 'auto',
+                                                    mb: 1,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontSize: { xs: '0.9rem', sm: '1.2rem' },
+                                                    fontWeight: 700,
+                                                    color: getLikertColor(opt.value),
+                                                    transition: 'all 0.3s ease-in-out',
+                                                    flexShrink: 0,
+                                                    '&:hover': {
+                                                        transform: 'scale(1.1)',
+                                                        boxShadow: `0 0 20px ${alpha(getLikertColor(opt.value), 0.3)}`
+                                                    }
+                                                }}
+                                            >
+                                                {index + 1}
                                             </Box>
-                                        </Grid>
+                                            <Typography variant="caption" sx={{
+                                                fontWeight: 700,
+                                                display: 'block',
+                                                fontSize: { xs: '0.65rem', sm: '0.75rem' },
+                                                lineHeight: 1.2
+                                            }}>
+                                                {opt.label}
+                                            </Typography>
+                                            <Typography variant="caption" color="text.secondary" sx={{
+                                                fontSize: { xs: '0.6rem', sm: '0.7rem' },
+                                                display: { xs: 'none', sm: 'block' }
+                                            }}>
+                                                {opt.description}
+                                            </Typography>
+                                        </Box>
                                     ))}
-                                </Grid>
+                                </Box>
                             </Paper>
 
                             {/* Questions */}
@@ -1145,7 +1208,16 @@ const MajorMatchingTest: React.FC = () => {
                                                     </Typography>
 
                                                     {/* Answer Options */}
-                                                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: { xs: 1.5, sm: 2 }, flexWrap: 'wrap' }}>
+                                                    <Box sx={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        gap: { xs: 1, sm: 2 },
+                                                        flexWrap: { xs: 'nowrap', sm: 'wrap' },
+                                                        overflowX: { xs: 'auto', sm: 'visible' },
+                                                        pb: { xs: 1, sm: 0 },
+                                                        '&::-webkit-scrollbar': { display: 'none' },
+                                                        scrollbarWidth: 'none'
+                                                    }}>
                                                         {likertOptions.map((option, index) => {
                                                             const selected = qAnswer === option.value;
                                                             const color = getLikertColor(option.value);
@@ -1154,8 +1226,10 @@ const MajorMatchingTest: React.FC = () => {
                                                                     <Box
                                                                         onClick={() => handleAnswerChangeFor(q.id, option.value)}
                                                                         sx={{
-                                                                            width: { xs: 44, sm: 50 },
-                                                                            height: { xs: 44, sm: 50 },
+                                                                            width: { xs: 40, sm: 50 },
+                                                                            height: { xs: 40, sm: 50 },
+                                                                            minWidth: { xs: 40, sm: 50 },
+                                                                            flexShrink: 0,
                                                                             borderRadius: '50%',
                                                                             border: `3px solid ${color}`,
                                                                             backgroundColor: selected
@@ -1166,7 +1240,7 @@ const MajorMatchingTest: React.FC = () => {
                                                                             display: 'flex',
                                                                             alignItems: 'center',
                                                                             justifyContent: 'center',
-                                                                            fontSize: { xs: '1rem', sm: '1.2rem' },
+                                                                            fontSize: { xs: '0.95rem', sm: '1.2rem' },
                                                                             fontWeight: 700,
                                                                             color: color,
                                                                             position: 'relative',
@@ -1234,30 +1308,52 @@ const MajorMatchingTest: React.FC = () => {
                             </Grid>
 
                             {/* Navigation */}
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 6, flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row' }}>
+                            <Box sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                mt: { xs: 4, md: 6 },
+                                flexDirection: { xs: 'column', sm: i18n.language === 'ar' ? 'row-reverse' : 'row' },
+                                gap: { xs: 2, sm: 0 }
+                            }}>
                                 <Button
                                     variant="outlined"
                                     onClick={handlePreviousPage}
                                     disabled={currentPage === 0 || submitting}
                                     startIcon={i18n.language === 'ar' ? undefined : <ArrowBack />}
                                     endIcon={i18n.language === 'ar' ? <ArrowBack sx={{ transform: 'scaleX(-1)' }} /> : undefined}
+                                    fullWidth={isXs}
                                     sx={{
-                                        py: 1.5,
-                                        px: 4,
-                                        fontSize: '1rem',
+                                        py: { xs: 2, sm: 1.5 },
+                                        px: { xs: 3, sm: 4 },
+                                        minHeight: { xs: '48px', sm: 'auto' },
+                                        fontSize: { xs: '1.1rem', sm: '1rem' },
                                         fontWeight: 700,
                                         borderWidth: '2px',
-                                        borderRadius: 3,
+                                        borderRadius: { xs: 4, sm: 3 },
+                                        textTransform: 'none',
+                                        letterSpacing: { xs: '0.5px', sm: 'normal' },
+                                        transition: 'all 0.2s ease-in-out',
                                         '&:hover': {
                                             borderWidth: '2px',
-                                            transform: i18n.language === 'ar' ? 'translateX(2px)' : 'translateX(-2px)'
+                                            transform: { xs: 'scale(0.98)', sm: i18n.language === 'ar' ? 'translateX(2px)' : 'translateX(-2px)' }
+                                        },
+                                        '&:active': {
+                                            transform: { xs: 'scale(0.95)', sm: 'none' }
+                                        },
+                                        '&.Mui-disabled': {
+                                            opacity: 0.5
                                         }
                                     }}
                                 >
                                     {t('majorMatchingTest.previous')}
                                 </Button>
 
-                                <Box sx={{ textAlign: 'center' }}>
+                                <Box sx={{
+                                    textAlign: 'center',
+                                    display: { xs: 'none', sm: 'block' },
+                                    width: { xs: '100%', sm: 'auto' }
+                                }}>
                                     {isPageComplete() && (
                                         <Zoom in={true} timeout={500}>
                                             <Chip
@@ -1267,14 +1363,36 @@ const MajorMatchingTest: React.FC = () => {
                                                     backgroundColor: theme.palette.success.main,
                                                     color: 'white',
                                                     fontWeight: 700,
-                                                    fontSize: '1rem',
-                                                    px: 2,
-                                                    py: 1
+                                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                                    px: { xs: 1.5, sm: 2 },
+                                                    py: { xs: 0.75, sm: 1 }
                                                 }}
                                             />
                                         </Zoom>
                                     )}
                                 </Box>
+
+                                {/* Mobile page complete indicator */}
+                                {isPageComplete() && isXs && (
+                                    <Box sx={{ width: '100%', display: { xs: 'block', sm: 'none' } }}>
+                                        <Zoom in={true} timeout={500}>
+                                            <Chip
+                                                icon={<CheckCircle />}
+                                                label={t('majorMatchingTest.pageComplete')}
+                                                sx={{
+                                                    backgroundColor: theme.palette.success.main,
+                                                    color: 'white',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.95rem',
+                                                    px: 2,
+                                                    py: 1,
+                                                    width: '100%',
+                                                    justifyContent: 'center'
+                                                }}
+                                            />
+                                        </Zoom>
+                                    </Box>
+                                )}
 
                                 <Button
                                     variant="contained"
@@ -1284,22 +1402,34 @@ const MajorMatchingTest: React.FC = () => {
                                         currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward sx={{ transform: 'scaleX(-1)' }} />) : undefined}
                                     endIcon={i18n.language === 'ar' ? undefined : (submitting ? <CircularProgress size={20} color="inherit" /> :
                                         currentPage === totalPages - 1 ? <EmojiEvents /> : <ArrowForward />)}
+                                    fullWidth={isXs}
                                     sx={{
-                                        py: 1.5,
-                                        px: 4,
-                                        fontSize: '1rem',
+                                        py: { xs: 2, sm: 1.5 },
+                                        px: { xs: 3, sm: 4 },
+                                        minHeight: { xs: '48px', sm: 'auto' },
+                                        fontSize: { xs: '1.1rem', sm: '1rem' },
                                         fontWeight: 700,
-                                        borderRadius: 3,
+                                        borderRadius: { xs: 4, sm: 3 },
+                                        textTransform: 'none',
+                                        letterSpacing: { xs: '0.5px', sm: 'normal' },
                                         background: isPageComplete()
                                             ? `linear-gradient(135deg, ${categoryColor} 0%, ${theme.palette.primary.main} 100%)`
                                             : theme.palette.grey[300],
-                                        boxShadow: isPageComplete() ? theme.shadows[4] : 'none',
+                                        boxShadow: isPageComplete() ? { xs: theme.shadows[6], sm: theme.shadows[4] } : 'none',
+                                        transition: 'all 0.2s ease-in-out',
                                         '&:hover': {
                                             background: isPageComplete()
                                                 ? `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${categoryColor} 100%)`
                                                 : theme.palette.grey[300],
-                                            transform: i18n.language === 'ar' ? 'translateX(-2px)' : 'translateX(2px)',
-                                            boxShadow: isPageComplete() ? theme.shadows[8] : 'none'
+                                            transform: { xs: 'translateY(-2px)', sm: i18n.language === 'ar' ? 'translateX(-2px)' : 'translateX(2px)' },
+                                            boxShadow: isPageComplete() ? { xs: theme.shadows[10], sm: theme.shadows[8] } : 'none'
+                                        },
+                                        '&:active': {
+                                            transform: { xs: 'translateY(0px) scale(0.98)', sm: 'none' }
+                                        },
+                                        '&.Mui-disabled': {
+                                            opacity: 0.5,
+                                            transform: 'none'
                                         }
                                     }}
                                 >
