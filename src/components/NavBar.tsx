@@ -34,6 +34,7 @@ const NavBar: React.FC = () => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [langMenuAnchor, setLangMenuAnchor] = useState<null | HTMLElement>(null);
+    const [navLoading, setNavLoading] = useState<'personality' | 'major' | null>(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -93,6 +94,90 @@ const NavBar: React.FC = () => {
     const isActive = (path: string) => location.pathname === path;
     const go = (path: string) => { navigate(path); setMobileOpen(false); };
 
+    const handlePersonalityNav = async () => {
+        if (!isAuthenticated) {
+            navigate('/login');
+            return;
+        }
+        if (!hasMbti) {
+            navigate('/personality-test');
+            return;
+        }
+        if (navLoading) return;
+        setNavLoading('personality');
+        try {
+            const latestRes = await fetch('/api/personality/latest', { credentials: 'include' });
+            if (latestRes.status === 401) {
+                navigate('/login');
+                return;
+            }
+            if (!latestRes.ok) throw new Error('Failed to load latest personality result');
+            const latest = await latestRes.json();
+            if (!latest?.type) throw new Error('No personality type found');
+
+            const detailRes = await fetch(`/api/personality/${encodeURIComponent(latest.type)}`, { credentials: 'include' });
+            if (!detailRes.ok) throw new Error('Failed to load personality details');
+            const personalityData = await detailRes.json();
+
+            navigate('/personality-results', {
+                state: {
+                    personalityType: latest.type,
+                    personalityData
+                }
+            });
+        } catch (error) {
+            console.error('[NavBar] Unable to load personality results:', error);
+            navigate('/personality-test');
+        } finally {
+            setNavLoading(current => current === 'personality' ? null : current);
+        }
+    };
+
+    const handleMajorNav = async () => {
+        if (!hasMbti || !isAuthenticated) {
+            if (!isAuthenticated) {
+                navigate('/login');
+                return;
+            }
+            navigate('/major-matching-test');
+            return;
+        }
+        if (navLoading) return;
+        setNavLoading('major');
+        try {
+            const profileRes = await fetch('/api/profile', { credentials: 'include' });
+            if (profileRes.status === 401) {
+                navigate('/login');
+                return;
+            }
+            if (!profileRes.ok) throw new Error('Failed to load profile');
+            const profile = await profileRes.json();
+            const topMajors = profile?.major_result?.top_majors;
+            if (Array.isArray(topMajors) && topMajors.length > 0) {
+                type ApiMajor = {
+                    name: string;
+                    score?: number;
+                    description?: string;
+                    career_paths?: string[];
+                };
+                const formatted = (topMajors as ApiMajor[]).map((major) => ({
+                    name: major.name,
+                    match: typeof major.score === 'number' ? major.score : 0,
+                    description: major.description || '',
+                    careerPaths: major.career_paths || []
+                }));
+                navigate('/major-matching-results', { state: { results: formatted } });
+                return;
+            }
+            navigate('/major-matching-test');
+        } catch (error) {
+            console.error('[NavBar] Unable to load major results:', error);
+            navigate('/major-matching-test');
+        } finally {
+            setNavLoading(current => current === 'major' ? null : current);
+        }
+    };
+
     const handleLanguageChange = (lang: string) => {
         i18n.changeLanguage(lang);
         setLangMenuAnchor(null);
@@ -146,9 +231,9 @@ const NavBar: React.FC = () => {
                         <span>
                             <Button
                                 color={isActive('/personality-test') ? 'primary' : 'inherit'}
-                                onClick={() => navigate('/personality-test')}
+                                onClick={() => { void handlePersonalityNav(); }}
                                 sx={{ fontWeight: 600 }}
-                                disabled={!isAuthenticated}
+                                disabled={!isAuthenticated || navLoading === 'personality'}
                             >
                                 {t('common.personalityTest')}
                             </Button>
@@ -158,9 +243,9 @@ const NavBar: React.FC = () => {
                         <span>
                             <Button
                                 color={isActive('/major-matching-test') ? 'primary' : 'inherit'}
-                                onClick={() => navigate('/major-matching-test')}
+                                onClick={() => { void handleMajorNav(); }}
                                 sx={{ fontWeight: 600 }}
-                                disabled={!hasMbti}
+                                disabled={!hasMbti || navLoading === 'major'}
                             >
                                 {t('common.majorMatch')}
                             </Button>
@@ -275,14 +360,28 @@ const NavBar: React.FC = () => {
                     </ListItemButton>
                     <Tooltip title={t('common.login')} disableHoverListener={isAuthenticated} placement="left">
                         <span>
-                            <ListItemButton disabled={!isAuthenticated} selected={isActive('/personality-test')} onClick={() => go('/personality-test')}>
+                            <ListItemButton
+                                disabled={!isAuthenticated || navLoading === 'personality'}
+                                selected={isActive('/personality-test')}
+                                onClick={() => {
+                                    setMobileOpen(false);
+                                    void handlePersonalityNav();
+                                }}
+                            >
                                 <ListItemText primary={t('common.personalityTest')} />
                             </ListItemButton>
                         </span>
                     </Tooltip>
                     <Tooltip title={t('common.majorMatch')} disableHoverListener={hasMbti} placement="left">
                         <span>
-                            <ListItemButton disabled={!hasMbti} selected={isActive('/major-matching-test')} onClick={() => go('/major-matching-test')}>
+                            <ListItemButton
+                                disabled={!hasMbti || navLoading === 'major'}
+                                selected={isActive('/major-matching-test')}
+                                onClick={() => {
+                                    setMobileOpen(false);
+                                    void handleMajorNav();
+                                }}
+                            >
                                 <ListItemText primary={t('common.majorMatch')} />
                             </ListItemButton>
                         </span>

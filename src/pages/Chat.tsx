@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import DOMPurify from 'dompurify';
 import {
     Box,
     Button,
@@ -57,6 +58,30 @@ type ConversationSummary = {
 
 type ConversationResponse = ConversationSummary & {
     messages: ChatMessage[];
+};
+
+const MESSAGE_SANITIZE_CONFIG: DOMPurify.Config = {
+    ALLOWED_TAGS: [
+        'b',
+        'strong',
+        'i',
+        'em',
+        'u',
+        's',
+        'p',
+        'br',
+        'ul',
+        'ol',
+        'li',
+        'a',
+        'code',
+        'pre',
+        'blockquote',
+        'span'
+    ],
+    ALLOWED_ATTR: ['href', 'target', 'rel'],
+    FORBID_TAGS: ['script', 'style'],
+    FORBID_ATTR: ['onerror', 'onclick', 'style']
 };
 
 const Chat: React.FC = () => {
@@ -382,6 +407,12 @@ const Chat: React.FC = () => {
     const stopGenerating = () => {
         setLoading(false);
     };
+
+    const sanitizeMessageContent = useCallback((content?: string) => {
+        const value = typeof content === 'string' ? content : '';
+        if (!value.trim()) return '';
+        return DOMPurify.sanitize(value, MESSAGE_SANITIZE_CONFIG);
+    }, []);
 
     const renderSidebarContent = (
         <Box
@@ -735,11 +766,13 @@ const Chat: React.FC = () => {
                                                 }}
                                             >
                                                 <Typography
+                                                    component="div"
                                                     variant="body1"
                                                     sx={{ whiteSpace: 'pre-wrap', fontSize: { xs: '0.9rem', sm: '1rem' } }}
-                                                >
-                                                    {m.content}
-                                                </Typography>
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: sanitizeMessageContent(m.content) || '&nbsp;'
+                                                    }}
+                                                />
                                             </Paper>
                                         </Stack>
                                     ))}

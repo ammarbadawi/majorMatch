@@ -12,7 +12,8 @@ import {
     Grid,
     useTheme,
     Alert,
-    CircularProgress
+    CircularProgress,
+    Divider
 } from '@mui/material';
 import {
     Email,
@@ -25,6 +26,7 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
@@ -34,6 +36,7 @@ const SignUp: React.FC = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [googleLoading, setGoogleLoading] = useState(false);
     const [passwordError, setPasswordError] = useState<string | null>(null);
     const [formData, setFormData] = useState({
         firstName: '',
@@ -43,6 +46,7 @@ const SignUp: React.FC = () => {
         confirmPassword: '',
         university: ''
     });
+    const isGoogleAuthEnabled = Boolean(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
     const validatePassword = (password: string): string | null => {
         if (password.length < 8) {
@@ -58,6 +62,36 @@ const SignUp: React.FC = () => {
             return t('signup.passwordMustContainSpecial');
         }
         return null;
+    };
+
+    const handleGoogleSuccess = async (response: CredentialResponse) => {
+        if (!response.credential) {
+            setError(t('signup.googleError'));
+            return;
+        }
+        setError(null);
+        setGoogleLoading(true);
+        try {
+            const res = await fetch('/api/auth/google', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ credential: response.credential })
+            });
+            const data = await res.json().catch(() => ({ error: t('signup.googleError') }));
+            if (!res.ok) {
+                throw new Error(data.error || t('signup.googleError'));
+            }
+            navigate('/');
+        } catch (err: any) {
+            setError(err.message || t('signup.googleError'));
+        } finally {
+            setGoogleLoading(false);
+        }
+    };
+
+    const handleGoogleError = () => {
+        setError(t('signup.googleError'));
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -468,7 +502,7 @@ const SignUp: React.FC = () => {
                                 endIcon={loading ? <CircularProgress size={20} color="inherit" /> : undefined}
                                 sx={{
                                     mt: { xs: 4, sm: 5 },
-                                    mb: 4,
+                                    mb: isGoogleAuthEnabled ? 2 : 4,
                                     py: { xs: 1.75, sm: 2 },
                                     fontSize: { xs: '1rem', sm: '1.125rem' },
                                     fontWeight: 700,
@@ -483,6 +517,46 @@ const SignUp: React.FC = () => {
                             >
                                 {t('signup.createAccount')}
                             </Button>
+
+                            {isGoogleAuthEnabled && (
+                                <>
+                                    <Divider
+                                        sx={{
+                                            my: 3,
+                                            fontSize: { xs: '0.85rem', sm: '0.95rem' },
+                                            fontWeight: 600,
+                                            color: theme.palette.text.secondary
+                                        }}
+                                    >
+                                        {t('signup.orContinue')}
+                                    </Divider>
+                                    <Box sx={{ mb: 4, position: 'relative' }}>
+                                        <GoogleLogin
+                                            onSuccess={handleGoogleSuccess}
+                                            onError={handleGoogleError}
+                                            width="100%"
+                                            theme="outline"
+                                            shape="rectangular"
+                                            text="signup_with"
+                                        />
+                                        {googleLoading && (
+                                            <Box
+                                                sx={{
+                                                    position: 'absolute',
+                                                    inset: 0,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    bgcolor: 'rgba(255,255,255,0.6)',
+                                                    borderRadius: 1
+                                                }}
+                                            >
+                                                <CircularProgress size={28} color="primary" />
+                                            </Box>
+                                        )}
+                                    </Box>
+                                </>
+                            )}
 
                             <Box sx={{ textAlign: 'center', mb: 4 }}>
                                 <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>

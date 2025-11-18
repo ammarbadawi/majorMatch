@@ -164,7 +164,9 @@
     "passwordMustContain": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
     "passwordMustContainNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
     "passwordMustContainSpecial": "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل",
-    "passwordMustBe8Chars": "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
+    "passwordMustBe8Chars": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "orContinue": "أو تابع باستخدام",
+    "googleError": "تعذر تسجيلك عبر جوجل. حاول مرة أخرى."
   },
   "personalityTest": {
     "title": "تقييم الشخصية",

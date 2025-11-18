@@ -108,6 +108,7 @@ const MajorMatchingTest: React.FC = () => {
     const [hoveredQuestion, setHoveredQuestion] = useState<number | null>(null);
     const [showInsights, setShowInsights] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const questionRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
     useEffect(() => {
         checkSubscriptionStatus();
@@ -292,8 +293,18 @@ const MajorMatchingTest: React.FC = () => {
         return questions.slice(start, start + QUESTIONS_PER_PAGE);
     };
 
-    const handleAnswerChangeFor = (questionId: number, value: string) => {
+    const handleAnswerChangeFor = (questionId: number, value: string, nextQuestionId?: number | null) => {
         setAnswers(prev => ({ ...prev, [questionId]: value }));
+        if (nextQuestionId) {
+            window.requestAnimationFrame(() => {
+                const target = questionRefs.current[nextQuestionId];
+                target?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            });
+        }
+    };
+
+    const registerQuestionRef = (questionId: number, node: HTMLDivElement | null) => {
+        questionRefs.current[questionId] = node;
     };
 
     const isPageComplete = () => {
@@ -1128,15 +1139,18 @@ const MajorMatchingTest: React.FC = () => {
                                     const qAnswer = answers[q.id] || '';
                                     const isHovered = hoveredQuestion === q.id;
                                     const qColor = getCategoryColor(q.category);
+                                    const nextQuestionId = pageQuestions[idx + 1]?.id ?? null;
 
                                     return (
                                         <Grid key={q.id} item xs={12}>
                                             <Grow in={true} timeout={500 + idx * 100}>
                                                 <Paper
+                                                    ref={(el) => registerQuestionRef(q.id, el)}
                                                     elevation={isHovered ? 8 : qAnswer ? 6 : 2}
                                                     sx={{
                                                         p: { xs: 3, md: 4 },
                                                         borderRadius: 3,
+                                                        scrollMarginTop: isXs ? 96 : 160,
                                                         background: qAnswer
                                                             ? `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.05)} 0%, ${alpha(theme.palette.success.light, 0.05)} 100%)`
                                                             : `linear-gradient(135deg, white 0%, ${alpha(theme.palette.grey[50], 0.5)} 100%)`,
@@ -1224,7 +1238,7 @@ const MajorMatchingTest: React.FC = () => {
                                                             return (
                                                                 <Tooltip key={option.value} title={option.description} placement="top">
                                                                     <Box
-                                                                        onClick={() => handleAnswerChangeFor(q.id, option.value)}
+                                                                        onClick={() => handleAnswerChangeFor(q.id, option.value, nextQuestionId)}
                                                                         sx={{
                                                                             width: { xs: 40, sm: 50 },
                                                                             height: { xs: 40, sm: 50 },

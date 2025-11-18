@@ -105,6 +105,7 @@ const PersonalityTest: React.FC = () => {
     const [hoveredQuestion, setHoveredQuestion] = useState<number | null>(null);
     const [showInsights, setShowInsights] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const questionRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
     // Load questions from backend
     useEffect(() => {
@@ -161,13 +162,23 @@ const PersonalityTest: React.FC = () => {
         }
     };
 
-    const handleAnswerChangeFor = (questionId: number, value: number) => {
+    const handleAnswerChangeFor = (questionId: number, value: number, nextQuestionId?: number | null) => {
         const newAnswers = [...answers];
         const idx = newAnswers.findIndex(a => a.questionId === questionId);
         if (idx !== -1) {
             newAnswers[idx] = { questionId, value };
         }
         setAnswers(newAnswers);
+        if (nextQuestionId) {
+            window.requestAnimationFrame(() => {
+                const target = questionRefs.current[nextQuestionId];
+                target?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+            });
+        }
+    };
+
+    const registerQuestionRef = (questionId: number, node: HTMLDivElement | null) => {
+        questionRefs.current[questionId] = node;
     };
 
     const QUESTIONS_PER_PAGE = 4;
@@ -812,15 +823,18 @@ const PersonalityTest: React.FC = () => {
                                     const qAnswer = getAnswer(q.id);
                                     const isAnswered = qAnswer !== null && qAnswer >= 1 && qAnswer <= 5;
                                     const isHovered = hoveredQuestion === q.id;
+                                    const nextQuestionId = pageQuestions[idx + 1]?.id ?? null;
 
                                     return (
                                         <Grid key={q.id} item xs={12}>
                                             <Grow in={true} timeout={500 + idx * 100}>
                                                 <Paper
+                                                    ref={(el) => registerQuestionRef(q.id, el)}
                                                     elevation={isHovered ? 8 : isAnswered ? 6 : 2}
                                                     sx={{
                                                         p: { xs: 3, md: 4 },
                                                         borderRadius: 3,
+                                                        scrollMarginTop: isXs ? 96 : 160,
                                                         background: isAnswered
                                                             ? `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.05)} 0%, ${alpha(theme.palette.success.light, 0.05)} 100%)`
                                                             : `linear-gradient(135deg, white 0%, ${alpha(theme.palette.grey[50], 0.5)} 100%)`,
@@ -908,7 +922,7 @@ const PersonalityTest: React.FC = () => {
                                                             return (
                                                                 <Tooltip key={option.value} title={option.description} placement="top">
                                                                     <Box
-                                                                        onClick={() => handleAnswerChangeFor(q.id, option.value)}
+                                                                        onClick={() => handleAnswerChangeFor(q.id, option.value, nextQuestionId)}
                                                                         sx={{
                                                                             width: { xs: 40, sm: 50 },
                                                                             height: { xs: 40, sm: 50 },

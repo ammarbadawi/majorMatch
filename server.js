@@ -366,9 +366,8 @@ function findConversationById(history, conversationId) {
     : [];
   const targetId = String(conversationId);
   return (
-    list.find(
-      (conv) => conv && conv._id && conv._id.toString() === targetId
-    ) || null
+    list.find((conv) => conv && conv._id && conv._id.toString() === targetId) ||
+    null
   );
 }
 
@@ -789,7 +788,9 @@ async function ensurePersonalitySeedMongo() {
         const qPath = path.join(__dirname, "MBTI Questions.txt");
         if (fs.existsSync(qPath)) {
           const raw = fs.readFileSync(qPath, "utf8");
-          const lines = raw.split(/\r?\n/).filter((l) => l.trim());
+          const lines = raw
+            .split(/\r?\n/)
+            .filter((line) => line.trim().length > 0);
           const docs = [];
           for (const line of lines) {
             const parts = line.split("\t");
@@ -866,9 +867,9 @@ async function ensurePersonalitySeedMongo() {
         if (fs.existsSync(qPathAr)) {
           console.log(`[Seed] Arabic questions file found, loading...`);
           const raw = fs.readFileSync(qPathAr, "utf8");
-          const lines = raw.split(/\r?\n/).filter(function (l) {
-            return l.trim();
-          });
+          const lines = raw
+            .split(/\r?\n/)
+            .filter((line) => line.trim().length > 0);
           console.log(`[Seed] Parsed ${lines.length} lines from Arabic file`);
           const docs = [];
           for (const line of lines) {
@@ -1598,7 +1599,9 @@ async function ensureQuestionCount(language) {
   if (current.length >= target) return current;
 
   console.warn(
-    `[Questions] ${language.toUpperCase()} cache has ${current.length} questions. Enforcing minimum ${target}.`
+    `[Questions] ${language.toUpperCase()} cache has ${
+      current.length
+    } questions. Enforcing minimum ${target}.`
   );
   const docs = parseQuestionFile(language);
   if (!docs.length) {
@@ -2487,7 +2490,8 @@ app.post("/api/auth/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     if (!user.password_hash) {
       return res.status(400).json({
-        error: "Password sign-in disabled for this account. Use Google Sign-In.",
+        error:
+          "Password sign-in disabled for this account. Use Google Sign-In.",
       });
     }
     const ok = bcrypt.compareSync(password, user.password_hash);
@@ -2924,7 +2928,7 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
       path.join(__dirname, "Mapping"),
       path.join(process.cwd(), "Mapping"),
     ].filter(Boolean);
-    
+
     let rootDir = null;
     for (const r of mappingRoots) {
       if (r && fs.existsSync(r)) {
@@ -2932,11 +2936,11 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
         break;
       }
     }
-    
+
     if (!rootDir) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         error: "Mapping directory not found",
-        checked: mappingRoots 
+        checked: mappingRoots,
       });
     }
 
@@ -2944,7 +2948,7 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
       majors: { updated: 0, created: 0 },
       mappings: { count: 0 },
       questions: { en: 0, ar: 0 },
-      descriptions: { updated: 0 }
+      descriptions: { updated: 0 },
     };
 
     // 1. Reload Major Questions (English)
@@ -2952,10 +2956,20 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
       const qCandidatesEn = [
         process.env.MAJOR_QUESTIONS_PATH,
         path.join(rootDir, "Question 2.txt"),
-        path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2.txt"),
-        path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2.txt"),
+        path.join(
+          __dirname,
+          "Mapping-20250819T113244Z-1-001",
+          "Mapping",
+          "Question 2.txt"
+        ),
+        path.join(
+          process.cwd(),
+          "Mapping-20250819T113244Z-1-001",
+          "Mapping",
+          "Question 2.txt"
+        ),
       ].filter(Boolean);
-      
+
       for (const p of qCandidatesEn) {
         if (p && fs.existsSync(p)) {
           const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
@@ -2971,13 +2985,18 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
             await MajorQuestion.deleteMany({ language: "en" });
             await MajorQuestion.insertMany(docs);
             results.questions.en = docs.length;
-            console.log(`[Major Reload] Loaded ${docs.length} English major questions from ${p}`);
+            console.log(
+              `[Major Reload] Loaded ${docs.length} English major questions from ${p}`
+            );
             break;
           }
         }
       }
     } catch (e) {
-      console.warn(`[Major Reload] Error loading English questions:`, e.message);
+      console.warn(
+        `[Major Reload] Error loading English questions:`,
+        e.message
+      );
     }
 
     // 2. Reload Major Questions (Arabic)
@@ -2985,10 +3004,20 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
       const qCandidatesAr = [
         process.env.MAJOR_QUESTIONS_PATH_AR,
         path.join(rootDir, "Question 2 - Arabic.txt"),
-        path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2 - Arabic.txt"),
-        path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping", "Question 2 - Arabic.txt"),
+        path.join(
+          __dirname,
+          "Mapping-20250819T113244Z-1-001",
+          "Mapping",
+          "Question 2 - Arabic.txt"
+        ),
+        path.join(
+          process.cwd(),
+          "Mapping-20250819T113244Z-1-001",
+          "Mapping",
+          "Question 2 - Arabic.txt"
+        ),
       ].filter(Boolean);
-      
+
       for (const p of qCandidatesAr) {
         if (p && fs.existsSync(p)) {
           const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
@@ -3002,31 +3031,38 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
               language: "ar",
             }));
             await MajorQuestion.deleteMany({ language: "ar" });
-            await MajorQuestion.insertMany(docs, { ordered: false }).catch(async (insertError) => {
-              // If duplicate key error, try inserting one by one
-              if (insertError.code === 11000) {
-                let inserted = 0;
-                for (const doc of docs) {
-                  try {
-                    await MajorQuestion.replaceOne(
-                      { id: doc.id, language: "ar" },
-                      doc,
-                      { upsert: true }
-                    );
-                    inserted++;
-                  } catch (e) {
-                    console.warn(`[Major Reload] Error upserting Arabic question ${doc.id}:`, e.message);
+            await MajorQuestion.insertMany(docs, { ordered: false }).catch(
+              async (insertError) => {
+                // If duplicate key error, try inserting one by one
+                if (insertError.code === 11000) {
+                  let inserted = 0;
+                  for (const doc of docs) {
+                    try {
+                      await MajorQuestion.replaceOne(
+                        { id: doc.id, language: "ar" },
+                        doc,
+                        { upsert: true }
+                      );
+                      inserted++;
+                    } catch (e) {
+                      console.warn(
+                        `[Major Reload] Error upserting Arabic question ${doc.id}:`,
+                        e.message
+                      );
+                    }
                   }
+                  results.questions.ar = inserted;
+                } else {
+                  throw insertError;
                 }
-                results.questions.ar = inserted;
-              } else {
-                throw insertError;
               }
-            });
+            );
             if (results.questions.ar === 0) {
               results.questions.ar = docs.length;
             }
-            console.log(`[Major Reload] Loaded ${results.questions.ar} Arabic major questions from ${p}`);
+            console.log(
+              `[Major Reload] Loaded ${results.questions.ar} Arabic major questions from ${p}`
+            );
             break;
           }
         }
@@ -3040,7 +3076,7 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
     const majorsSet = new Set();
     const mappings = [];
     const descriptions = {};
-    
+
     const addMap = (optionValue, majorName, score, category) => {
       if (!optionValue || !majorName) return;
       mappings.push({
@@ -3050,14 +3086,14 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
         score: parseInt(score || 1) || 1,
       });
     };
-    
+
     const weight = {
       ria_sec: 2,
       academic_strengths: 3,
       core_values: 2,
       personality_traits: 1,
     };
-    
+
     for (const entry of entries) {
       if (!entry.isDirectory()) continue;
       const dir = path.join(rootDir, entry.name);
@@ -3065,9 +3101,9 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
         fs.readdirSync(dir).find((f) => /Algorithm .*\.txt$/i.test(f)) || null;
       const descFile =
         fs.readdirSync(dir).find((f) => /Description\.txt$/i.test(f)) || null;
-      
+
       if (!algo) continue;
-      
+
       // Parse algorithm file for majors and mappings
       try {
         const content = fs.readFileSync(path.join(dir, algo), "utf8");
@@ -3188,27 +3224,27 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
         majors: {
           total: majorsSet.size,
           updated: results.majors.updated,
-          created: results.majors.created
+          created: results.majors.created,
         },
         mappings: {
-          count: results.mappings.count
+          count: results.mappings.count,
         },
         questions: {
           english: results.questions.en,
-          arabic: results.questions.ar
+          arabic: results.questions.ar,
         },
         descriptions: {
-          updated: results.descriptions.updated
-        }
+          updated: results.descriptions.updated,
+        },
       },
-      rootDir: rootDir
+      rootDir: rootDir,
     });
   } catch (e) {
     console.error("[Major Reload] Error:", e);
-    res.status(500).json({ 
-      error: "Server error", 
+    res.status(500).json({
+      error: "Server error",
       details: e.message,
-      stack: process.env.NODE_ENV === "development" ? e.stack : undefined
+      stack: process.env.NODE_ENV === "development" ? e.stack : undefined,
     });
   }
 });
@@ -4849,9 +4885,8 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
       conversation = history.conversations[0];
     }
 
-    const sanitizedConversationMessages = sanitizeIncomingMessages(
-      userMessages
-    );
+    const sanitizedConversationMessages =
+      sanitizeIncomingMessages(userMessages);
     if (sanitizedConversationMessages.length) {
       conversation.messages = sanitizedConversationMessages;
     } else if (!Array.isArray(conversation.messages)) {
@@ -4860,16 +4895,29 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
 
     // Lightweight domain-specific system instruction
     let systemContent =
-      "You are Major Match AI, a helpful assistant for students exploring majors and careers. Be concise and clear. Always ground your answers in the user's own test responses and personality when applicable.";
+      "You are Major Match AI, a helpful assistant for students exploring majors and careers. Your role is to explain and explore connections, not to justify or defend recommendations. When users ask about their major match, help them understand how their test responses connect to the major. Focus on explaining the connections between their answers and the major's characteristics. Be educational, exploratory, and supportive. Prioritize their specific major test results over personality test results. Always reference their actual test answers, categories, and topics that contributed to the match. Be specific, avoid generic statements, and format every response using clean HTML (use <p>, <strong>, <em>, <ul>, <ol>, <li>, <code>, and <br /> as needed). Never return Markdown.";
 
     // Build latest test/personality context for grounding
     const majorContext = await buildMajorAiContext(req.user.id);
     const contextMessage = majorContext
       ? {
           role: "system",
-          content: `User context (JSON): ${JSON.stringify(
+          content: `User's test results context (JSON): ${JSON.stringify(
             majorContext
-          )}. When explaining why a major was recommended, explicitly reference the most influential categories/topics from reasons. Avoid generic statements.`,
+          )}. 
+
+IMPORTANT INSTRUCTIONS FOR EXPLANATORY RESPONSES:
+- Your goal is to help the user understand and explore connections, not to justify the recommendation
+- Explain how their test responses connect to the major's characteristics and requirements
+- ALWAYS prioritize major test results over personality when explaining connections
+- Reference specific categories and topics from the "reasons" array, ordered by impact (highest impact first)
+- Show how their actual answers (from majorAnswers) relate to what the major involves
+- Include personality type as supporting context, but make major test results the primary focus
+- Use exploratory language: "Your responses show...", "This connects to...", "You indicated interest in..."
+- Avoid defensive language: don't say "this proves" or "this justifies" - instead say "this suggests" or "this indicates"
+- Be specific: cite exact categories, topics, and the user's responses that show the connection
+- Help them understand what the major involves and how their answers align with it
+- Format the final response using semantic HTML (paragraphs, strong/emphasis tags, lists, line breaks). Never return Markdown.`,
         }
       : null;
 
@@ -4879,21 +4927,121 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
         .reverse()
         .find((m) => String(m.role).toLowerCase() === "user");
       if (latestUserMessage && latestUserMessage.content) {
-        const normalizedContent = String(latestUserMessage.content).toLowerCase();
+        const normalizedContent = String(
+          latestUserMessage.content
+        ).toLowerCase();
+        // Enhanced "why" detection - catch more variations
         const askedWhy =
-          normalizedContent.includes("why") &&
+          (normalizedContent.includes("why") ||
+            normalizedContent.includes("explain") ||
+            normalizedContent.includes("reason")) &&
           (normalizedContent.includes("major") ||
-            normalizedContent.includes("recommend"));
+            normalizedContent.includes("recommend") ||
+            normalizedContent.includes("match") ||
+            normalizedContent.includes("get") ||
+            normalizedContent.includes("this") ||
+            normalizedContent.includes("that"));
+
         if (askedWhy) {
-          const mentioned = majorContext.topMajors.find((m) =>
-            normalizedContent.includes(String(m.name || "").toLowerCase())
-          );
-          if (mentioned) {
+          // Try to find mentioned major by name
+          let mentioned = majorContext.topMajors.find((m) => {
+            const majorNameLower = String(m.name || "").toLowerCase();
+            return normalizedContent.includes(majorNameLower);
+          });
+
+          // If no specific major mentioned, use the top match
+          if (!mentioned && majorContext.topMajors.length > 0) {
+            mentioned = majorContext.topMajors[0];
+          }
+
+          if (mentioned && mentioned.reasons && mentioned.reasons.length > 0) {
+            // Get relevant user answers for the top contributing categories/topics
+            const topReasons = mentioned.reasons.slice(0, 5); // Top 5 reasons
+            const relevantAnswers = majorContext.majorAnswers
+              ? majorContext.majorAnswers.filter((ans) => {
+                  return topReasons.some((reason) => {
+                    const reasonCat = String(
+                      reason.category || ""
+                    ).toLowerCase();
+                    const reasonTopic = String(
+                      reason.topic || ""
+                    ).toLowerCase();
+                    const ansCat = String(ans.category || "").toLowerCase();
+                    const ansTopic = String(ans.topic || "").toLowerCase();
+                    return (
+                      ansCat === reasonCat ||
+                      ansTopic === reasonTopic ||
+                      ansCat.includes(reasonCat) ||
+                      ansTopic.includes(reasonTopic)
+                    );
+                  });
+                })
+              : [];
+
+            // Build detailed explanation instruction
+            const reasonsText = topReasons
+              .map((r, idx) => {
+                const impactDesc =
+                  r.impact > 0 ? "strongly contributed" : "contributed";
+                return `${idx + 1}. ${r.category || "General"} - ${
+                  r.topic || "N/A"
+                } (${impactDesc} with impact: ${r.impact.toFixed(2)})`;
+              })
+              .join("\n");
+
+            const answersText =
+              relevantAnswers.length > 0
+                ? relevantAnswers
+                    .slice(0, 8)
+                    .map((ans) => {
+                      return `- Question: "${
+                        ans.question || "N/A"
+                      }" → You answered: "${ans.choice}" (Category: ${
+                        ans.category || "N/A"
+                      }, Topic: ${ans.topic || "N/A"})`;
+                    })
+                    .join("\n")
+                : "No specific matching answers found";
+
             focusInstruction = {
               role: "system",
-              content: `The user specifically asked why they matched with "${mentioned.name}". Use their latest major test reasons and MBTI/personality result to explain the recommendation. Reference the strongest categories/topics from the reasons list and mention their personality type ${
-                majorContext.personality?.type || "unknown"
-              }. Keep the explanation grounded in their actual answers.`,
+              content: `The user wants to understand how their test responses connect to "${
+                mentioned.name
+              }" (${mentioned.match}% match).
+
+EXPLORE AND EXPLAIN (Major Test Results - PRIMARY FOCUS):
+The key connections from their major test are:
+${reasonsText}
+
+Their relevant answers that show these connections:
+${answersText}
+
+SUPPORTING CONTEXT (Personality - Mention as additional insight):
+Personality Type: ${majorContext.personality?.type || "Not available"}
+${
+  majorContext.personality?.snippet
+    ? `\nPersonality traits: ${majorContext.personality.snippet.substring(
+        0,
+        300
+      )}...`
+    : ""
+}
+
+RESPONSE APPROACH - EXPLANATORY AND EXPLORATORY:
+1. Start by exploring the connections: "Your test responses show strong alignment with ${
+                mentioned.name
+              } in several areas..."
+2. Explain what the major involves and how their answers connect to those aspects
+3. Use the top 3-4 categories/topics from the reasons list to show specific connections
+4. Reference specific questions and answers to illustrate the connections: "When you indicated [answer], this connects to [major aspect] because..."
+5. Help them understand: "This suggests you have interest/aptitude in [area], which is central to ${
+                mentioned.name
+              }"
+6. Mention personality type as additional insight, but keep major test results as the main focus
+7. Use exploratory language: "Your responses indicate...", "This aligns with...", "You showed interest in..."
+8. Avoid defensive or justificatory language - focus on helping them understand and explore
+9. Keep explanations grounded in their actual data, not generic statements
+10. Format using clean HTML elements (<p>, <strong>, <em>, <ul>, <li>, <code>, <br />) and never return Markdown`,
             };
           }
         }
@@ -4989,7 +5137,9 @@ app.get("/api/chat/history", authMiddleware, async (req, res) => {
           requestedConversationId &&
           conv._id &&
           conv._id.toString() === requestedConversationId
-      ) || conversations[0] || null;
+      ) ||
+      conversations[0] ||
+      null;
 
     return res.json({
       conversations: summaries,

@@ -164,7 +164,9 @@
     "passwordMustContain": "Password must contain at least one capital letter",
     "passwordMustContainNumber": "Password must contain at least one number",
     "passwordMustContainSpecial": "Password must contain at least one special character",
-    "passwordMustBe8Chars": "Password must be at least 8 characters long"
+    "passwordMustBe8Chars": "Password must be at least 8 characters long",
+    "orContinue": "Or continue with",
+    "googleError": "We couldn't sign you up with Google. Please try again."
   },
   "personalityTest": {
     "title": "Personality Assessment",
