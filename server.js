@@ -218,6 +218,56 @@ mongoose.connection.once("open", async () => {
       console.warn("[Schema] Could not manage indexes:", e.message);
     }
   }
+
+  // Ensure the google_id index allows null values for local signups
+  try {
+    const indexes = await User.collection.listIndexes().toArray();
+    const googleIndex = indexes.find((idx) => idx.name === "google_id_1");
+    const desiredPartial = { google_id: { $exists: true, $ne: null } };
+    const matchesDesired =
+      googleIndex &&
+      googleIndex.unique &&
+      googleIndex.sparse &&
+      JSON.stringify(googleIndex.partialFilterExpression || {}) ===
+        JSON.stringify(desiredPartial);
+
+    if (!matchesDesired) {
+      console.log(
+        "[Schema] Rebuilding google_id index so null local accounts don't collide"
+      );
+
+      if (googleIndex) {
+        try {
+          await User.collection.dropIndex("google_id_1");
+          console.log("[Schema] Dropped legacy google_id_1 index");
+        } catch (dropErr) {
+          if (!String(dropErr.message).includes("index not found")) {
+            console.warn(
+              "[Schema] Could not drop google_id_1 index:",
+              dropErr.message || dropErr
+            );
+          }
+        }
+      }
+
+      // Remove explicit null values so the new partial index can build cleanly
+      await User.updateMany({ google_id: null }, { $unset: { google_id: "" } });
+
+      await User.collection.createIndex(
+        { google_id: 1 },
+        {
+          name: "google_id_1",
+          unique: true,
+          sparse: true,
+          partialFilterExpression: desiredPartial,
+          background: true,
+        }
+      );
+      console.log("[Schema] google_id index ensured (sparse + partial)");
+    }
+  } catch (e) {
+    console.warn("[Schema] Could not ensure google_id index:", e.message || e);
+  }
 });
 
 const personalitySchema = new mongoose.Schema({
