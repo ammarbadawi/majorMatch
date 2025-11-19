@@ -51,7 +51,7 @@
   {
     "parent_major": "Art Education",
     "ria_sec": ["S", "A"],
-    "academic_strengths": ["Design & Creativity", "Writing & Communication", "Leadership & Public Speaking"],
+    "academic_strengths": ["Design & Creativity", "Writing & Communication", "Leadership & Public Speaking", "Teaching"],
     "core_values": ["Helping Others", "Creativity"],
     "mbti_traits": ["F", "J", "E"]
   }

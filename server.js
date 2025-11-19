@@ -4017,6 +4017,9 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
       }
     }
 
+    // Proxy question IDs that should also boost Teaching academic strength
+    const teachingProxyIds = new Set([102, 107]);
+
     // Scores from major test answers
     // Signed Likert: positive boosts, negative reduces
     const likertWeight = {
@@ -4071,6 +4074,11 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
               )}, matching: "${translatedValue}")`
             );
             addScoreForValue(translatedValue, translatedCategory, normalizedW);
+
+            // Treat select Social questions as Teaching academic strength without changing the question bank
+            if (teachingProxyIds.has(Number(qid))) {
+              addScoreForValue("Teaching", "Academic Strength", normalizedW);
+            }
           }
         }
       });
