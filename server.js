@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
+const fsp = fs.promises;
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -44,6 +45,151 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 const googleClient = GOOGLE_CLIENT_ID
   ? new OAuth2Client(GOOGLE_CLIENT_ID)
   : null;
+
+const PERSONALITIES_DISPLAY_PATH = path.join(
+  __dirname,
+  "PersonalitiesDisplay.txt"
+);
+let personalitiesDisplayCache = null;
+let personalitiesDisplayMtime = null;
+let personalitiesDisplayRecords = [];
+
+async function loadPersonalitiesDisplay(force = false) {
+  try {
+    const stats = await fsp.stat(PERSONALITIES_DISPLAY_PATH);
+    if (
+      force ||
+      !personalitiesDisplayCache ||
+      !personalitiesDisplayMtime ||
+      personalitiesDisplayMtime !== stats.mtimeMs
+    ) {
+      const raw = await fsp.readFile(PERSONALITIES_DISPLAY_PATH, "utf-8");
+      const chunks = raw
+        .split(/\r?\n-{3,}\r?\n/g)
+        .map((chunk) => chunk.trim())
+        .filter(Boolean);
+      const map = {};
+      const records = [];
+      chunks.forEach((chunk, index) => {
+        try {
+          const parsed = JSON.parse(chunk);
+          if (parsed?.personalityType) {
+            const key = String(parsed.personalityType || "")
+              .trim()
+              .toUpperCase();
+            if (key) {
+              records.push(parsed);
+              map[key] = parsed;
+              const [letters] = key.split("-");
+              if (letters && !map[letters]) {
+                map[letters] = parsed;
+              }
+            }
+          }
+        } catch (err) {
+          console.warn(
+            `[DisplayData] Failed to parse personality chunk #${index + 1}: ${
+              err.message || err
+            }`
+          );
+        }
+      });
+      personalitiesDisplayRecords = records;
+      personalitiesDisplayCache = map;
+      personalitiesDisplayMtime = stats.mtimeMs;
+      console.log(
+        `[DisplayData] Loaded ${
+          Object.keys(map).length
+        } display personalities from PersonalitiesDisplay.txt`
+      );
+    }
+    return personalitiesDisplayCache;
+  } catch (err) {
+    if (!["ENOENT", "ENAMETOOLONG"].includes(err.code)) {
+      console.error(
+        "[DisplayData] Unable to read PersonalitiesDisplay.txt:",
+        err.message || err
+      );
+    }
+    if (force) {
+      personalitiesDisplayCache = null;
+      personalitiesDisplayMtime = null;
+    }
+    throw err;
+  }
+}
+
+async function getDisplayPersonality(type) {
+  if (!type) return null;
+  const cache = await loadPersonalitiesDisplay();
+  const normalized = String(type).toUpperCase();
+  if (cache[normalized]) return cache[normalized];
+  const [letters, variant] = normalized.split("-");
+  if (!letters) return null;
+  const fallbackKeys = [
+    variant ? `${letters}-${variant}` : null,
+    `${letters}-A`,
+    `${letters}-T`,
+    letters,
+  ].filter(Boolean);
+  for (const key of fallbackKeys) {
+    if (cache[key]) return cache[key];
+  }
+  return null;
+}
+
+async function upsertPersonalitiesFromDisplay({ forceReload = false } = {}) {
+  try {
+    await loadPersonalitiesDisplay(forceReload);
+  } catch (err) {
+    console.error(
+      "[DisplayData] Unable to load PersonalitiesDisplay.txt:",
+      err.message || err
+    );
+    throw err;
+  }
+
+  const records = Array.isArray(personalitiesDisplayRecords)
+    ? personalitiesDisplayRecords
+    : [];
+  if (!records.length) {
+    console.warn(
+      "[DisplayData] PersonalitiesDisplay.txt loaded but contains no valid records"
+    );
+    return 0;
+  }
+
+  let count = 0;
+  for (const record of records) {
+    const baseType =
+      record?.personalityType ||
+      record?.type ||
+      record?.code ||
+      record?.codeName;
+    const normalized = String(baseType || "")
+      .trim()
+      .toUpperCase();
+    if (!normalized) continue;
+    try {
+      await Personality.updateOne(
+        { type: normalized },
+        { $set: { content: JSON.stringify(record) } },
+        { upsert: true }
+      );
+      count++;
+    } catch (err) {
+      console.error(
+        `[DisplayData] Failed to upsert personality ${normalized}:`,
+        err.message || err
+      );
+    }
+  }
+
+  console.log(
+    `[DisplayData] Upserted ${count} personality profiles from PersonalitiesDisplay.txt`
+  );
+  return count;
+}
 
 // Email (nodemailer) setup
 let mailer = null;
@@ -772,62 +918,6 @@ async function ensurePersonalitySeedMongo() {
       );
     }
 
-    // Always try to upsert from the updated personality types file if it exists
-    try {
-      const updatedPath = path.join(
-        __dirname,
-        "MBTI personalities Updated.txt"
-      );
-      if (fs.existsSync(updatedPath)) {
-        const data = fs.readFileSync(updatedPath, "utf8");
-        const lines = data.split(/\r?\n/);
-        let currentType = null;
-        let buffer = [];
-        const flush = async () => {
-          if (currentType && buffer.length) {
-            const content = buffer.join("\n").trim();
-            if (content) {
-              await Personality.updateOne(
-                { type: currentType },
-                { $set: { content } },
-                { upsert: true }
-              );
-            }
-          }
-          buffer = [];
-        };
-        let count = 0;
-        for (const rawLine of lines) {
-          const line = String(rawLine || "").trim();
-          // Match headers like: The Soul (INFP A) or The Visionary (INFJ‑A) or The Strategist (ENTJ-A)
-          // Handle space, hyphen, or en-dash separator
-          const m = line.match(/\(([A-Z]{4})\s*[‑\-]?\s*([AT])\)/);
-          if (m) {
-            await flush();
-            currentType = `${m[1]}-${m[2]}`;
-            buffer.push(rawLine);
-            count++;
-          } else {
-            buffer.push(rawLine);
-          }
-        }
-        await flush();
-        try {
-          await loadPersonalityCache();
-          console.log(
-            `[Startup Seed] Personality types upserted from updated file: ${count} types processed`
-          );
-        } catch (e) {
-          console.error(
-            "[Startup Seed] Error loading personality cache:",
-            e.message
-          );
-        }
-      }
-    } catch (e) {
-      console.warn("Personality updated file upsert skipped:", e.message);
-    }
-
     // Seed English questions if missing or below minimum threshold
     let seededQ = 0;
     if (needsEnglishReseed) {
@@ -1046,46 +1136,11 @@ async function ensurePersonalitySeedMongo() {
 
     let seededP = 0;
     try {
-      // Use updated file for initial seeding - use upsert to update existing records
-      const picked = path.join(__dirname, "MBTI personalities Updated.txt");
-      if (fs.existsSync(picked)) {
-        const data = fs.readFileSync(picked, "utf8");
-        const lines = data.split(/\r?\n/);
-        let currentType = null;
-        let buffer = [];
-        const flush = async () => {
-          if (currentType && buffer.length) {
-            const content = buffer.join("\n").trim();
-            if (content) {
-              await Personality.updateOne(
-                { type: currentType },
-                { $set: { content } },
-                { upsert: true }
-              );
-              seededP++;
-            }
-          }
-          buffer = [];
-        };
-        for (const rawLine of lines) {
-          const line = String(rawLine || "").trim();
-          // Match headers like: The Soul (INFP A) or The Visionary (INFJ‑A) or The Strategist (ENTJ-A)
-          // Handle space, hyphen, or en-dash separator
-          const m = line.match(/\(([A-Z]{4})\s*[‑\-]?\s*([AT])\)/);
-          if (m) {
-            await flush();
-            currentType = `${m[1]}-${m[2]}`;
-            buffer.push(rawLine);
-          } else {
-            buffer.push(rawLine);
-          }
-        }
-        await flush();
-        if (seededP > 0) {
-          console.log(
-            `[Seed] Upserted ${seededP} personality types from MBTI personalities Updated.txt`
-          );
-        }
+      seededP = await upsertPersonalitiesFromDisplay();
+      if (seededP > 0) {
+        console.log(
+          `[Seed] Upserted ${seededP} personality types from PersonalitiesDisplay.txt`
+        );
       }
     } catch (e) {
       console.error("[Seed] Error seeding personalities:", e.message);
@@ -2333,6 +2388,28 @@ app.get("/api/personality/:type", async (req, res, next) => {
   }
 });
 
+app.get("/api/personality/display/:type", async (req, res) => {
+  try {
+    const type = String(req.params.type || "").trim();
+    if (!type) {
+      return res.status(400).json({ error: "Missing personality type" });
+    }
+    const personality = await getDisplayPersonality(type);
+    if (!personality) {
+      return res
+        .status(404)
+        .json({ error: "Personality display data not found" });
+    }
+    res.json(personality);
+  } catch (err) {
+    console.error(
+      "[API] Error in /api/personality/display:",
+      err.message || err
+    );
+    res.status(500).json({ error: "Unable to load personality display data" });
+  }
+});
+
 // Admin endpoint to check personality data in database
 app.get("/api/admin/personality/check", authMiddleware, async (req, res) => {
   try {
@@ -3348,86 +3425,24 @@ app.post(
   }
 );
 
-// Force reload personalities from "MBTI personalities Updated.txt" file
+// Force reload personalities from PersonalitiesDisplay.txt file
 app.post("/api/admin/personality/reload", authMiddleware, async (req, res) => {
   try {
-    const updatedPath = path.join(__dirname, "MBTI personalities Updated.txt");
-    console.log(`[Personality Reload] Looking for file at: ${updatedPath}`);
-
-    if (!fs.existsSync(updatedPath)) {
-      console.error(`[Personality Reload] File not found at: ${updatedPath}`);
-      return res.status(404).json({
-        error: "MBTI personalities Updated.txt file not found",
-        path: updatedPath,
-      });
-    }
-
-    console.log(`[Personality Reload] Reading file...`);
-    const data = fs.readFileSync(updatedPath, "utf8");
-    const lines = data.split(/\r?\n/);
-    console.log(`[Personality Reload] File has ${lines.length} lines`);
-
-    let currentType = null;
-    let buffer = [];
-    let count = 0;
-    const typesFound = [];
-
-    const flush = async () => {
-      if (currentType && buffer.length) {
-        const content = buffer.join("\n").trim();
-        if (content) {
-          const result = await Personality.updateOne(
-            { type: currentType },
-            { $set: { content } },
-            { upsert: true }
-          );
-          count++;
-          typesFound.push(currentType);
-          console.log(
-            `[Personality Reload] Updated ${currentType} (matched: ${result.matchedCount}, modified: ${result.modifiedCount})`
-          );
-        }
-      }
-      buffer = [];
-    };
-
-    for (const rawLine of lines) {
-      const line = String(rawLine || "").trim();
-      // Match headers like: The Soul (INFP A) or The Visionary (INFJ‑A) or The Strategist (ENTJ-A)
-      // Handle space, hyphen, or en-dash separator: \s* matches spaces, [‑\-]? matches optional dash/en-dash
-      const m = line.match(/\(([A-Z]{4})\s*[‑\-]?\s*([AT])\)/);
-      if (m) {
-        await flush();
-        currentType = `${m[1]}-${m[2]}`; // m[1] is the type (INFP), m[2] is A or T
-        buffer.push(rawLine);
-      } else {
-        buffer.push(rawLine);
-      }
-    }
-    await flush();
-
-    console.log(
-      `[Personality Reload] Processed ${count} personality types: ${typesFound.join(
-        ", "
-      )}`
-    );
-
+    const count = await upsertPersonalitiesFromDisplay({ forceReload: true });
     await loadPersonalityCache();
-    console.log(
-      `[Personality Reload] Cache reloaded. Cache now has ${
-        Object.keys(personalitiesCache).length
-      } types`
-    );
-
     res.json({
       ok: true,
-      count: count,
-      types: typesFound,
-      message: "Personalities reloaded from MBTI personalities Updated.txt",
+      count,
+      message: "Personalities reloaded from PersonalitiesDisplay.txt",
     });
   } catch (e) {
     console.error("Personality reload error:", e);
-    console.error("Stack:", e.stack);
+    if (e.code === "ENOENT") {
+      return res.status(404).json({
+        error: "PersonalitiesDisplay.txt file not found",
+        path: PERSONALITIES_DISPLAY_PATH,
+      });
+    }
     res
       .status(500)
       .json({ error: "Server error", details: e.message, stack: e.stack });

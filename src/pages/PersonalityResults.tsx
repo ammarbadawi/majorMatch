@@ -1,60 +1,114 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Container,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  Box,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Grid,
-  Chip,
-  Paper,
+  Alert,
   Avatar,
-  Divider,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Container,
+  Grid,
+  IconButton,
+  Paper,
   Stack,
-  useTheme,
-  Tooltip
+  Tooltip,
+  Typography,
+  useTheme
 } from '@mui/material';
 import {
   ArrowBack,
-  Psychology,
-  Home,
-  Share,
-  School,
-  Refresh,
-  PersonPin,
+  AutoAwesome,
   CheckCircle,
-  Star,
-  Favorite
+  CheckCircleOutline,
+  EmojiPeople,
+  FormatQuote,
+  Home,
+  Psychology,
+  Refresh,
+  School,
+  Share,
+  WarningAmber,
+  Work
 } from '@mui/icons-material';
-import { WarningAmber, Gavel, Group, Handshake, Work, FormatQuote } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-interface PersonalityData {
-  type: string;
-  content: string;
+interface PersonalityDisplaySection {
+  id: string;
+  type?: string;
+  heading?: string;
+  title?: string;
+  body?: string;
+  paragraphs?: string[];
+  cards?: Array<{ title?: string; subtitle?: string }>;
+  items?: Array<{ title?: string; description?: string } | string>;
+  mostAligned?: Array<{ type: string; description?: string }>;
+  mostChallenging?: Array<{ type: string; description?: string }>;
+  coreValue?: string;
+  paragraph?: string;
+  subBox?: { title?: string; text?: string };
+  style?: Record<string, unknown>;
+  layout?: Record<string, unknown>;
+  [key: string]: any;
+}
+
+interface PersonalityHeroColumn {
+  title?: string;
+  subtitle?: string;
+  quote?: string;
+  tags?: string[];
+}
+
+interface PersonalityHero {
+  leftColumn?: PersonalityHeroColumn;
+  rightColumn?: Record<string, unknown>;
+  layout?: string;
+}
+
+interface PersonalityDisplayProfile {
+  personalityType: string;
+  codeName?: string;
+  label?: string;
+  lifeQuote?: string;
+  theme?: {
+    gradient?: string[];
+    backgroundLight?: string;
+    backgroundWarning?: string;
+    backgroundCareer?: string;
+    textMain?: string;
+  };
+  hero?: PersonalityHero;
+  sections?: PersonalityDisplaySection[];
 }
 
 interface LocationState {
-  personalityType: string;
-  personalityData: PersonalityData;
+  personalityType?: string;
+  personalityData?: PersonalityDisplayProfile;
 }
+
+const headingFont = "'Poppins','Montserrat','Inter','sans-serif'";
+const bodyFont = "'Inter','Lato','sans-serif'";
 
 const PersonalityResults: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state as LocationState;
+  const state = (location.state || null) as LocationState | null;
   const theme = useTheme();
   const { t } = useTranslation();
 
+  const [personalityType, setPersonalityType] = useState(state?.personalityType || '');
+  const [displayData, setDisplayData] = useState<PersonalityDisplayProfile | null>(
+    state?.personalityData && Array.isArray(state.personalityData.sections)
+      ? state.personalityData
+      : null
+  );
   const [shareMessage, setShareMessage] = useState('');
   const [hasMbti, setHasMbti] = useState<boolean>(() => {
     try { return localStorage.getItem('hasMbti') === '1'; } catch { return true; }
   });
+  const [loadingType, setLoadingType] = useState(!state?.personalityType);
+  const [loadingDisplay, setLoadingDisplay] = useState(!state?.personalityData);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const onMbti = () => setHasMbti(true);
@@ -63,392 +117,665 @@ const PersonalityResults: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    if (state?.personalityType) {
+      setPersonalityType(state.personalityType);
+    }
+    if (state?.personalityData && Array.isArray(state.personalityData.sections)) {
+      setDisplayData(state.personalityData);
+    }
+  }, [state]);
+
+  useEffect(() => {
     let cancelled = false;
-    const check = async () => {
+    const fetchLatest = async () => {
       try {
         const res = await fetch('/api/personality/latest', { credentials: 'include' });
         if (!cancelled) {
           if (res.ok) {
             const data = await res.json();
             setHasMbti(Boolean(data?.hasResult));
+            if (!state?.personalityType && data?.type) {
+              setPersonalityType(data.type);
+            }
+          } else if (res.status === 404) {
+            setHasMbti(false);
+            if (!state?.personalityType) {
+              setError(t('personalityResults.noResultsDesc'));
+            }
           } else {
             setHasMbti(false);
           }
         }
       } catch {
-        if (!cancelled) setHasMbti(false);
+        if (!cancelled) {
+          setHasMbti(false);
+          if (!state?.personalityType && !personalityType) {
+            setError('Unable to load your latest personality result right now.');
+          }
+        }
+      } finally {
+        if (!cancelled) setLoadingType(false);
       }
     };
-    check();
+    fetchLatest();
     return () => { cancelled = true; };
-  }, []);
+  }, [state?.personalityType, personalityType, t]);
 
-  if (!state || !state.personalityType || !state.personalityData) {
+  useEffect(() => {
+    if (!personalityType) return;
+    let cancelled = false;
+    setLoadingDisplay(true);
+    setError(null);
+    const fetchDisplay = async () => {
+      try {
+        const res = await fetch(`/api/personality/display/${encodeURIComponent(personalityType)}`);
+        if (!cancelled) {
+          if (res.ok) {
+            const data = await res.json();
+            setDisplayData(data);
+          } else if (res.status === 404) {
+            setDisplayData(null);
+            setError('We could not find the updated layout for this personality yet.');
+          } else {
+            setError('Unable to load your personality details right now.');
+          }
+        }
+      } catch {
+        if (!cancelled) {
+          setError('Unable to load your personality details right now.');
+        }
+      } finally {
+        if (!cancelled) setLoadingDisplay(false);
+      }
+    };
+    fetchDisplay();
+    return () => { cancelled = true; };
+  }, [personalityType]);
+
+  const sectionsById = useMemo(() => {
+    const map: Record<string, PersonalityDisplaySection> = {};
+    displayData?.sections?.forEach((section) => {
+      if (section?.id) {
+        map[section.id] = section;
+      }
+    });
+    return map;
+  }, [displayData]);
+
+  const overviewSection = sectionsById.overview;
+  const storySection = sectionsById.story;
+  const keyTraitsSection = sectionsById.keyTraits;
+  const strengthsSection = sectionsById.strengths;
+  const watchOutSection = sectionsById.watchOutFor;
+  const moralCompassSection = sectionsById.moralCompass;
+  const friendshipsSection = sectionsById.friendshipsTeams;
+  const growthSection = sectionsById.growthAdvice;
+  const compatibilitySection = sectionsById.compatibility;
+  const careerSection = sectionsById.careerGrowth;
+  const famousSection = sectionsById.famousPeople;
+  const quoteSection = sectionsById.quote;
+
+  const gradientColors = displayData?.theme?.gradient || ['#6d64ff', '#e972a8'];
+  const headerGradient = `linear-gradient(135deg, ${gradientColors[0]}, ${gradientColors[1]})`;
+  const lightBackground = displayData?.theme?.backgroundLight || '#f7f5ff';
+  const warningBackground = displayData?.theme?.backgroundWarning || '#fff7d6';
+  const careerBackground = displayData?.theme?.backgroundCareer || '#f1edff';
+  const heroTitle = displayData?.hero?.leftColumn?.title || `${displayData?.codeName || ''} (${personalityType})`;
+  const heroSubtitle = displayData?.hero?.leftColumn?.subtitle || displayData?.label || '';
+  const heroQuote = displayData?.hero?.leftColumn?.quote || displayData?.lifeQuote || '';
+  const heroTags = displayData?.hero?.leftColumn?.tags || [];
+  const storyParagraphs = storySection?.paragraphs?.slice(0, 4) || [];
+  const traitCards = keyTraitsSection?.cards || [];
+  const strengthsItems = strengthsSection?.items as Array<{ title?: string; description?: string }> | undefined;
+  const warningItems = watchOutSection?.items as Array<{ title?: string; description?: string }> | undefined;
+  const friendshipsItems = friendshipsSection?.items as string[] | undefined;
+  const growthItems = growthSection?.items as string[] | undefined;
+  const mostAligned = compatibilitySection?.mostAligned || [];
+  const mostChallenging = compatibilitySection?.mostChallenging || [];
+  const careerItems = careerSection?.items as string[] | undefined;
+  const famousItems = famousSection?.items as Array<{ name: string; description?: string }> | undefined;
+  const lifeQuote = quoteSection?.text || displayData?.lifeQuote || heroQuote;
+
+  const handleShare = async () => {
+    const shareHeadline = heroTitle?.trim() || personalityType;
+    const shareQuote = heroQuote ? `"${heroQuote}"` : '';
+    const shareText = `I just discovered I'm ${shareHeadline}. ${shareQuote}`.trim();
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: t('personalityResults.myPersonalityTestResults'),
+          text: shareText,
+          url: window.location.href
+        });
+      } catch (err) {
+        console.warn('Share cancelled', err);
+      }
+    } else {
+      await navigator.clipboard.writeText(shareText);
+      setShareMessage(t('personalityResults.resultsCopiedToClipboard'));
+      setTimeout(() => setShareMessage(''), 3500);
+    }
+  };
+
+  if ((loadingType && !personalityType) || (loadingDisplay && !displayData)) {
     return (
-      <Box
-        sx={{
-          minHeight: '100vh',
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Container maxWidth="md">
-          <Paper
-            elevation={10}
-            sx={{
-              p: 8,
-              textAlign: 'center',
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)'
-            }}
-          >
-            <Psychology sx={{ fontSize: 80, color: theme.palette.primary.main, mb: 3 }} />
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 700, color: theme.palette.text.primary }}>
-              {t('personalityResults.noResults')}
-            </Typography>
-            <Typography variant="body1" color="text.secondary" gutterBottom sx={{ fontSize: '1.125rem', mb: 4 }}>
-              {t('personalityResults.noResultsDesc')}
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<Psychology />}
-              onClick={() => navigate('/personality-test')}
-              sx={{
-                py: 2,
-                px: 4,
-                fontSize: '1.125rem',
-                fontWeight: 700,
-                background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
-              }}
-            >
-              {t('common.personalityTest')}
-            </Button>
-          </Paper>
-        </Container>
+      <Box sx={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f5ff' }}>
+        <CircularProgress color="secondary" />
       </Box>
     );
   }
 
-  const { personalityType, personalityData } = state;
-
-  const parsePersonalityContent = (content: string) => {
-    const lines = content.split('\n').filter(line => line.trim());
-    let title = '';
-    let subtitle = '';
-    let description = '';
-    let traits: string[] = [];
-    let strengths: string[] = [];
-    let quote = '';
-
-    for (let i = 0; i < Math.min(5, lines.length); i++) {
-      const line = lines[i].trim();
-      if (line.includes('(') && line.includes(')') && /[IE][SN][TF][JP]/.test(line)) {
-        title = line;
-      } else if (line.startsWith('The ') && !title) {
-        title = line;
-      } else if (line.startsWith('"') && line.endsWith('"')) {
-        subtitle = line.replace(/\"/g, '');
-      }
-    }
-
-    // Parse strengths from "Your Strengths" section
-    const strengthsSection = content.match(/Your Strengths\s*\n(.*?)(?=\n•|\n________________________________|$)/s);
-    if (strengthsSection) {
-      const strengthsText = strengthsSection[1].trim();
-      // Handle both formats: tab-separated on one line, or one per line
-      if (strengthsText.includes('\t') || strengthsText.match(/\s{2,}/)) {
-        // Tab-separated or multiple spaces format
-        strengths = strengthsText.split(/\s{2,}|\t+/).filter(s => s.trim().length > 0);
-      } else {
-        // One per line format
-        strengths = strengthsText.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-      }
-    }
-
-    const sections = content.split('###').map(s => s.trim());
-    sections.forEach(section => {
-      if (section.includes('Key Traits') || section.includes('You Embody')) {
-        const matches = section.match(/• ([^•\n]+)/g);
-        if (matches) {
-          traits = matches.map(match => match.replace('• ', '').split(' – ')[0]);
-        }
-      }
-      if (section.includes('Your Life Quote') || section.includes('Life Quote')) {
-        const quoteMatch = section.match(/"([^"]+)"/);
-        if (quoteMatch) {
-          quote = quoteMatch[1];
-        }
-      }
-      if (section.includes('Your Story') && !description) {
-        const paragraphs = section.split('\n').filter(p => p.trim() && !p.includes('Your Story'));
-        description = paragraphs.slice(0, 2).join(' ').trim();
-      }
-    });
-
-    return {
-      title: title || personalityType,
-      subtitle: subtitle || 'Discover your unique personality',
-      description: description || 'Your detailed personality analysis reveals unique insights about your character, motivations, and potential.',
-      traits: traits.slice(0, 5),
-      strengths: strengths.slice(0, 4),
-      quote: quote || 'Your personality is your superpower.'
-    };
-  };
-
-  const parsedData = parsePersonalityContent(personalityData.content);
-
-  // Remove "Your Strengths" section from the full content display
-  const getContentWithoutStrengths = (content: string) => {
-    // Remove the "Your Strengths" section and everything until the next section
-    return content.replace(/Your Strengths\s*\n.*?(?=\n________________________________|\nWatch Out For|\nYour Moral Compass|\nYou in Friendships|\nCompatibility|\nCareer Growth|\nFamous People|\nYour Life Quote|$)/s, '');
-  };
-
-  const contentWithoutStrengths = getContentWithoutStrengths(personalityData.content);
-
-  const formatMbtiDisplay = (type: string) => {
-    const safe = String(type || '').replace('‑', '-');
-    const parts = safe.split('-');
-    if (parts.length === 2 && parts[0] && parts[1]) {
-      return `${parts[0]}(${parts[1]})`;
-    }
-    return safe;
-  };
-
-  const getPersonalityColor = (type: string) => {
-    const colorMap: { [key: string]: string } = {
-      'INFP': theme.palette.secondary.main,
-      'INFJ': theme.palette.primary.dark,
-      'ENFP': theme.palette.warning.main,
-      'ENFJ': theme.palette.secondary.light,
-      'INTP': theme.palette.primary.main,
-      'INTJ': theme.palette.primary.dark,
-      'ENTP': theme.palette.warning.main,
-      'ENTJ': theme.palette.error.main,
-      'ISFP': theme.palette.success.main,
-      'ISFJ': theme.palette.success.dark,
-      'ESFP': theme.palette.warning.light,
-      'ESFJ': theme.palette.warning.main,
-      'ISTP': theme.palette.primary.light,
-      'ISTJ': theme.palette.primary.dark,
-      'ESTP': theme.palette.error.light,
-      'ESTJ': theme.palette.primary.main
-    };
-    return colorMap[type.split('-')[0]] || theme.palette.primary.main;
-  };
-
-  const getPersonalityEmoji = (type: string) => {
-    const emojiMap: { [key: string]: string } = {
-      'INFP': '🌸', 'INFJ': '🔮', 'ENFP': '🌟', 'ENFJ': '💫', 'INTP': '🧠', 'INTJ': '♟️', 'ENTP': '💡', 'ENTJ': '👑',
-      'ISFP': '🎨', 'ISFJ': '🤗', 'ESFP': '🎉', 'ESFJ': '💖', 'ISTP': '🔧', 'ISTJ': '📋', 'ESTP': '⚡', 'ESTJ': '⚖️'
-    };
-    return emojiMap[type.split('-')[0]] || '🧠';
-  };
-
-  const handleShare = async () => {
-    const shareText = `I just discovered I'm a ${personalityType} personality type! ${parsedData.quote}`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: t('personalityResults.myPersonalityTestResults'), text: shareText, url: window.location.href });
-      } catch (err) {
-        console.log('Error sharing:', err);
-      }
-    } else {
-      navigator.clipboard.writeText(shareText);
-      setShareMessage(t('personalityResults.resultsCopiedToClipboard'));
-      setTimeout(() => setShareMessage(''), 3000);
-    }
-  };
-
-  const personalityColor = getPersonalityColor(personalityType);
-  const personalityEmoji = getPersonalityEmoji(personalityType);
-
-  return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: theme.palette.grey[50] }}>
-      {/* App Bar */}
-      <AppBar
-        position="static"
-        elevation={0}
+  if (!personalityType || !displayData) {
+    return (
+      <Box
         sx={{
-          background: `linear-gradient(135deg, ${personalityColor} 0%, ${theme.palette.primary.dark} 100%)`,
-          boxShadow: theme.shadows[4]
+          minHeight: '100vh',
+          background: headerGradient,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          px: 2
         }}
       >
-        <Toolbar sx={{ py: { xs: 1, sm: 1.5 }, flexWrap: 'wrap' }}>
-          <IconButton edge="start" color="inherit" onClick={() => navigate('/')} sx={{ mr: { xs: 1, sm: 3 }, mb: { xs: 1, sm: 0 } }}>
-            <ArrowBack />
-          </IconButton>
-          <Box sx={{ flexGrow: 1, minWidth: { xs: '100%', sm: 'auto' } }}>
-            <Typography variant="h5" component="h1" sx={{ fontWeight: 700, mb: 0.5, fontSize: { xs: '1.125rem', sm: '1.5rem' } }}>
-              {t('personalityResults.title')}
-            </Typography>
-            <Typography variant="body2" sx={{ opacity: 0.9, fontSize: { xs: '0.8rem', sm: '0.875rem' } }}>
-              {t('personalityResults.subtitle')}
-            </Typography>
+        <Paper sx={{ p: 6, maxWidth: 560, textAlign: 'center', borderRadius: 4, backgroundColor: '#ffffffdd' }}>
+          <Psychology sx={{ fontSize: 72, color: gradientColors[0], mb: 2 }} />
+          <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
+            {t('personalityResults.noResults')}
+          </Typography>
+          <Typography sx={{ mb: 4, fontFamily: bodyFont }}>
+            {error || t('personalityResults.noResultsDesc')}
+          </Typography>
+          <Stack spacing={2}>
+            <Button variant="contained" onClick={() => navigate('/personality-test')} startIcon={<Psychology />} size="large">
+              {t('common.personalityTest')}
+            </Button>
+            <Button variant="outlined" onClick={() => navigate('/')} startIcon={<Home />} size="large">
+              {t('common.back')} {t('common.home')}
+            </Button>
+          </Stack>
+        </Paper>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#f5f5ff' }}>
+      <Box
+        component="header"
+        sx={{
+          background: headerGradient,
+          color: '#fff',
+          py: { xs: 6, md: 10 },
+          boxShadow: 4
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap' }}>
+            <IconButton onClick={() => navigate(-1)} sx={{ color: 'white', mb: { xs: 2, md: 0 } }}>
+              <ArrowBack />
+            </IconButton>
+            <Stack direction="row" spacing={2}>
+              <Button variant="outlined" color="inherit" startIcon={<Share />} onClick={handleShare}>
+                {t('common.share')}
+              </Button>
+              <Button variant="contained" color="secondary" onClick={() => navigate('/')} startIcon={<Home />}>
+                {t('common.home')}
+              </Button>
+            </Stack>
           </Box>
-          <Button
-            variant="outlined"
-            color="inherit"
-            startIcon={<Share />}
-            onClick={handleShare}
-            sx={{
-              borderColor: 'rgba(255,255,255,0.5)', borderWidth: '2px', color: 'white', mr: { xs: 0, sm: 2 },
-              mt: { xs: 1, sm: 0 },
-              fontSize: { xs: '0.85rem', sm: '0.875rem' },
-              py: { xs: 0.75, sm: 1 },
-              px: { xs: 1.5, sm: 2 },
-              '&:hover': { borderColor: 'white', backgroundColor: 'rgba(255,255,255,0.1)', borderWidth: '2px' }
-            }}
-          >
-            {t('common.share')}
-          </Button>
-        </Toolbar>
-      </AppBar>
-
-      <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
-        {/* Hero Section */}
-        <Card elevation={8} sx={{
-          mb: { xs: 4, sm: 6 }, background: `linear-gradient(135deg, ${personalityColor} 0%, ${personalityColor}CC 100%)`, color: 'white', overflow: 'hidden', position: 'relative',
-          '&::before': { content: '""', position: 'absolute', top: -50, right: -50, width: 200, height: 200, background: 'rgba(255,255,255,0.1)', borderRadius: '50%' }
-        }}>
-          <CardContent sx={{ p: { xs: 3, sm: 4, md: 6 }, position: 'relative', zIndex: 1 }}>
-            <Grid container spacing={4} alignItems="center" justifyContent="space-between">
-              <Grid item xs={12} md={8}>
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="h1" sx={{ fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem', lg: '4rem' }, fontWeight: 800, mb: 2, textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
-                    {personalityEmoji} {formatMbtiDisplay(personalityType)}
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={7}>
+              <Stack spacing={2}>
+                <Typography
+                  variant="h2"
+                  sx={{
+                    fontFamily: headingFont,
+                    fontWeight: 800,
+                    fontSize: { xs: '2.5rem', md: '3.5rem' },
+                    textTransform: 'none',
+                    letterSpacing: '-1px'
+                  }}
+                >
+                  {heroTitle}
+                </Typography>
+                {heroSubtitle && (
+                  <Typography variant="h5" sx={{ fontFamily: headingFont, opacity: 0.9 }}>
+                    {heroSubtitle}
                   </Typography>
-                  <Typography variant="h4" sx={{ fontWeight: 600, mb: 3, opacity: 0.95, fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' } }}>
-                    {parsedData.title}
+                )}
+                {heroQuote && (
+                  <Typography variant="h6" sx={{ fontFamily: bodyFont, fontStyle: 'italic', opacity: 0.85 }}>
+                    “{heroQuote}”
                   </Typography>
-                  {parsedData.quote && (
-                    <Typography variant="h6" sx={{ fontStyle: 'italic', opacity: 0.9, mb: 4, fontSize: { xs: '1rem', sm: '1.125rem', md: '1.25rem' } }}>
-                      "{parsedData.quote}"
-                    </Typography>
-                  )}
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Box sx={{ textAlign: 'center' }}>
-                  <Avatar sx={{ width: { xs: 80, sm: 100, md: 120 }, height: { xs: 80, sm: 100, md: 120 }, mx: 'auto', mb: 3, fontSize: { xs: '2.5rem', sm: '3rem', md: '4rem' }, backgroundColor: 'rgba(255,255,255,0.2)', border: '4px solid rgba(255,255,255,0.3)' }}>
-                    {personalityEmoji}
-                  </Avatar>
-                  <Typography variant="h3" sx={{ fontWeight: 800, mb: 1, fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' } }}>
-                    {formatMbtiDisplay(personalityType)}
-                  </Typography>
-                  <Typography variant="body1" sx={{ opacity: 0.9, fontSize: { xs: '0.9rem', sm: '1rem' } }}>
-                    {t('personalityResults.personalityType')}
-                  </Typography>
-                </Box>
-              </Grid>
+                )}
+                <Stack direction="row" spacing={1.5} flexWrap="wrap" mt={2}>
+                  {heroTags.map((tag) => (
+                    <Chip
+                      key={tag}
+                      label={tag}
+                      sx={{
+                        backgroundColor: 'rgba(255,255,255,0.2)',
+                        borderRadius: '999px',
+                        border: '1px solid rgba(255,255,255,0.4)',
+                        color: '#fff',
+                        fontWeight: 600,
+                        mb: 1
+                      }}
+                    />
+                  ))}
+                </Stack>
+              </Stack>
             </Grid>
-          </CardContent>
-        </Card>
-
-        {/* Share Message */}
-        {shareMessage && (
-          <Paper elevation={4} sx={{ p: 2, mb: 4, backgroundColor: theme.palette.success.main, color: 'white', textAlign: 'center' }}>
-            <Typography variant="body1" sx={{ fontWeight: 600 }}>{shareMessage}</Typography>
-          </Paper>
-        )}
-
-        <Grid container spacing={{ xs: 3, sm: 4, md: 6 }} alignItems="stretch" justifyContent="center">
-          {/* Key Traits */}
-          <Grid item xs={12} md={6}>
-            <Card elevation={4} sx={{ height: '100%' }}>
-              <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <Avatar sx={{ backgroundColor: `${personalityColor}20`, color: personalityColor, mr: 2, width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 } }}>
-                    <PersonPin sx={{ fontSize: { xs: 20, sm: 28 } }} />
-                  </Avatar>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
-                    {t('personalityResults.keyTraits')}
-                  </Typography>
-                </Box>
-                <Stack spacing={2}>
-                  {parsedData.traits.map((trait, index) => (
-                    <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <CheckCircle sx={{ color: personalityColor, mr: 2, fontSize: { xs: 20, sm: 24 }, flexShrink: 0 }} />
-                      <Typography variant="body1" sx={{ fontSize: { xs: '0.95rem', sm: '1.1rem' }, fontWeight: 500 }}>
-                        {trait}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Strengths */}
-          <Grid item xs={12} md={6}>
-            <Card elevation={4} sx={{ height: '100%' }}>
-              <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                  <Avatar sx={{ backgroundColor: `${theme.palette.success.main}20`, color: theme.palette.success.main, mr: 2, width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 } }}>
-                    <Star sx={{ fontSize: { xs: 20, sm: 28 } }} />
-                  </Avatar>
-                  <Typography variant="h5" sx={{ fontWeight: 700, color: theme.palette.text.primary, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
-                    {t('personalityResults.yourStrengths')}
-                  </Typography>
-                </Box>
-                <Stack spacing={2}>
-                  {parsedData.strengths.map((strength, index) => (
-                    <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Favorite sx={{ color: theme.palette.success.main, mr: 2, fontSize: { xs: 20, sm: 24 }, flexShrink: 0 }} />
-                      <Typography variant="body1" sx={{ fontSize: { xs: '0.95rem', sm: '1.1rem' }, fontWeight: 500 }}>
-                        {strength}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Detailed Analysis */}
-          <Grid item xs={12}>
-            <Card elevation={4}>
-              <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, color: theme.palette.text.primary, mb: 3, display: 'flex', alignItems: 'center', fontSize: { xs: '1.25rem', sm: '1.5rem' }, flexWrap: 'wrap' }}>
-                  <Psychology sx={{ mr: 2, color: personalityColor, fontSize: { xs: 24, sm: 32 } }} />
-                  {t('personalityResults.completeAnalysis')}
+            <Grid item xs={12} md={5}>
+              <Box
+                sx={{
+                  backgroundColor: 'rgba(255,255,255,0.15)',
+                  borderRadius: '24px',
+                  p: 4,
+                  textAlign: 'center',
+                  border: '1px solid rgba(255,255,255,0.3)'
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 120,
+                    height: 120,
+                    mx: 'auto',
+                    mb: 3,
+                    fontSize: '2rem',
+                    bgcolor: 'rgba(255,255,255,0.25)',
+                    border: '3px solid rgba(255,255,255,0.45)'
+                  }}
+                >
+                  {displayData.codeName?.slice(0, 1) || personalityType.slice(0, 1)}
+                </Avatar>
+                <Typography variant="h4" sx={{ fontFamily: headingFont, fontWeight: 700 }}>
+                  {personalityType}
                 </Typography>
-                <Divider sx={{ mb: 3 }} />
-                <Typography variant="body1" sx={{ lineHeight: 1.8, fontSize: { xs: '0.95rem', sm: '1.1rem' }, whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
-                  {contentWithoutStrengths}
+                <Typography sx={{ fontFamily: bodyFont, opacity: 0.85 }}>
+                  {t('personalityResults.personalityType')}
                 </Typography>
-              </CardContent>
-            </Card>
+              </Box>
+            </Grid>
           </Grid>
+        </Container>
+      </Box>
 
-          {/* Action Buttons */}
-          <Grid item xs={12}>
-            <Paper elevation={3} sx={{ p: { xs: 3, sm: 4 }, textAlign: 'center', background: `linear-gradient(135deg, ${theme.palette.primary.main}08 0%, ${theme.palette.secondary.main}08 100%)` }}>
-              <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mb: 4, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
-                {t('personalityResults.whatsNext')}
+      <Container maxWidth="lg" sx={{ py: { xs: 5, md: 8 } }}>
+        <Stack spacing={{ xs: 4, md: 6 }}>
+          {shareMessage && (
+            <Alert severity="success" onClose={() => setShareMessage('')}>
+              {shareMessage}
+            </Alert>
+          )}
+          {error && (
+            <Alert severity="warning">
+              {error}
+            </Alert>
+          )}
+
+          {overviewSection && (
+            <Paper sx={{ p: { xs: 4, md: 5 }, borderRadius: 4, boxShadow: 6 }}>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 2 }}>
+                {overviewSection.title}
               </Typography>
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} justifyContent="center">
-                <Tooltip title={t('personalityResults.takeMajorTest')} disableHoverListener={hasMbti}>
-                  <span>
-                    <Button variant="contained" size="large" startIcon={<School />} onClick={() => navigate('/major-matching-test')} sx={{ py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 700, background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`, width: { xs: '100%', sm: 'auto' } }} disabled={!hasMbti}>
-                      {t('personalityResults.takeMajorTest')}
-                    </Button>
-                  </span>
-                </Tooltip>
-                <Button variant="outlined" size="large" startIcon={<Refresh />} onClick={() => navigate('/personality-test')} sx={{ py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 600, borderWidth: '2px', '&:hover': { borderWidth: '2px' }, width: { xs: '100%', sm: 'auto' } }}>
-                  {t('personalityResults.retakeTest')}
-                </Button>
-                <Button variant="outlined" size="large" startIcon={<Home />} onClick={() => navigate('/')} sx={{ py: { xs: 1.5, sm: 2 }, px: { xs: 3, sm: 4 }, fontSize: { xs: '1rem', sm: '1.125rem' }, fontWeight: 600, borderWidth: '2px', '&:hover': { borderWidth: '2px' }, width: { xs: '100%', sm: 'auto' } }}>
-                  {t('common.back')} {t('common.home')}
-                </Button>
+              <Typography sx={{ fontFamily: bodyFont, fontSize: '1.05rem', color: '#444' }}>
+                {overviewSection.body}
+              </Typography>
+            </Paper>
+          )}
+
+          {storyParagraphs.length > 0 && (
+            <Box
+              sx={{
+                backgroundColor: lightBackground,
+                borderRadius: 4,
+                p: { xs: 4, md: 6 },
+                border: '1px solid rgba(109,100,255,0.15)'
+              }}
+            >
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {storySection?.heading || 'Your Story'}
+              </Typography>
+              <Stack spacing={2.5}>
+                {storyParagraphs.map((paragraph, idx) => (
+                  <Typography key={idx} sx={{ fontFamily: bodyFont, lineHeight: 1.8 }}>
+                    {paragraph}
+                  </Typography>
+                ))}
+              </Stack>
+            </Box>
+          )}
+
+          {traitCards.length > 0 && (
+            <Paper sx={{ p: { xs: 4, md: 5 }, borderRadius: 4, boxShadow: 4 }}>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {keyTraitsSection?.heading || 'Key Traits'}
+              </Typography>
+              <Stack spacing={2}>
+                {traitCards.map((card, index) => (
+                  <Stack
+                    key={`${card.title}-${index}`}
+                    direction="row"
+                    spacing={2}
+                    alignItems="flex-start"
+                    sx={{ fontFamily: bodyFont }}
+                  >
+                    <CheckCircle color="secondary" sx={{ mt: 0.5 }} />
+                    <Box>
+                      <Typography sx={{ fontFamily: headingFont, fontWeight: 600 }}>
+                        {card.title}
+                      </Typography>
+                      <Typography sx={{ color: '#555', mt: 0.5 }}>
+                        {card.subtitle}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                ))}
               </Stack>
             </Paper>
-          </Grid>
-        </Grid>
+          )}
+
+          {strengthsItems && strengthsItems.length > 0 && (
+            <Box>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {strengthsSection?.heading || 'Your Strengths'}
+              </Typography>
+              <Grid container spacing={3}>
+                {strengthsItems.map((item, index) => (
+                  <Grid item xs={12} md={3} sm={6} key={`${item?.title}-${index}`}>
+                    <Paper sx={{ p: 3, borderRadius: 3, height: '100%', boxShadow: 3 }}>
+                      <AutoAwesome color="secondary" sx={{ mb: 1.5 }} />
+                      <Typography sx={{ fontFamily: headingFont, fontWeight: 600 }}>
+                        {item?.title}
+                      </Typography>
+                      <Typography sx={{ fontFamily: bodyFont, mt: 1, color: '#555' }}>
+                        {item?.description}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          )}
+
+          {warningItems && warningItems.length > 0 && (
+            <Box
+              sx={{
+                backgroundColor: warningBackground,
+                borderRadius: 4,
+                p: { xs: 4, md: 5 },
+                border: '1px solid rgba(233,114,168,0.4)'
+              }}
+            >
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {watchOutSection?.heading || 'Watch Out For'}
+              </Typography>
+              <Grid container spacing={3}>
+                {warningItems.map((warning, index) => (
+                  <Grid item xs={12} md={4} key={`${warning?.title}-${index}`}>
+                    <Paper
+                      sx={{
+                        p: 3,
+                        borderRadius: 3,
+                        backgroundColor: '#fff',
+                        border: '1px solid rgba(250, 211, 144, 0.6)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 1
+                      }}
+                    >
+                      <WarningAmber color="warning" />
+                      <Typography sx={{ fontFamily: headingFont, fontWeight: 600 }}>
+                        {warning?.title}
+                      </Typography>
+                      <Typography sx={{ fontFamily: bodyFont, color: '#555' }}>
+                        {warning?.description}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          )}
+
+          {moralCompassSection && (
+            <Paper sx={{ p: { xs: 4, md: 5 }, borderRadius: 4, textAlign: 'center', boxShadow: 4 }}>
+              <Typography sx={{ fontFamily: headingFont, letterSpacing: 5, fontWeight: 800, textTransform: 'uppercase', color: gradientColors[0], mb: 2 }}>
+                {moralCompassSection.coreValue || 'Authentic'}
+              </Typography>
+              <Typography sx={{ fontFamily: bodyFont, fontSize: '1.05rem', mb: 4 }}>
+                {moralCompassSection.paragraph}
+              </Typography>
+              {moralCompassSection.subBox && (
+                <Box
+                  sx={{
+                    backgroundColor: lightBackground,
+                    borderRadius: 3,
+                    p: 3,
+                    border: '1px solid rgba(109,100,255,0.2)'
+                  }}
+                >
+                  <Typography sx={{ fontFamily: headingFont, fontWeight: 600, mb: 1 }}>
+                    {moralCompassSection.subBox.title}
+                  </Typography>
+                  <Typography sx={{ fontFamily: bodyFont }}>
+                    {moralCompassSection.subBox.text}
+                  </Typography>
+                </Box>
+              )}
+            </Paper>
+          )}
+
+          {friendshipsItems && friendshipsItems.length > 0 && (
+            <Paper sx={{ p: { xs: 4, md: 5 }, borderRadius: 4, boxShadow: 4 }}>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 2 }}>
+                {friendshipsSection?.heading || 'Friendships & Teams'}
+              </Typography>
+              <Stack spacing={1.5} mb={2}>
+                {friendshipsItems.map((item, idx) => (
+                  <Stack direction="row" spacing={1.5} key={`${item}-${idx}`} alignItems="center">
+                    <CheckCircle color="secondary" />
+                    <Typography sx={{ fontFamily: bodyFont }}>{item}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
+              <Typography sx={{ fontFamily: bodyFont, color: '#555' }}>
+                {friendshipsSection?.summary ||
+                  `As ${displayData.codeName || displayData.label}, you anchor teams with empathy, meaning, and steady conviction.`}
+              </Typography>
+            </Paper>
+          )}
+
+          {growthItems && growthItems.length > 0 && (
+            <Paper sx={{ p: { xs: 4, md: 5 }, borderRadius: 4 }}>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {growthSection?.heading || 'Growth Advice'}
+              </Typography>
+              <Stack spacing={2}>
+                {growthItems.map((tip, idx) => (
+                  <Stack direction="row" spacing={2} alignItems="flex-start" key={`${tip}-${idx}`}>
+                    <CheckCircleOutline color="secondary" sx={{ mt: 0.5 }} />
+                    <Typography sx={{ fontFamily: bodyFont }}>{tip}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Paper>
+          )}
+
+          {(mostAligned.length > 0 || mostChallenging.length > 0) && (
+            <Paper sx={{ p: { xs: 4, md: 5 }, borderRadius: 4 }}>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {compatibilitySection?.heading || 'Compatibility Snapshot'}
+              </Typography>
+              <Grid container spacing={4}>
+                {mostAligned.length > 0 && (
+                  <Grid item xs={12} md={6}>
+                    <Typography sx={{ fontFamily: headingFont, fontWeight: 600, mb: 2 }}>
+                      Most Aligned With
+                    </Typography>
+                    <Stack spacing={2}>
+                      {mostAligned.map((partner, idx) => (
+                        <Paper key={`${partner.type}-${idx}`} sx={{ p: 2.5, borderRadius: 3, border: '1px solid rgba(109,100,255,0.2)' }}>
+                          <Typography sx={{ fontFamily: headingFont, fontWeight: 600 }}>
+                            {partner.type}
+                          </Typography>
+                          <Typography sx={{ fontFamily: bodyFont, color: '#555', fontSize: '0.95rem' }}>
+                            {partner.description}
+                          </Typography>
+                        </Paper>
+                      ))}
+                    </Stack>
+                  </Grid>
+                )}
+                {mostChallenging.length > 0 && (
+                  <Grid item xs={12} md={6}>
+                    <Typography sx={{ fontFamily: headingFont, fontWeight: 600, mb: 2 }}>
+                      Most Challenging With
+                    </Typography>
+                    <Stack spacing={2}>
+                      {mostChallenging.map((partner, idx) => (
+                        <Paper key={`${partner.type}-${idx}`} sx={{ p: 2.5, borderRadius: 3, border: '1px solid rgba(233,114,168,0.2)' }}>
+                          <Typography sx={{ fontFamily: headingFont, fontWeight: 600 }}>
+                            {partner.type}
+                          </Typography>
+                          <Typography sx={{ fontFamily: bodyFont, color: '#555', fontSize: '0.95rem' }}>
+                            {partner.description}
+                          </Typography>
+                        </Paper>
+                      ))}
+                    </Stack>
+                  </Grid>
+                )}
+              </Grid>
+            </Paper>
+          )}
+
+          {careerItems && careerItems.length > 0 && (
+            <Box sx={{ backgroundColor: careerBackground, borderRadius: 4, p: { xs: 4, md: 5 } }}>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {careerSection?.heading || 'Career Growth Advice'}
+              </Typography>
+              <Stack spacing={2}>
+                {careerItems.map((item, idx) => (
+                  <Stack direction="row" spacing={2} key={`${item}-${idx}`}>
+                    <Work color="secondary" />
+                    <Typography sx={{ fontFamily: bodyFont }}>{item}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+          )}
+
+          {famousItems && famousItems.length > 0 && (
+            <Box>
+              <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 3 }}>
+                {famousSection?.heading || 'Famous People Like You'}
+              </Typography>
+              <Grid container spacing={3}>
+                {famousItems.map((person, idx) => (
+                  <Grid item xs={12} md={4} key={`${person.name}-${idx}`}>
+                    <Paper
+                      sx={{
+                        p: 3,
+                        borderRadius: 4,
+                        textAlign: 'center',
+                        border: '1px solid rgba(109,100,255,0.15)'
+                      }}
+                    >
+                      <EmojiPeople color="secondary" sx={{ fontSize: 40, mb: 1.5 }} />
+                      <Typography sx={{ fontFamily: headingFont, fontWeight: 600 }}>
+                        {person.name}
+                      </Typography>
+                      <Typography sx={{ fontFamily: bodyFont, color: '#555', mt: 1 }}>
+                        {person.description}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          )}
+
+          {lifeQuote && (
+            <Paper
+              sx={{
+                p: { xs: 4, md: 5 },
+                borderRadius: 4,
+                textAlign: 'center',
+                backgroundColor: '#fff',
+                boxShadow: 3
+              }}
+            >
+              <FormatQuote color="secondary" sx={{ fontSize: 48, opacity: 0.5 }} />
+              <Typography
+                variant="h5"
+                sx={{
+                  fontFamily: headingFont,
+                  fontStyle: 'italic',
+                  fontWeight: 600,
+                  mt: 2,
+                  color: gradientColors[0]
+                }}
+              >
+                “{lifeQuote}”
+              </Typography>
+            </Paper>
+          )}
+
+          <Paper
+            sx={{
+              p: { xs: 4, md: 5 },
+              borderRadius: 4,
+              textAlign: 'center',
+              background: `linear-gradient(120deg, ${gradientColors[0]}15, ${gradientColors[1]}15)`
+            }}
+          >
+            <Typography variant="h5" sx={{ fontFamily: headingFont, fontWeight: 700, mb: 4 }}>
+              {t('personalityResults.whatsNext')}
+            </Typography>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={3} justifyContent="center">
+              <Tooltip title={t('personalityResults.takeMajorTest')} disableHoverListener={hasMbti}>
+                <span>
+                  <Button
+                    variant="contained"
+                    size="large"
+                    startIcon={<School />}
+                    onClick={() => navigate('/major-matching-test')}
+                    disabled={!hasMbti}
+                    sx={{
+                      fontFamily: headingFont,
+                      fontWeight: 700,
+                      px: 4,
+                      py: 1.75
+                    }}
+                  >
+                    {t('personalityResults.takeMajorTest')}
+                  </Button>
+                </span>
+              </Tooltip>
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<Refresh />}
+                onClick={() => navigate('/personality-test')}
+                sx={{ fontFamily: headingFont, fontWeight: 600, px: 4, py: 1.75 }}
+              >
+                {t('personalityResults.retakeTest')}
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<Home />}
+                onClick={() => navigate('/')}
+                sx={{ fontFamily: headingFont, fontWeight: 600, px: 4, py: 1.75 }}
+              >
+                {t('common.back')} {t('common.home')}
+              </Button>
+            </Stack>
+          </Paper>
+        </Stack>
       </Container>
     </Box>
   );
