@@ -1,0 +1,1424 @@
+[
+  {
+    "parent_major": "Architecture & Built Arts",
+    "ria_sec": ["A", "R", "I"],
+    "academic_strengths": [
+      "Mathematics",
+      "Physics",
+      "Visual-Spatial Thinking",
+      "Design & Creativity"
+    ],
+    "core_values": [
+      "Creativity",
+      "Impact",
+      "Intellectual Challenge",
+      "Prestige"
+    ],
+    "micro_traits": [
+      "Problem Solving",
+      "Precision & Accuracy",
+      "Sustainability & Preservation"
+    ],
+    "mbti_traits": ["N", "T", "J"]
+  },
+  {
+    "parent_major": "Design & Applied Arts",
+    "ria_sec": ["A", "C"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Visual-Spatial Thinking",
+      "Writing & Communication"
+    ],
+    "core_values": [
+      "Creativity",
+      "Innovation",
+      "Impact",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Cultural Expression",
+      "Problem Solving"
+    ],
+    "mbti_traits": ["N", "F", "P"]
+  },
+  {
+    "parent_major": "Fine & Studio Arts",
+    "ria_sec": ["A"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Visual-Spatial Thinking",
+      "Writing & Communication"
+    ],
+    "core_values": [
+      "Creativity",
+      "Independence",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Cultural Expression",
+      "Curiosity & Discovery"
+    ],
+    "mbti_traits": ["I", "N", "F", "P"]
+  },
+  {
+    "parent_major": "Performing Arts",
+    "ria_sec": ["A", "S"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Leadership & Public Speaking",
+      "Writing & Communication",
+      "Social Sciences"
+    ],
+    "core_values": [
+      "Creativity",
+      "Teamwork",
+      "Prestige",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Communication & Connection",
+      "Cultural Expression"
+    ],
+    "mbti_traits": ["E", "N", "F", "P"]
+  },
+  {
+    "parent_major": "Music",
+    "ria_sec": ["A", "S"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Writing & Communication",
+      "Foreign Languages"
+    ],
+    "core_values": [
+      "Creativity",
+      "Cultural Appreciation",
+      "Independence",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Cultural Expression",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["I", "N", "F", "P"]
+  },
+  {
+    "parent_major": "Cinematic Arts",
+    "ria_sec": ["A", "E", "S"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Writing & Communication",
+      "Visual-Spatial Thinking",
+      "Social Sciences"
+    ],
+    "core_values": [
+      "Creativity",
+      "Impact",
+      "Prestige",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Cultural Expression",
+      "Influence",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["N", "F", "P"]
+  }
+]
+[
+  {
+    "parent_major": "Aircraft Maintenance",
+    "ria_sec": ["R", "I", "C"],
+    "academic_strengths": [
+      "Physics",
+      "Mathematics",
+      "Visual-Spatial Thinking",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Prestige",
+      "Stability",
+      "Efficiency & Order",
+      "Impact",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Precision & Accuracy",
+      "Responsibility & Discipline",
+      "Problem Solving"
+    ],
+    "mbti_traits": ["S", "T", "J"]
+  }
+]
+[
+  {
+    "parent_major": "Accounting & Finance",
+    "ria_sec": ["C", "E"],
+    "academic_strengths": [
+      "Mathematics",
+      "Business & Economics",
+      "Reading & Analysis"
+    ],
+    "core_values": [
+      "Stability",
+      "Financial Reward",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Precision & Accuracy",
+      "Responsibility & Discipline",
+      "Logic"
+    ],
+    "mbti_traits": ["S", "T", "J"]
+  },
+  {
+    "parent_major": "Business Administration & Mgmt.",
+    "ria_sec": ["E", "C"],
+    "academic_strengths": [
+      "Business & Economics",
+      "Leadership & Public Speaking",
+      "Mathematics"
+    ],
+    "core_values": [
+      "Leadership",
+      "Impact",
+      "Financial Reward"
+    ],
+    "micro_traits": [
+      "Influence",
+      "Responsibility & Discipline",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["E", "T", "J"]
+  },
+  {
+    "parent_major": "Human Resource Mgmt.",
+    "ria_sec": ["S", "E"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Leadership & Public Speaking",
+      "Writing & Communication"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Teamwork",
+      "Stability"
+    ],
+    "micro_traits": [
+      "Communication & Connection",
+      "Service & Empathy",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["E", "F", "J"]
+  },
+  {
+  "parent_major": "Logistics & Supply Chain",
+  "ria_sec": ["I", "C", "E"],
+  "academic_strengths": [
+    "Mathematics",
+    "Business & Economics",
+    "Research & Investigation"
+  ],
+  "core_values": [
+    "Efficiency & Order",
+    "Impact",
+    "Leadership"
+  ],
+  "micro_traits": [
+    "Problem Solving",
+    "Responsibility & Discipline",
+    "Logic"
+  ],
+  "mbti_traits": ["S", "T", "J"]
+  },
+  {
+    "parent_major": "Marketing & Advertising",
+    "ria_sec": ["E", "A"],
+    "academic_strengths": [
+      "Business & Economics",
+      "Writing & Communication",
+      "Design & Creativity",
+      "Social Sciences"
+    ],
+    "core_values": [
+      "Creativity",
+      "Innovation",
+      "Impact",
+      "Prestige"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Influence",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["E", "N", "F", "P"]
+  },
+  {
+    "parent_major": "Economics",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": [
+      "Mathematics",
+      "Business & Economics",
+      "Reading & Analysis"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Impact",
+      "Financial Reward"
+    ],
+    "micro_traits": [
+      "Research & Investigation",
+      "Logic",
+      "Curiosity & Discovery"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Hospitality, Tourism & Event Management",
+    "ria_sec": ["S", "E"],
+    "academic_strengths": [
+      "Business & Economics",
+      "Foreign Languages",
+      "Leadership & Public Speaking"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Teamwork",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Communication & Connection",
+      "Service & Empathy",
+      "Cultural Expression"
+    ],
+    "mbti_traits": ["E", "S", "F", "P"]
+  }
+]
+[
+  {
+    "parent_major": "Computer Science & Data",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": [
+      "Programming & Logic",
+      "Mathematics",
+      "Research & Investigation",
+      "Reading & Analysis"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Innovation",
+      "Independence",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Logic",
+      "Problem Solving",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Information Technology",
+    "ria_sec": ["R", "C"],
+    "academic_strengths": [
+      "Programming & Logic",
+      "Mathematics",
+      "Business & Economics"
+    ],
+    "core_values": [
+      "Stability",
+      "Efficiency & Order",
+      "Helping Others"
+    ],
+    "micro_traits": [
+      "Problem Solving",
+      "Responsibility & Discipline",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["S", "T", "J"]
+  },
+  {
+    "parent_major": "Document & Library Mgmt.",
+    "ria_sec": ["C", "S", "I"],
+    "academic_strengths": [
+      "Reading & Analysis",
+      "Writing & Communication",
+      "Research & Investigation",
+      "Foreign Languages"
+    ],
+    "core_values": [
+      "Efficiency & Order",
+      "Cultural Appreciation",
+      "Helping Others"
+    ],
+    "micro_traits": [
+      "Knowledge",
+      "Precision & Accuracy",
+      "Communication & Connection",
+      "Cultural Expression"
+    ],
+    "mbti_traits": ["I", "S", "F", "J"]
+  }
+]
+[
+  {
+    "parent_major": "Primary Education Teaching",
+    "ria_sec": ["S", "A"],
+    "academic_strengths": [
+      "Writing & Communication",
+      "Social Sciences",
+      "Leadership & Public Speaking"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Teamwork",
+      "Stability",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Service & Empathy",
+      "Communication & Connection",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["E", "S", "F", "J"]
+  },
+  {
+    "parent_major": "Education Administration",
+    "ria_sec": ["E", "S", "C"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Leadership & Public Speaking",
+      "Reading & Analysis",
+      "Business & Economics"
+    ],
+    "core_values": [
+      "Leadership",
+      "Impact",
+      "Stability",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Influence",
+      "Responsibility & Discipline",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["E", "T", "J"]
+  },
+  {
+    "parent_major": "Teaching English / Languages",
+    "ria_sec": ["S", "A", "I"],
+    "academic_strengths": [
+      "Foreign Languages",
+      "Writing & Communication",
+      "Reading & Analysis",
+      "Social Sciences"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Cultural Appreciation",
+      "Intellectual Challenge",
+      "Independence"
+    ],
+    "micro_traits": [
+      "Communication & Connection",
+      "Cultural Expression",
+      "Service & Empathy",
+      "Knowledge"
+    ],
+    "mbti_traits": ["I", "N", "F", "J"]
+  },
+  {
+    "parent_major": "Art & Music Education",
+    "ria_sec": ["A", "S"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Writing & Communication",
+      "Leadership & Public Speaking"
+    ],
+    "core_values": [
+      "Creativity",
+      "Helping Others",
+      "Teamwork",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Communication & Connection",
+      "Service & Empathy"
+    ],
+    "mbti_traits": ["E", "N", "F", "P"]
+  }
+]
+[
+  {
+    "parent_major": "Energy Technologies",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": [
+      "Physics",
+      "Mathematics",
+      "Chemistry",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Nature & Environment",
+      "Impact",
+      "Innovation",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Sustainability & Preservation",
+      "Research & Investigation",
+      "Problem Solving"
+    ],
+    "mbti_traits": ["N", "T", "J"]
+  }
+]
+[
+  {
+    "parent_major": "Civil Engineering",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Mathematics",
+      "Physics",
+      "Visual-Spatial Thinking"
+    ],
+    "core_values": [
+      "Impact",
+      "Stability",
+      "Nature & Environment",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Sustainability & Preservation",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["T", "J"]
+  },
+  {
+    "parent_major": "Mechanical Engineering",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Mathematics",
+      "Physics",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Innovation",
+      "Financial Reward"
+    ],
+    "micro_traits": [
+      "Problem Solving",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["T", "J"]
+  },
+  {
+    "parent_major": "Electrical Engineering",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Mathematics",
+      "Physics",
+      "Programming & Logic"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Innovation",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Logic",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["T", "J", "I"]
+  },
+  {
+    "parent_major": "Computer & Communications Eng.",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": [
+      "Programming & Logic",
+      "Mathematics",
+      "Physics"
+    ],
+    "core_values": [
+      "Innovation",
+      "Intellectual Challenge",
+      "Financial Reward"
+    ],
+    "micro_traits": [
+      "Logic",
+      "Problem Solving"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Mechatronics Engineering",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Mathematics",
+      "Physics",
+      "Programming & Logic"
+    ],
+    "core_values": [
+      "Innovation",
+      "Intellectual Challenge",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Problem Solving",
+      "Logic"
+    ],
+    "mbti_traits": ["T", "J"]
+  },
+  {
+    "parent_major": "Chemical Engineering",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": [
+      "Chemistry",
+      "Mathematics",
+      "Physics"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Efficiency & Order",
+      "Financial Reward"
+    ],
+    "micro_traits": [
+      "Research & Investigation",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["T", "J", "I"]
+  },
+  {
+    "parent_major": "Petroleum Engineering",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Chemistry",
+      "Mathematics",
+      "Physics"
+    ],
+    "core_values": [
+      "Financial Reward",
+      "Stability",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Problem Solving",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["T", "J"]
+  },
+  {
+    "parent_major": "Industrial Engineering",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": [
+      "Mathematics",
+      "Business & Economics",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Efficiency & Order",
+      "Intellectual Challenge",
+      "Leadership"
+    ],
+    "micro_traits": [
+      "Problem Solving",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["T", "J", "E"]
+  },
+  {
+    "parent_major": "Agricultural Engineering",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Mathematics",
+      "Physics",
+      "Biology"
+    ],
+    "core_values": [
+      "Nature & Environment",
+      "Impact",
+      "Stability"
+    ],
+    "micro_traits": [
+      "Sustainability & Preservation",
+      "Problem Solving"
+    ],
+    "mbti_traits": ["S", "T", "J"]
+  },
+  {
+    "parent_major": "Biomedical Engineering",
+    "ria_sec": ["I", "R", "S"],
+    "academic_strengths": [
+      "Biology",
+      "Mathematics",
+      "Physics"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Innovation",
+      "Intellectual Challenge",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["N", "T", "J"]
+  },
+  {
+    "parent_major": "Medicine",
+    "ria_sec": ["S", "I", "R"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Social Sciences",
+      "Reading & Analysis"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Prestige",
+      "Intellectual Challenge",
+      "Stability",
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Service & Empathy",
+      "Research & Investigation",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["N", "F", "J"]
+  },
+  {
+    "parent_major": "Dentistry",
+    "ria_sec": ["S", "R", "I"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Visual-Spatial Thinking"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Prestige",
+      "Financial Reward",
+      "Intellectual Challenge",
+      "Independence"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Precision & Accuracy",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["S", "T", "J"]
+  },
+  {
+    "parent_major": "Pharmacy",
+    "ria_sec": ["I", "C", "S"],
+    "academic_strengths": [
+      "Chemistry",
+      "Biology",
+      "Mathematics",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Stability",
+      "Intellectual Challenge",
+      "Helping Others",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Precision & Accuracy",
+      "Responsibility & Discipline",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "S", "T", "J"]
+  },
+  {
+    "parent_major": "Nursing & Midwifery",
+    "ria_sec": ["S", "R"],
+    "academic_strengths": [
+      "Biology",
+      "Social Sciences",
+      "Writing & Communication"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Teamwork",
+      "Stability",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Service & Empathy",
+      "Health & Prevention",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["E", "S", "F", "J"]
+  },
+  {
+    "parent_major": "Public Health & Promotion",
+    "ria_sec": ["S", "I", "E"],
+    "academic_strengths": [
+      "Biology",
+      "Social Sciences",
+      "Research & Investigation",
+      "Reading & Analysis"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Leadership",
+      "Teamwork"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Service & Empathy",
+      "Justice / Truth / Ethics",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["N", "F", "J"]
+  },
+  {
+    "parent_major": "Nutrition & Dietetics",
+    "ria_sec": ["S", "I"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Social Sciences"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Stability",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Service & Empathy",
+      "Sustainability & Preservation"
+    ],
+    "mbti_traits": ["S", "F", "J"]
+  },
+  {
+    "parent_major": "Allied Health Lab Sciences",
+    "ria_sec": ["I", "R", "C"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Efficiency & Order",
+      "Stability"
+    ],
+    "micro_traits": [
+      "Precision & Accuracy",
+      "Responsibility & Discipline",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "S", "T", "J"]
+  },
+  {
+    "parent_major": "Rehabilitation Sciences",
+    "ria_sec": ["S", "R", "I"],
+    "academic_strengths": [
+      "Biology",
+      "Social Sciences",
+      "Physics"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Teamwork",
+      "Stability"
+    ],
+    "micro_traits": [
+      "Service & Empathy",
+      "Health & Prevention",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["E", "S", "F", "J"]
+  },
+  {
+    "parent_major": "Optometry & Vision Science",
+    "ria_sec": ["S", "I", "R"],
+    "academic_strengths": [
+      "Physics",
+      "Biology",
+      "Mathematics"
+    ],
+    "core_values": [
+      "Stability",
+      "Intellectual Challenge",
+      "Helping Others",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Precision & Accuracy",
+      "Health & Prevention",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["S", "T", "J"]
+  },
+  {
+    "parent_major": "Biochemistry & Bioinformatics",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": [
+      "Chemistry",
+      "Biology",
+      "Mathematics",
+      "Programming & Logic",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Innovation",
+      "Impact",
+      "Independence"
+    ],
+    "micro_traits": [
+      "Research & Investigation",
+      "Logic",
+      "Curiosity & Discovery",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  }
+]
+[
+  {
+    "parent_major": "Law",
+    "ria_sec": ["E", "S", "I"],
+    "academic_strengths": [
+      "Reading & Analysis",
+      "Writing & Communication",
+      "Social Sciences",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Impact",
+      "Leadership",
+      "Prestige",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Justice / Truth / Ethics",
+      "Communication & Connection",
+      "Influence"
+    ],
+    "mbti_traits": ["E", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Public Administration",
+    "ria_sec": ["E", "S", "C"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Business & Economics",
+      "Leadership & Public Speaking",
+      "Reading & Analysis"
+    ],
+    "core_values": [
+      "Impact",
+      "Leadership",
+      "Stability",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Responsibility & Discipline",
+      "Service & Empathy",
+      "Justice / Truth / Ethics"
+    ],
+    "mbti_traits": ["E", "S", "T", "J"]
+  }
+]
+[
+  {
+    "parent_major": "Biological Sciences",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Independence",
+      "Nature & Environment"
+    ],
+    "micro_traits": [
+      "Research & Investigation",
+      "Curiosity & Discovery"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Chemical Sciences",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": [
+      "Chemistry",
+      "Mathematics",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Efficiency & Order",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Precision & Accuracy",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Physical Sciences",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": [
+      "Physics",
+      "Mathematics",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Impact",
+      "Innovation"
+    ],
+    "micro_traits": [
+      "Curiosity & Discovery",
+      "Problem Solving"
+    ],
+    "mbti_traits": ["I", "N", "T", "P"]
+  },
+  {
+    "parent_major": "Mathematics & Statistics",
+    "ria_sec": ["I", "C"],
+    "academic_strengths": [
+      "Mathematics",
+      "Programming & Logic",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Independence",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Logic",
+      "Problem Solving",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Environmental Science",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Social Sciences",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Nature & Environment",
+      "Impact",
+      "Helping Others"
+    ],
+    "micro_traits": [
+      "Sustainability & Preservation",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "N", "F", "J"]
+  },
+  {
+    "parent_major": "Food Science",
+    "ria_sec": ["I", "R"],
+    "academic_strengths": [
+      "Chemistry",
+      "Biology",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["S", "F", "J"]
+	  },
+  {
+    "parent_major": "Forensic Science",
+    "ria_sec": ["I", "R", "C"],
+    "academic_strengths": [
+      "Chemistry",
+      "Biology",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Impact",
+      "Stability"
+    ],
+    "micro_traits": [
+      "Justice / Truth / Ethics",
+      "Precision & Accuracy",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "S", "T", "J"]
+  },
+  {
+    "parent_major": "Agriculture",
+    "ria_sec": ["R", "I"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Nature & Environment",
+      "Impact",
+      "Stability",
+      "Efficiency & Order"
+    ],
+    "micro_traits": [
+      "Sustainability & Preservation",
+      "Problem Solving",
+      "Responsibility & Discipline"
+    ],
+    "mbti_traits": ["S", "T", "J"]
+  },
+  {
+    "parent_major": "Veterinary Sciences",
+    "ria_sec": ["R", "S", "I"],
+    "academic_strengths": [
+      "Biology",
+      "Chemistry",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Nature & Environment",
+      "Stability",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Precision & Accuracy",
+      "Service & Empathy"
+    ],
+    "mbti_traits": ["S", "F", "J"]
+  }
+]
+[
+  {
+    "parent_major": "Languages & Translation",
+    "ria_sec": ["A", "S", "C"],
+    "academic_strengths": [
+      "Foreign Languages",
+      "Writing & Communication",
+      "Reading & Analysis"
+    ],
+    "core_values": [
+      "Cultural Appreciation",
+      "Intellectual Challenge",
+      "Independence"
+    ],
+    "micro_traits": [
+      "Precision & Accuracy",
+      "Communication & Connection",
+      "Cultural Expression"
+    ],
+    "mbti_traits": ["I", "N", "F", "J"]
+  },
+  {
+    "parent_major": "History & Cultural Studies",
+    "ria_sec": ["I", "A", "S"],
+    "academic_strengths": [
+      "Reading & Analysis",
+      "Research & Investigation",
+      "Social Sciences",
+      "Writing & Communication"
+    ],
+    "core_values": [
+      "Cultural Appreciation",
+      "Intellectual Challenge",
+      "Independence"
+    ],
+    "micro_traits": [
+      "Research & Investigation",
+      "Curiosity & Discovery",
+      "Insight & Wisdom"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Philosophy & Religion",
+    "ria_sec": ["I", "S"],
+    "academic_strengths": [
+      "Reading & Analysis",
+      "Writing & Communication",
+      "Social Sciences",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Intellectual Challenge",
+      "Helping Others",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Justice / Truth / Ethics",
+      "Insight & Wisdom",
+      "Curiosity & Discovery"
+    ],
+    "mbti_traits": ["I", "N", "F", "J"]
+  },
+  {
+    "parent_major": "Political Science & Intl. Affairs",
+    "ria_sec": ["S", "E", "I"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Reading & Analysis",
+      "Writing & Communication",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Impact",
+      "Leadership",
+      "Cultural Appreciation",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Justice / Truth / Ethics",
+      "Communication & Connection",
+      "Influence",
+      "Curiosity & Discovery"
+    ],
+    "mbti_traits": ["E", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Psychology",
+    "ria_sec": ["S", "I"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Reading & Analysis",
+      "Research & Investigation",
+      "Biology"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Service & Empathy",
+      "Insight & Wisdom",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "N", "F", "J"]
+  },
+  {
+    "parent_major": "Sociology & Social Work",
+    "ria_sec": ["S", "E", "I"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Writing & Communication",
+      "Reading & Analysis",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Teamwork"
+    ],
+    "micro_traits": [
+      "Service & Empathy",
+      "Justice / Truth / Ethics",
+      "Communication & Connection"
+    ],
+    "mbti_traits": ["E", "N", "F", "J"]
+  },
+  {
+    "parent_major": "Geography & GIS",
+    "ria_sec": ["I", "R", "C"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Mathematics",
+      "Research & Investigation",
+      "Visual-Spatial Thinking"
+    ],
+    "core_values": [
+      "Nature & Environment",
+      "Impact",
+      "Intellectual Challenge"
+    ],
+    "micro_traits": [
+      "Research & Investigation",
+      "Sustainability & Preservation",
+      "Precision & Accuracy"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  },
+  {
+    "parent_major": "Arts & Archaeology",
+    "ria_sec": ["I", "A", "R"],
+    "academic_strengths": [
+      "Reading & Analysis",
+      "Research & Investigation",
+      "Social Sciences",
+      "Visual-Spatial Thinking"
+    ],
+    "core_values": [
+      "Cultural Appreciation",
+      "Intellectual Challenge",
+      "Nature & Environment"
+    ],
+    "micro_traits": [
+      "Sustainability & Preservation",
+      "Curiosity & Discovery",
+      "Research & Investigation"
+    ],
+    "mbti_traits": ["I", "N", "T", "J"]
+  }
+]
+[
+  {
+    "parent_major": "Physical Education & Sports Sciences",
+    "ria_sec": ["R", "S", "E"],
+    "academic_strengths": [
+      "Biology",
+      "Social Sciences",
+      "Leadership & Public Speaking"
+    ],
+    "core_values": [
+      "Teamwork",
+      "Helping Others",
+      "Impact"
+    ],
+    "micro_traits": [
+      "Health & Prevention",
+      "Responsibility & Discipline",
+      "Communication & Connection"
+ 	   ],
+    "mbti_traits": ["E", "S", "T", "P"]
+  }
+]
+[
+  {
+    "parent_major": "Journalism",
+    "ria_sec": ["A", "I", "S"],
+    "academic_strengths": [
+      "Writing & Communication",
+      "Reading & Analysis",
+      "Social Sciences",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Creativity",
+      "Impact",
+      "Independence",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Justice / Truth / Ethics",
+      "Communication & Connection",
+      "Self-Expression & Storytelling"
+    ],
+    "mbti_traits": ["N", "F", "P"]
+  },
+  {
+    "parent_major": "Cinematic & Media Production",
+    "ria_sec": ["A", "R", "E"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Visual-Spatial Thinking",
+      "Writing & Communication",
+      "Leadership & Public Speaking"
+    ],
+    "core_values": [
+      "Creativity",
+      "Impact",
+      "Teamwork",
+      "Prestige"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Communication & Connection",
+      "Influence"
+    ],
+    "mbti_traits": ["E", "N", "F", "P"]
+  },
+  {
+    "parent_major": "Public Relations & Advertising",
+    "ria_sec": ["E", "A", "S"],
+    "academic_strengths": [
+      "Writing & Communication",
+      "Social Sciences",
+      "Business & Economics",
+      "Leadership & Public Speaking"
+    ],
+    "core_values": [
+      "Creativity",
+      "Impact",
+      "Prestige",
+      "Leadership"
+    ],
+    "micro_traits": [
+      "Influence",
+      "Communication & Connection",
+      "Cultural Expression"
+    ],
+    "mbti_traits": ["E", "N", "F", "P"]
+  },
+  {
+    "parent_major": "Communication Studies",
+    "ria_sec": ["S", "I", "A"],
+    "academic_strengths": [
+      "Social Sciences",
+      "Reading & Analysis",
+      "Writing & Communication",
+      "Research & Investigation"
+    ],
+    "core_values": [
+      "Helping Others",
+      "Impact",
+      "Intellectual Challenge",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Communication & Connection",
+      "Insight & Wisdom",
+      "Justice / Truth / Ethics"
+    ],
+    "mbti_traits": ["N", "F", "J"]
+  },
+  {
+    "parent_major": "Animation & Multimedia",
+    "ria_sec": ["A", "I"],
+    "academic_strengths": [
+      "Design & Creativity",
+      "Visual-Spatial Thinking",
+      "Programming & Logic",
+      "Writing & Communication"
+    ],
+    "core_values": [
+      "Creativity",
+      "Innovation",
+      "Independence",
+      "Cultural Appreciation"
+    ],
+    "micro_traits": [
+      "Self-Expression & Storytelling",
+      "Cultural Expression",
+      "Problem Solving"
+    ],
+    "mbti_traits": ["I", "N", "F", "P"]
+  }
+]

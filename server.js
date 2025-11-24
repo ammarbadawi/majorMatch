@@ -46,6 +46,222 @@ const googleClient = GOOGLE_CLIENT_ID
   ? new OAuth2Client(GOOGLE_CLIENT_ID)
   : null;
 
+const DEFAULT_MAJOR_QUESTIONS_FILENAME = "Question 2 Final.txt";
+const DEFAULT_MAJOR_MAPPING_FILENAME = "ALL - FInal.txt";
+
+function normalizeStringArray(input) {
+  if (!Array.isArray(input)) return [];
+  return input
+    .map((value) => {
+      if (value === null || value === undefined) return "";
+      return String(value).trim();
+    })
+    .filter(Boolean);
+}
+
+function resolveCandidateFile(candidate, defaultFileName) {
+  if (!candidate) return null;
+  try {
+    if (!fs.existsSync(candidate)) return null;
+    const stats = fs.statSync(candidate);
+    if (stats.isDirectory()) {
+      if (!defaultFileName) return null;
+      const nested = path.join(candidate, defaultFileName);
+      return fs.existsSync(nested) ? nested : null;
+    }
+    return candidate;
+  } catch (err) {
+    return null;
+  }
+}
+
+const stackedArrayBoundary = /\]\s*(?:\r?\n)+\s*\[/g;
+
+function parseStackedJsonArrays(raw) {
+  if (!raw) return [];
+  const trimmed = raw.trim();
+  if (!trimmed) return [];
+  try {
+    const direct = JSON.parse(trimmed);
+    return Array.isArray(direct) ? direct : [];
+  } catch (err) {
+    try {
+      const normalized = `[${trimmed.replace(stackedArrayBoundary, "],\n[")}]`;
+      const parsed = JSON.parse(normalized);
+      if (Array.isArray(parsed)) {
+        return parsed.reduce((acc, item) => acc.concat(item), []);
+      }
+    } catch (err2) {}
+  }
+  return [];
+}
+
+function parseQuestionList(raw) {
+  if (!raw) return [];
+  const trimmed = raw.trim();
+  if (!trimmed) return [];
+  try {
+    const parsed = JSON.parse(trimmed);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    try {
+      const fixed = trimmed
+        .replace(/}\s*\n+\s*\{/g, "},{")
+        .replace(/,\s*([\]}])/g, "$1");
+      const parsed = JSON.parse(fixed);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (err2) {
+      return [];
+    }
+  }
+}
+
+function mapQuestionRecords(list, language) {
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((q, idx) => {
+      const rawId = q.id ?? idx + 1;
+      const id = Number.isFinite(Number(rawId)) ? parseInt(rawId, 10) : idx + 1;
+      const questionText = q.question || q.text;
+      if (!questionText) return null;
+      const topic = q.topic ? String(q.topic).trim() : "";
+      return {
+        id,
+        category: String(q.category || "General"),
+        topic: topic || null,
+        question: String(questionText),
+        language,
+        micro_traits: normalizeStringArray(q.micro_traits),
+      };
+    })
+    .filter(Boolean);
+}
+
+function loadMajorQuestionDocs(language = "en") {
+  const envPath =
+    language === "ar"
+      ? process.env.MAJOR_QUESTIONS_PATH_AR
+      : process.env.MAJOR_QUESTIONS_PATH;
+  const defaultFileName =
+    language === "en" ? DEFAULT_MAJOR_QUESTIONS_FILENAME : null;
+  const candidates = new Set();
+  if (envPath) candidates.add(envPath);
+  if (language === "en") {
+    candidates.add(path.join(__dirname, DEFAULT_MAJOR_QUESTIONS_FILENAME));
+    candidates.add(path.join(process.cwd(), DEFAULT_MAJOR_QUESTIONS_FILENAME));
+  }
+  for (const candidate of candidates) {
+    const resolved = resolveCandidateFile(candidate, defaultFileName);
+    if (!resolved) continue;
+    try {
+      const raw = fs.readFileSync(resolved, "utf8").replace(/^\uFEFF/, "");
+      const parsed = parseQuestionList(raw);
+      if (Array.isArray(parsed) && parsed.length) {
+        return { docs: mapQuestionRecords(parsed, language), source: resolved };
+      }
+    } catch (err) {
+      console.warn(
+        `[Seed] Failed to load ${language} major questions from ${resolved}:`,
+        err.message
+      );
+    }
+  }
+  return null;
+}
+
+function buildMappingsFromRecords(records) {
+  const majorsSet = new Set();
+  const mappings = [];
+  const categoryLabels = {
+    ria_sec: "RIASEC",
+    academic_strengths: "Academic Strength",
+    core_values: "Core Value",
+    personality_traits: "Personality",
+    mbti_traits: "Personality",
+    micro_traits: "Micro Trait",
+  };
+  const weight = {
+    ria_sec: 2,
+    academic_strengths: 3,
+    core_values: 2,
+    personality_traits: 1,
+    mbti_traits: 1,
+    micro_traits: 2,
+  };
+  const addMap = (optionValue, majorName, score, category) => {
+    if (!optionValue || !majorName) return;
+    mappings.push({
+      category,
+      option_value: String(optionValue),
+      major_name: String(majorName),
+      score: parseInt(score || 1) || 1,
+    });
+  };
+
+  (records || []).forEach((item) => {
+    const majorName = String(
+      item.parent_major || item.major_name || item.name || ""
+    ).trim();
+    if (!majorName) return;
+    majorsSet.add(majorName);
+
+    ["ria_sec", "academic_strengths", "core_values"].forEach((key) => {
+      normalizeStringArray(item[key]).forEach((value) =>
+        addMap(value, majorName, weight[key], categoryLabels[key])
+      );
+    });
+
+    // Legacy compatibility
+    normalizeStringArray(item.personality_traits).forEach((value) =>
+      addMap(value, majorName, weight.personality_traits, "Personality")
+    );
+
+    normalizeStringArray(item.mbti_traits).forEach((value) =>
+      addMap(value, majorName, weight.mbti_traits, "Personality")
+    );
+
+    normalizeStringArray(item.micro_traits).forEach((value) =>
+      addMap(value, majorName, weight.micro_traits, "Micro Trait")
+    );
+  });
+
+  return {
+    majors: Array.from(majorsSet),
+    mappings,
+  };
+}
+
+function loadMajorMappingDataset() {
+  const candidates = new Set();
+  if (process.env.MAPPING_DATA_PATH)
+    candidates.add(process.env.MAPPING_DATA_PATH);
+  if (process.env.MAPPING_ROOT_PATH)
+    candidates.add(process.env.MAPPING_ROOT_PATH);
+  candidates.add(path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME));
+  candidates.add(path.join(process.cwd(), DEFAULT_MAJOR_MAPPING_FILENAME));
+
+  for (const candidate of candidates) {
+    const resolved = resolveCandidateFile(
+      candidate,
+      DEFAULT_MAJOR_MAPPING_FILENAME
+    );
+    if (!resolved) continue;
+    try {
+      const raw = fs.readFileSync(resolved, "utf8").replace(/^\uFEFF/, "");
+      const records = parseStackedJsonArrays(raw);
+      if (Array.isArray(records) && records.length) {
+        return { records, source: resolved };
+      }
+    } catch (err) {
+      console.warn(
+        `[Mapping] Failed to load mapping data from ${candidate}:`,
+        err.message
+      );
+    }
+  }
+  return null;
+}
+
 const PERSONALITIES_DISPLAY_PATH = path.join(
   __dirname,
   "PersonalitiesDisplay.txt"
@@ -428,6 +644,7 @@ const majorQuestionSchema = new mongoose.Schema({
   topic: { type: String, default: null },
   question: { type: String, required: true },
   language: { type: String, default: "en" },
+  micro_traits: { type: [String], default: [] },
 });
 // Compound unique index on id + language (allows same id for different languages)
 majorQuestionSchema.index({ id: 1, language: 1 }, { unique: true });
@@ -1289,44 +1506,16 @@ async function ensureMajorSeedMongo() {
     // Major questions - English
     const mqCountEn = await MajorQuestion.countDocuments({ language: "en" });
     if (mqCountEn === 0) {
-      const qCandidates = [
-        process.env.MAJOR_QUESTIONS_PATH,
-        path.join(
-          __dirname,
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2.txt"
-        ),
-        path.join(
-          process.cwd(),
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2.txt"
-        ),
-        path.join(__dirname, "Mapping", "Question 2.txt"),
-        path.join(process.cwd(), "Mapping", "Question 2.txt"),
-      ].filter(Boolean);
-      for (const p of qCandidates) {
-        try {
-          if (p && fs.existsSync(p)) {
-            const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length) {
-              const docs = parsed.map((q, idx) => ({
-                id: parseInt(q.id ?? idx + 1),
-                category: String(q.category || "General"),
-                topic: q.topic ? String(q.topic) : null,
-                question: String(q.question || q.text || ""),
-                language: "en",
-              }));
-              await MajorQuestion.insertMany(docs);
-              console.log(
-                `Seeded ${docs.length} major questions (en) from ${p}`
-              );
-              break;
-            }
-          }
-        } catch (e) {}
+      const englishSeed = loadMajorQuestionDocs("en");
+      if (englishSeed?.docs?.length) {
+        await MajorQuestion.insertMany(englishSeed.docs);
+        console.log(
+          `Seeded ${englishSeed.docs.length} major questions (en) from ${englishSeed.source}`
+        );
+      } else {
+        console.warn(
+          "[Seed] No English major question source found (looked for Question 2 Final.txt)"
+        );
       }
     }
 
@@ -1342,164 +1531,47 @@ async function ensureMajorSeedMongo() {
       console.log(
         `[Seed] Arabic major questions count (${mqCountAr}) below threshold (${MIN_ARABIC_MAJOR_QUESTIONS}), reseeding...`
       );
-      const qCandidatesAr = [
-        process.env.MAJOR_QUESTIONS_PATH_AR,
-        path.join(
-          __dirname,
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2 - Arabic.txt"
-        ),
-        path.join(
-          process.cwd(),
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2 - Arabic.txt"
-        ),
-        path.join(__dirname, "Mapping", "Question 2 - Arabic.txt"),
-        path.join(process.cwd(), "Mapping", "Question 2 - Arabic.txt"),
-        path.join(__dirname, "Question 2 - Arabic.txt"),
-        path.join(process.cwd(), "Question 2 - Arabic.txt"),
-      ].filter(Boolean);
-      console.log(
-        `[Seed] Checking ${qCandidatesAr.length} possible paths for Arabic major questions file...`
-      );
-      let fileFound = false;
-      for (const p of qCandidatesAr) {
+      const arabicSeed = loadMajorQuestionDocs("ar");
+      if (arabicSeed?.docs?.length) {
+        await MajorQuestion.deleteMany({ language: "ar" });
         try {
-          console.log(`[Seed] Checking path: ${p}`);
-          if (p && fs.existsSync(p)) {
-            console.log(`[Seed] ✓ Found Arabic major questions file at: ${p}`);
-            fileFound = true;
-            const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
-            const parsed = JSON.parse(raw);
-            if (Array.isArray(parsed) && parsed.length) {
-              const docs = parsed.map((q, idx) => ({
-                id: parseInt(q.id ?? idx + 1),
-                category: String(q.category || "General"),
-                topic: q.topic ? String(q.topic) : null,
-                question: String(q.question || q.text || ""),
-                language: "ar",
-              }));
-              if (docs.length) {
-                // Delete all existing Arabic major questions first to avoid conflicts
-                const deletedCount = await MajorQuestion.deleteMany({
-                  language: "ar",
-                });
-                console.log(
-                  `[Seed] Deleted ${deletedCount.deletedCount} existing Arabic major questions to avoid conflicts`
-                );
-
-                // Wait a moment for deletion to complete
-                await new Promise((resolve) => setTimeout(resolve, 200));
-
-                // Now insert all Arabic major questions fresh
-                try {
-                  await MajorQuestion.insertMany(docs, { ordered: false });
-                  console.log(
-                    `[Seed] Successfully inserted ${docs.length} Arabic major questions from ${p}`
-                  );
-                  break;
-                } catch (insertError) {
-                  // If duplicate key error, try inserting one by one
-                  if (
-                    insertError.code === 11000 ||
-                    insertError.name === "MongoServerError"
-                  ) {
-                    console.log(
-                      `[Seed] Duplicate key error, trying to insert Arabic major questions one by one...`
-                    );
-                    let inserted = 0;
-                    for (const doc of docs) {
-                      try {
-                        const result = await MajorQuestion.replaceOne(
-                          { id: doc.id, language: "ar" },
-                          doc,
-                          { upsert: true }
-                        );
-                        if (
-                          result.upsertedCount > 0 ||
-                          result.modifiedCount > 0
-                        ) {
-                          inserted++;
-                        }
-                      } catch (e) {
-                        // If still duplicate key, check if it's the old index or document already exists
-                        if (e.code === 11000) {
-                          const existing = await MajorQuestion.findOne({
-                            id: doc.id,
-                            language: "ar",
-                          });
-                          if (existing) {
-                            // Already exists, update it
-                            await MajorQuestion.updateOne(
-                              { id: doc.id, language: "ar" },
-                              { $set: doc }
-                            );
-                            inserted++;
-                            console.log(
-                              `[Seed] Updated existing Arabic major question ${doc.id}`
-                            );
-                          } else {
-                            // Old index conflict - try using raw collection insert
-                            try {
-                              await MajorQuestion.collection.insertOne(doc);
-                              inserted++;
-                            } catch (e2) {
-                              if (e2.code === 11000) {
-                                console.log(
-                                  `[Seed] Arabic major question ${doc.id} already exists (duplicate key), skipping`
-                                );
-                              } else {
-                                console.error(
-                                  `[Seed] Error inserting Arabic major question ${doc.id}:`,
-                                  e2.message
-                                );
-                              }
-                            }
-                          }
-                        } else {
-                          console.error(
-                            `[Seed] Error inserting Arabic major question ${doc.id}:`,
-                            e.message
-                          );
-                        }
-                      }
-                    }
-                    console.log(
-                      `[Seed] Upserted ${inserted} Arabic major questions`
-                    );
-                    if (inserted > 0) break;
-                  } else {
-                    throw insertError;
-                  }
-                }
-              }
-            } else {
-              console.warn(
-                `[Seed] File exists but parsed data is not an array or is empty`
-              );
-            }
-          } else {
-            console.log(`[Seed] ✗ File not found at: ${p}`);
-          }
-        } catch (e) {
-          console.warn(
-            `[Seed] Error checking/loading Arabic major questions from ${p}:`,
-            e.message
+          await MajorQuestion.insertMany(arabicSeed.docs, { ordered: false });
+          console.log(
+            `[Seed] Seeded ${arabicSeed.docs.length} Arabic major questions from ${arabicSeed.source}`
           );
+        } catch (insertError) {
+          if (
+            insertError.code === 11000 ||
+            insertError.name === "MongoServerError"
+          ) {
+            console.log(
+              "[Seed] Duplicate key error while inserting Arabic questions, upserting individually..."
+            );
+            let inserted = 0;
+            for (const doc of arabicSeed.docs) {
+              try {
+                await MajorQuestion.replaceOne(
+                  { id: doc.id, language: "ar" },
+                  doc,
+                  { upsert: true }
+                );
+                inserted++;
+              } catch (e) {
+                console.warn(
+                  `[Seed] Error upserting Arabic major question ${doc.id}:`,
+                  e.message
+                );
+              }
+            }
+            console.log(`[Seed] Upserted ${inserted} Arabic major questions`);
+          } else {
+            throw insertError;
+          }
         }
-      }
-      if (!fileFound) {
-        console.error(
-          `[Seed] CRITICAL: Arabic major questions file not found in any of the checked paths!`
+      } else {
+        console.warn(
+          "[Seed] No Arabic major question source found. Set MAJOR_QUESTIONS_PATH_AR to enable Arabic seeding."
         );
-        console.error(
-          `[Seed] Checked ${qCandidatesAr.length} paths:`,
-          qCandidatesAr
-        );
-        console.error(`[Seed] Current working directory: ${process.cwd()}`);
-        console.error(`[Seed] __dirname: ${__dirname}`);
       }
     }
   } catch (e) {
@@ -1511,142 +1583,33 @@ async function ensureMajorSeedMongo() {
     const majCount = await Major.countDocuments({});
     const mapCount = await MajorMapping.countDocuments({});
     if (majCount === 0 || mapCount === 0) {
-      const mappingRoots = [
-        process.env.MAPPING_ROOT_PATH,
-        path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping"),
-        path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping"),
-        path.join(__dirname, "Mapping"),
-        path.join(process.cwd(), "Mapping"),
-      ].filter(Boolean);
-      let rootDir = null;
-      for (const r of mappingRoots) {
-        if (r && fs.existsSync(r)) {
-          rootDir = r;
-          break;
-        }
-      }
-      if (rootDir) {
-        const entries = fs.readdirSync(rootDir, { withFileTypes: true });
-        const majorsSet = new Set();
-        const mappings = [];
-        const descriptions = {};
-        const addMap = (optionValue, majorName, score, category) => {
-          if (!optionValue || !majorName) return;
-          mappings.push({
-            category: category || "derived",
-            option_value: String(optionValue),
-            major_name: String(majorName),
-            score: parseInt(score || 1) || 1,
-          });
-        };
-        const weight = {
-          ria_sec: 2,
-          academic_strengths: 3,
-          core_values: 2,
-          personality_traits: 1,
-        };
-        for (const entry of entries) {
-          if (!entry.isDirectory()) continue;
-          const dir = path.join(rootDir, entry.name);
-          const algo =
-            fs.readdirSync(dir).find((f) => /Algorithm .*\.txt$/i.test(f)) ||
-            null;
-          const descFile =
-            fs.readdirSync(dir).find((f) => /Description\.txt$/i.test(f)) ||
-            null;
-          if (!algo) continue;
-          try {
-            const content = fs.readFileSync(path.join(dir, algo), "utf8");
-            const list = JSON.parse(content);
-            if (!Array.isArray(list)) continue;
-            list.forEach((item) => {
-              const majorName = item.parent_major;
-              if (!majorName) return;
-              majorsSet.add(majorName);
-              (item.ria_sec || []).forEach((v) =>
-                addMap(v, majorName, weight.ria_sec, "RIASEC")
-              );
-              (item.academic_strengths || []).forEach((v) =>
-                addMap(
-                  v,
-                  majorName,
-                  weight.academic_strengths,
-                  "Academic Strength"
-                )
-              );
-              (item.core_values || []).forEach((v) =>
-                addMap(v, majorName, weight.core_values, "Core Value")
-              );
-              (item.personality_traits || []).forEach((v) =>
-                addMap(v, majorName, weight.personality_traits, "Personality")
-              );
-            });
-          } catch (e) {}
-
-          // Parse major descriptions if available
-          try {
-            if (descFile) {
-              const raw = fs.readFileSync(path.join(dir, descFile), "utf8");
-              const lines = raw.split(/\r?\n/);
-              let currentMajor = null;
-              let buffer = [];
-              const flush = () => {
-                if (currentMajor) {
-                  const text = buffer.join("\n").trim();
-                  if (text) descriptions[currentMajor] = text;
-                }
-                currentMajor = null;
-                buffer = [];
-              };
-              for (const line of lines) {
-                const mHdr = line.match(/^\s*-\s*([^–\-]+?)\s*[–\-]\s*(.*)$/);
-                if (mHdr) {
-                  flush();
-                  currentMajor = String(mHdr[1] || "").trim();
-                  const tagline = String(mHdr[2] || "").trim();
-                  if (tagline) buffer.push(tagline);
-                  continue;
-                }
-                buffer.push(line);
-              }
-              flush();
-            }
-          } catch (e) {}
-        }
-        if (majCount === 0 && majorsSet.size) {
+      const dataset = loadMajorMappingDataset();
+      if (dataset?.records?.length) {
+        const built = buildMappingsFromRecords(dataset.records);
+        if (majCount === 0 && built.majors.length) {
           await Major.insertMany(
-            Array.from(majorsSet).map((name) => ({
+            built.majors.map((name) => ({
               name,
-              description: descriptions[name] || "",
+              description: "",
               avg_salary: "",
               job_outlook: "",
               work_environment: "",
             }))
           );
-          console.log(`Seeded ${majorsSet.size} majors from mapping folder`);
-        }
-        if (mapCount === 0 && mappings.length) {
-          await MajorMapping.insertMany(mappings);
           console.log(
-            `Seeded ${mappings.length} major mappings from mapping folder`
+            `[Seed] Inserted ${built.majors.length} majors from ${dataset.source}`
           );
         }
-
-        // Backfill missing descriptions for already-seeded majors
-        try {
-          const existingMajors = await Major.find({}).lean();
-          for (const m of existingMajors) {
-            if (
-              (!m.description || !String(m.description).trim()) &&
-              descriptions[m.name]
-            ) {
-              await Major.updateOne(
-                { _id: m._id },
-                { $set: { description: descriptions[m.name] } }
-              );
-            }
-          }
-        } catch (e) {}
+        if (mapCount === 0 && built.mappings.length) {
+          await MajorMapping.insertMany(built.mappings);
+          console.log(
+            `[Seed] Inserted ${built.mappings.length} major mappings from ${dataset.source}`
+          );
+        }
+      } else {
+        console.warn(
+          "[Seed] Mapping dataset not found. Set MAPPING_DATA_PATH or place ALL - FInal.txt in project root."
+        );
       }
     }
   } catch (e) {
@@ -2963,81 +2926,27 @@ app.post("/api/admin/mapping/bulk", authMiddleware, async (req, res) => {
 // Force reload mappings from files
 app.post("/api/admin/mapping/reload", authMiddleware, async (req, res) => {
   try {
-    const mappingRoots = [
-      process.env.MAPPING_ROOT_PATH,
-      path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping"),
-      path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping"),
-      path.join(__dirname, "Mapping"),
-      path.join(process.cwd(), "Mapping"),
-    ].filter(Boolean);
-    let rootDir = null;
-    for (const r of mappingRoots) {
-      if (r && fs.existsSync(r)) {
-        rootDir = r;
-        break;
-      }
-    }
-    if (!rootDir) {
-      return res.status(404).json({ error: "Mapping directory not found" });
-    }
-
-    const entries = fs.readdirSync(rootDir, { withFileTypes: true });
-    const mappings = [];
-    const addMap = (optionValue, majorName, score, category) => {
-      if (!optionValue || !majorName) return;
-      mappings.push({
-        category: category || "derived",
-        option_value: String(optionValue),
-        major_name: String(majorName),
-        score: parseInt(score || 1) || 1,
+    const dataset = loadMajorMappingDataset();
+    if (!dataset?.records?.length) {
+      return res.status(404).json({
+        error: "Mapping dataset not found",
+        checked: [
+          process.env.MAPPING_DATA_PATH,
+          path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME),
+        ],
       });
-    };
-    const weight = {
-      ria_sec: 2,
-      academic_strengths: 3,
-      core_values: 2,
-      personality_traits: 1,
-    };
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      const dir = path.join(rootDir, entry.name);
-      const algo =
-        fs.readdirSync(dir).find((f) => /Algorithm .*\.txt$/i.test(f)) || null;
-      if (!algo) continue;
-      try {
-        const content = fs.readFileSync(path.join(dir, algo), "utf8");
-        const list = JSON.parse(content);
-        if (!Array.isArray(list)) continue;
-        list.forEach((item) => {
-          const majorName = item.parent_major;
-          if (!majorName) return;
-          (item.ria_sec || []).forEach((v) =>
-            addMap(v, majorName, weight.ria_sec, "RIASEC")
-          );
-          (item.academic_strengths || []).forEach((v) =>
-            addMap(v, majorName, weight.academic_strengths, "Academic Strength")
-          );
-          (item.core_values || []).forEach((v) =>
-            addMap(v, majorName, weight.core_values, "Core Value")
-          );
-          (item.personality_traits || []).forEach((v) =>
-            addMap(v, majorName, weight.personality_traits, "Personality")
-          );
-        });
-      } catch (e) {
-        console.warn(`Failed to parse ${algo}:`, e.message);
-      }
     }
+    const built = buildMappingsFromRecords(dataset.records);
 
-    // Clear and reload
     await MajorMapping.deleteMany({});
-    if (mappings.length) {
-      await MajorMapping.insertMany(mappings);
+    if (built.mappings.length) {
+      await MajorMapping.insertMany(built.mappings);
     }
     res.json({
       ok: true,
-      count: mappings.length,
-      message: "Mappings reloaded from files",
+      count: built.mappings.length,
+      source: dataset.source,
+      message: "Mappings reloaded from dataset",
     });
   } catch (e) {
     console.error("Mapping reload error:", e);
@@ -3048,28 +2957,17 @@ app.post("/api/admin/mapping/reload", authMiddleware, async (req, res) => {
 // Comprehensive reload endpoint for all major-related data from Mapping folder
 app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
   try {
-    const mappingRoots = [
-      process.env.MAPPING_ROOT_PATH,
-      path.join(__dirname, "Mapping-20250819T113244Z-1-001", "Mapping"),
-      path.join(process.cwd(), "Mapping-20250819T113244Z-1-001", "Mapping"),
-      path.join(__dirname, "Mapping"),
-      path.join(process.cwd(), "Mapping"),
-    ].filter(Boolean);
-
-    let rootDir = null;
-    for (const r of mappingRoots) {
-      if (r && fs.existsSync(r)) {
-        rootDir = r;
-        break;
-      }
-    }
-
-    if (!rootDir) {
+    const dataset = loadMajorMappingDataset();
+    if (!dataset?.records?.length) {
       return res.status(404).json({
-        error: "Mapping directory not found",
-        checked: mappingRoots,
+        error: "Mapping dataset not found",
+        checked: [
+          process.env.MAPPING_DATA_PATH,
+          path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME),
+        ],
       });
     }
+    const built = buildMappingsFromRecords(dataset.records);
 
     const results = {
       majors: { updated: 0, created: 0 },
@@ -3078,46 +2976,16 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
       descriptions: { updated: 0 },
     };
 
-    // 1. Reload Major Questions (English)
+    // Reload English questions
     try {
-      const qCandidatesEn = [
-        process.env.MAJOR_QUESTIONS_PATH,
-        path.join(rootDir, "Question 2.txt"),
-        path.join(
-          __dirname,
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2.txt"
-        ),
-        path.join(
-          process.cwd(),
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2.txt"
-        ),
-      ].filter(Boolean);
-
-      for (const p of qCandidatesEn) {
-        if (p && fs.existsSync(p)) {
-          const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length) {
-            const docs = parsed.map((q, idx) => ({
-              id: parseInt(q.id ?? idx + 1),
-              category: String(q.category || "General"),
-              topic: q.topic ? String(q.topic) : null,
-              question: String(q.question || q.text || ""),
-              language: "en",
-            }));
-            await MajorQuestion.deleteMany({ language: "en" });
-            await MajorQuestion.insertMany(docs);
-            results.questions.en = docs.length;
-            console.log(
-              `[Major Reload] Loaded ${docs.length} English major questions from ${p}`
-            );
-            break;
-          }
-        }
+      const englishSeed = loadMajorQuestionDocs("en");
+      if (englishSeed?.docs?.length) {
+        await MajorQuestion.deleteMany({ language: "en" });
+        await MajorQuestion.insertMany(englishSeed.docs);
+        results.questions.en = englishSeed.docs.length;
+        console.log(
+          `[Major Reload] Loaded ${englishSeed.docs.length} English major questions from ${englishSeed.source}`
+        );
       }
     } catch (e) {
       console.warn(
@@ -3126,230 +2994,89 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
       );
     }
 
-    // 2. Reload Major Questions (Arabic)
+    // Reload Arabic questions (optional)
     try {
-      const qCandidatesAr = [
-        process.env.MAJOR_QUESTIONS_PATH_AR,
-        path.join(rootDir, "Question 2 - Arabic.txt"),
-        path.join(
-          __dirname,
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2 - Arabic.txt"
-        ),
-        path.join(
-          process.cwd(),
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2 - Arabic.txt"
-        ),
-      ].filter(Boolean);
-
-      for (const p of qCandidatesAr) {
-        if (p && fs.existsSync(p)) {
-          const raw = fs.readFileSync(p, "utf8").replace(/^\uFEFF/, "");
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length) {
-            const docs = parsed.map((q, idx) => ({
-              id: parseInt(q.id ?? idx + 1),
-              category: String(q.category || "General"),
-              topic: q.topic ? String(q.topic) : null,
-              question: String(q.question || q.text || ""),
-              language: "ar",
-            }));
-            await MajorQuestion.deleteMany({ language: "ar" });
-            await MajorQuestion.insertMany(docs, { ordered: false }).catch(
-              async (insertError) => {
-                // If duplicate key error, try inserting one by one
-                if (insertError.code === 11000) {
-                  let inserted = 0;
-                  for (const doc of docs) {
-                    try {
-                      await MajorQuestion.replaceOne(
-                        { id: doc.id, language: "ar" },
-                        doc,
-                        { upsert: true }
-                      );
-                      inserted++;
-                    } catch (e) {
-                      console.warn(
-                        `[Major Reload] Error upserting Arabic question ${doc.id}:`,
-                        e.message
-                      );
-                    }
-                  }
-                  results.questions.ar = inserted;
-                } else {
-                  throw insertError;
-                }
+      const arabicSeed = loadMajorQuestionDocs("ar");
+      if (arabicSeed?.docs?.length) {
+        await MajorQuestion.deleteMany({ language: "ar" });
+        try {
+          await MajorQuestion.insertMany(arabicSeed.docs, { ordered: false });
+          results.questions.ar = arabicSeed.docs.length;
+          console.log(
+            `[Major Reload] Loaded ${arabicSeed.docs.length} Arabic major questions from ${arabicSeed.source}`
+          );
+        } catch (insertError) {
+          if (
+            insertError.code === 11000 ||
+            insertError.name === "MongoServerError"
+          ) {
+            let inserted = 0;
+            for (const doc of arabicSeed.docs) {
+              try {
+                await MajorQuestion.replaceOne(
+                  { id: doc.id, language: "ar" },
+                  doc,
+                  { upsert: true }
+                );
+                inserted++;
+              } catch (err) {
+                console.warn(
+                  `[Major Reload] Error upserting Arabic question ${doc.id}:`,
+                  err.message
+                );
               }
-            );
-            if (results.questions.ar === 0) {
-              results.questions.ar = docs.length;
             }
-            console.log(
-              `[Major Reload] Loaded ${results.questions.ar} Arabic major questions from ${p}`
-            );
-            break;
+            results.questions.ar = inserted;
+          } else {
+            throw insertError;
           }
         }
+      } else {
+        console.log(
+          "[Major Reload] Arabic question dataset not found; skipping Arabic reseed"
+        );
       }
     } catch (e) {
       console.warn(`[Major Reload] Error loading Arabic questions:`, e.message);
     }
 
-    // 3. Reload Majors, Descriptions, and Mappings
-    const entries = fs.readdirSync(rootDir, { withFileTypes: true });
-    const majorsSet = new Set();
-    const mappings = [];
-    const descriptions = {};
-
-    const addMap = (optionValue, majorName, score, category) => {
-      if (!optionValue || !majorName) return;
-      mappings.push({
-        category: category || "derived",
-        option_value: String(optionValue),
-        major_name: String(majorName),
-        score: parseInt(score || 1) || 1,
-      });
-    };
-
-    const weight = {
-      ria_sec: 2,
-      academic_strengths: 3,
-      core_values: 2,
-      personality_traits: 1,
-    };
-
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue;
-      const dir = path.join(rootDir, entry.name);
-      const algo =
-        fs.readdirSync(dir).find((f) => /Algorithm .*\.txt$/i.test(f)) || null;
-      const descFile =
-        fs.readdirSync(dir).find((f) => /Description\.txt$/i.test(f)) || null;
-
-      if (!algo) continue;
-
-      // Parse algorithm file for majors and mappings
-      try {
-        const content = fs.readFileSync(path.join(dir, algo), "utf8");
-        const list = JSON.parse(content);
-        if (!Array.isArray(list)) continue;
-        list.forEach((item) => {
-          const majorName = item.parent_major;
-          if (!majorName) return;
-          majorsSet.add(majorName);
-          (item.ria_sec || []).forEach((v) =>
-            addMap(v, majorName, weight.ria_sec, "RIASEC")
-          );
-          (item.academic_strengths || []).forEach((v) =>
-            addMap(v, majorName, weight.academic_strengths, "Academic Strength")
-          );
-          (item.core_values || []).forEach((v) =>
-            addMap(v, majorName, weight.core_values, "Core Value")
-          );
-          (item.personality_traits || []).forEach((v) =>
-            addMap(v, majorName, weight.personality_traits, "Personality")
-          );
-        });
-      } catch (e) {
-        console.warn(`[Major Reload] Failed to parse ${algo}:`, e.message);
-      }
-
-      // Parse major descriptions if available
-      try {
-        if (descFile) {
-          const raw = fs.readFileSync(path.join(dir, descFile), "utf8");
-          const lines = raw.split(/\r?\n/);
-          let currentMajor = null;
-          let buffer = [];
-          const flush = () => {
-            if (currentMajor) {
-              const text = buffer.join("\n").trim();
-              if (text) descriptions[currentMajor] = text;
-            }
-            currentMajor = null;
-            buffer = [];
-          };
-          for (const line of lines) {
-            const mHdr = line.match(/^\s*-\s*([^–\-]+?)\s*[–\-]\s*(.*)$/);
-            if (mHdr) {
-              flush();
-              currentMajor = String(mHdr[1] || "").trim();
-              const tagline = String(mHdr[2] || "").trim();
-              if (tagline) buffer.push(tagline);
-              continue;
-            }
-            buffer.push(line);
-          }
-          flush();
-        }
-      } catch (e) {
-        console.warn(`[Major Reload] Failed to parse ${descFile}:`, e.message);
-      }
-    }
-
-    // Update/Create majors
-    if (majorsSet.size > 0) {
-      for (const majorName of majorsSet) {
-        const existing = await Major.findOne({ name: majorName });
-        if (existing) {
-          // Update existing major with description if available
-          if (descriptions[majorName]) {
-            await Major.updateOne(
-              { _id: existing._id },
-              { $set: { description: descriptions[majorName] } }
-            );
-            results.descriptions.updated++;
-          }
-          results.majors.updated++;
-        } else {
-          // Create new major
-          await Major.create({
-            name: majorName,
-            description: descriptions[majorName] || "",
-            avg_salary: "",
-            job_outlook: "",
-            work_environment: "",
-          });
+    // Upsert majors
+    if (built.majors.length) {
+      for (const majorName of built.majors) {
+        const writeResult = await Major.updateOne(
+          { name: majorName },
+          {
+            $setOnInsert: {
+              description: "",
+              avg_salary: "",
+              job_outlook: "",
+              work_environment: "",
+            },
+          },
+          { upsert: true }
+        );
+        if (writeResult.upsertedCount) {
           results.majors.created++;
+        } else {
+          results.majors.updated++;
         }
       }
     }
 
     // Reload mappings
     await MajorMapping.deleteMany({});
-    if (mappings.length) {
-      await MajorMapping.insertMany(mappings);
-      results.mappings.count = mappings.length;
-    }
-
-    // Backfill missing descriptions for existing majors
-    try {
-      const existingMajors = await Major.find({}).lean();
-      for (const m of existingMajors) {
-        if (
-          (!m.description || !String(m.description).trim()) &&
-          descriptions[m.name]
-        ) {
-          await Major.updateOne(
-            { _id: m._id },
-            { $set: { description: descriptions[m.name] } }
-          );
-          results.descriptions.updated++;
-        }
-      }
-    } catch (e) {
-      console.warn(`[Major Reload] Error backfilling descriptions:`, e.message);
+    if (built.mappings.length) {
+      await MajorMapping.insertMany(built.mappings);
+      results.mappings.count = built.mappings.length;
     }
 
     res.json({
       ok: true,
-      message: "All major data reloaded from Mapping folder",
+      message: "All major data reloaded from dataset",
+      source: dataset.source,
       results: {
         majors: {
-          total: majorsSet.size,
+          total: built.majors.length,
           updated: results.majors.updated,
           created: results.majors.created,
         },
@@ -3364,7 +3091,6 @@ app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
           updated: results.descriptions.updated,
         },
       },
-      rootDir: rootDir,
     });
   } catch (e) {
     console.error("[Major Reload] Error:", e);
@@ -3538,64 +3264,17 @@ app.get("/api/major/questions", authMiddleware, async (req, res) => {
       }
     }
 
-    // Last resort: read from local file candidates and persist (only for English)
+    // Last resort: reload from default dataset (English only)
     if (!Array.isArray(list) || (list.length < 10 && language === "en")) {
-      const candidates = [
-        process.env.MAJOR_QUESTIONS_PATH,
-        path.join(
-          __dirname,
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2.txt"
-        ),
-        path.join(
-          process.cwd(),
-          "Mapping-20250819T113244Z-1-001",
-          "Mapping",
-          "Question 2.txt"
-        ),
-        path.join(__dirname, "Mapping", "Question 2.txt"),
-        path.join(process.cwd(), "Mapping", "Question 2.txt"),
-      ].filter(Boolean);
-
-      for (const p of candidates) {
-        try {
-          if (p && fs.existsSync(p)) {
-            const raw = fs
-              .readFileSync(p, "utf8")
-              .replace(/^[\uFEFF\ufeff]/, "");
-            let parsed = null;
-            try {
-              parsed = JSON.parse(raw);
-            } catch (e1) {
-              try {
-                const fixed = raw
-                  .replace(/}\s*\n+\s*\{/g, "},{")
-                  .replace(/,\s*([\]}])/g, "$1");
-                parsed = JSON.parse(fixed);
-              } catch (e2) {
-                parsed = null;
-              }
-            }
-            if (Array.isArray(parsed) && parsed.length) {
-              const docs = parsed.map((q, idx) => ({
-                id: parseInt(q.id ?? idx + 1),
-                category: String(q.category || "General"),
-                topic: q.topic ? String(q.topic) : null,
-                question: String(q.question || q.text || ""),
-                language: "en",
-              }));
-              await MajorQuestion.deleteMany({ language: "en" });
-              await MajorQuestion.insertMany(docs);
-              list = await MajorQuestion.find({ language: language })
-                .sort({ id: 1 })
-                .lean();
-              break;
-            }
-          }
-        } catch (e) {}
-      } // ✅ closes for loop
-    } // ✅ closes "if (list < 10)" for file seeding
+      const englishSeed = loadMajorQuestionDocs("en");
+      if (englishSeed?.docs?.length) {
+        await MajorQuestion.deleteMany({ language: "en" });
+        await MajorQuestion.insertMany(englishSeed.docs);
+        list = await MajorQuestion.find({ language: language })
+          .sort({ id: 1 })
+          .lean();
+      }
+    }
 
     // If still empty, seed minimal fallback (only for English)
     if (!Array.isArray(list) || (list.length === 0 && language === "en")) {
@@ -4106,6 +3785,10 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
         ).toLowerCase()}`;
         topicCounts.set(key, (topicCounts.get(key) || 0) + 1);
       });
+      const MICRO_TRAIT_FACTOR = parseFloat(
+        process.env.MICRO_TRAIT_FACTOR || "1"
+      );
+
       Object.entries(answers).forEach(([qid, choice]) => {
         const q = byId.get(String(qid));
         if (!q) return;
@@ -4143,6 +3826,26 @@ app.post("/api/major/calculate", authMiddleware, async (req, res) => {
             // Treat select Social questions as Teaching academic strength without changing the question bank
             if (teachingProxyIds.has(Number(qid))) {
               addScoreForValue("Teaching", "Academic Strength", normalizedW);
+            }
+
+            // Micro-trait signals (optional) boost specific behaviors
+            if (Array.isArray(q.micro_traits) && q.micro_traits.length) {
+              console.log(
+                `[MAJOR CALC] Q${qid}: micro traits -> [${q.micro_traits
+                  .map((t) => `"${String(t)}"`)
+                  .join(", ")}] (factor: ${(
+                  normalizedW * MICRO_TRAIT_FACTOR
+                ).toFixed(3)})`
+              );
+              q.micro_traits.forEach((trait) => {
+                const trimmedTrait = String(trait || "").trim();
+                if (!trimmedTrait) return;
+                addScoreForValue(
+                  trimmedTrait,
+                  "Micro Trait",
+                  normalizedW * MICRO_TRAIT_FACTOR
+                );
+              });
             }
           }
         }
