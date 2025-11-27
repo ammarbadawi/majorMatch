@@ -1,0 +1,7914 @@
+{
+  "majors": [
+    {
+      "name": "Architecture & Built Arts",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Design & Applied Arts",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Fine & Studio Arts",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Performing Arts",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Music",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Cinematic Arts",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Aircraft Maintenance",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Accounting & Finance",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Business Administration & Mgmt.",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Human Resource Mgmt.",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Logistics & Supply Chain",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Marketing & Advertising",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Economics",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Hospitality, Tourism & Event Management",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Computer Science & Data",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Information Technology",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Document & Library Mgmt.",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Primary Education Teaching",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Education Administration",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Teaching English / Languages",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Art & Music Education",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Energy Technologies",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Civil Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Mechanical Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Electrical Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Computer & Communications Eng.",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Mechatronics Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Chemical Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Petroleum Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Industrial Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Agricultural Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Biomedical Engineering",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Medicine",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Dentistry",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Pharmacy",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Nursing & Midwifery",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Public Health & Promotion",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Nutrition & Dietetics",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Allied Health Lab Sciences",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Rehabilitation Sciences",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Optometry & Vision Science",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Biochemistry & Bioinformatics",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Law",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Public Administration",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Biological Sciences",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Chemical Sciences",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Physical Sciences",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Mathematics & Statistics",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Environmental Science",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Food Science",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Forensic Science",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Agriculture",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Veterinary Sciences",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Languages & Translation",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "History & Cultural Studies",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Philosophy & Religion",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Political Science & Intl. Affairs",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Psychology",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Sociology & Social Work",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Geography & GIS",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Arts & Archaeology",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Physical Education & Sports Sciences",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Journalism",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Cinematic & Media Production",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Public Relations & Advertising",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Communication Studies",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    },
+    {
+      "name": "Animation & Multimedia",
+      "description": "",
+      "avg_salary": "",
+      "job_outlook": "",
+      "work_environment": ""
+    }
+  ],
+  "mapping": [
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Architecture & Built Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Architecture & Built Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Architecture & Built Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Architecture & Built Arts",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Architecture & Built Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Architecture & Built Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Architecture & Built Arts",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Architecture & Built Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Design & Applied Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Design & Applied Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Design & Applied Arts",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Design & Applied Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Design & Applied Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Design & Applied Arts",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Design & Applied Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Fine & Studio Arts",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Fine & Studio Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Fine & Studio Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Fine & Studio Arts",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Fine & Studio Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Fine & Studio Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Fine & Studio Arts",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Fine & Studio Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Fine & Studio Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Fine & Studio Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Fine & Studio Arts",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Fine & Studio Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Fine & Studio Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Fine & Studio Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Performing Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Performing Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Performing Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Performing Arts",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Performing Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Performing Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Performing Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Performing Arts",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Performing Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Music",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Music",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Foreign Languages",
+      "major_name": "Music",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Music",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Music",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Music",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Music",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Music",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Cinematic Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Cinematic Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Cinematic Arts",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Cinematic Arts",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Cinematic Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Cinematic Arts",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Cinematic Arts",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Cinematic Arts",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Aircraft Maintenance",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Aircraft Maintenance",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Aircraft Maintenance",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Aircraft Maintenance",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Aircraft Maintenance",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Aircraft Maintenance",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Aircraft Maintenance",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Aircraft Maintenance",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Accounting & Finance",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Accounting & Finance",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Accounting & Finance",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Accounting & Finance",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Accounting & Finance",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Accounting & Finance",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Accounting & Finance",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Business Administration & Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Human Resource Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Human Resource Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Human Resource Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Human Resource Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Human Resource Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Human Resource Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Human Resource Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Logistics & Supply Chain",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Logistics & Supply Chain",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Logistics & Supply Chain",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Logistics & Supply Chain",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Logistics & Supply Chain",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Logistics & Supply Chain",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Logistics & Supply Chain",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Marketing & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Marketing & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Marketing & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Marketing & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Marketing & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Marketing & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Marketing & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Marketing & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Marketing & Advertising",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Economics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Economics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Economics",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Economics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Economics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Economics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Economics",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Economics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Foreign Languages",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Hospitality, Tourism & Event Management",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Computer Science & Data",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Computer Science & Data",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Computer Science & Data",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Computer Science & Data",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Computer Science & Data",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Computer Science & Data",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Computer Science & Data",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Computer Science & Data",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Computer Science & Data",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Information Technology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Information Technology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Information Technology",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Information Technology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Information Technology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Information Technology",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Information Technology",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Document & Library Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Document & Library Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Document & Library Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Foreign Languages",
+      "major_name": "Document & Library Mgmt.",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Document & Library Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Document & Library Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Document & Library Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Document & Library Mgmt.",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Knowledge",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Document & Library Mgmt.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Primary Education Teaching",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Primary Education Teaching",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Primary Education Teaching",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Primary Education Teaching",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Primary Education Teaching",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Primary Education Teaching",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Primary Education Teaching",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Primary Education Teaching",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Education Administration",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Education Administration",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Education Administration",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Education Administration",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Education Administration",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Education Administration",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Education Administration",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Education Administration",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Foreign Languages",
+      "major_name": "Teaching English / Languages",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Teaching English / Languages",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Teaching English / Languages",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Teaching English / Languages",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Teaching English / Languages",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Teaching English / Languages",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Teaching English / Languages",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Teaching English / Languages",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Knowledge",
+      "major_name": "Teaching English / Languages",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Art & Music Education",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Art & Music Education",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Art & Music Education",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Art & Music Education",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Art & Music Education",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Art & Music Education",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Art & Music Education",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Art & Music Education",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Energy Technologies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Energy Technologies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Energy Technologies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Energy Technologies",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Energy Technologies",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Energy Technologies",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Energy Technologies",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Energy Technologies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Civil Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Civil Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Civil Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Civil Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Civil Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Civil Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Mechanical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Mechanical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Mechanical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Mechanical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Mechanical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Mechanical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Mechanical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Mechanical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Mechanical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Mechanical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Mechanical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Mechanical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Electrical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Electrical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Electrical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Electrical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Electrical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Electrical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Electrical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Electrical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Electrical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Electrical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Electrical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Electrical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Electrical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Computer & Communications Eng.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Computer & Communications Eng.",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Computer & Communications Eng.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Computer & Communications Eng.",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Computer & Communications Eng.",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Computer & Communications Eng.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Computer & Communications Eng.",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Computer & Communications Eng.",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Computer & Communications Eng.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Computer & Communications Eng.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Computer & Communications Eng.",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Computer & Communications Eng.",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Computer & Communications Eng.",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Computer & Communications Eng.",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Mechatronics Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Mechatronics Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Mechatronics Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Mechatronics Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Mechatronics Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Mechatronics Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Mechatronics Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Mechatronics Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Mechatronics Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Mechatronics Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Mechatronics Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Mechatronics Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Chemical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Chemical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Chemical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Chemical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Chemical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Chemical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Chemical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Chemical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Chemical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Chemical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Chemical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Chemical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Chemical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Petroleum Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Petroleum Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Petroleum Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Petroleum Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Petroleum Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Petroleum Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Petroleum Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Petroleum Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Petroleum Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Petroleum Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Petroleum Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Petroleum Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Industrial Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Industrial Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Industrial Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Industrial Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Industrial Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Industrial Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Industrial Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Industrial Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Industrial Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Industrial Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Industrial Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Industrial Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Industrial Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Agricultural Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Agricultural Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Agricultural Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Agricultural Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Agricultural Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Agricultural Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Agricultural Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Agricultural Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Agricultural Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Agricultural Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Agricultural Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Agricultural Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Agricultural Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Biomedical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Biomedical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Biomedical Engineering",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Biomedical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Biomedical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Biomedical Engineering",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Biomedical Engineering",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Medicine",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Medicine",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Medicine",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Medicine",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Medicine",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Medicine",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Medicine",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Medicine",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Dentistry",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Dentistry",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Dentistry",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Financial Reward",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Dentistry",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Dentistry",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Dentistry",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Dentistry",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Pharmacy",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Pharmacy",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Pharmacy",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Pharmacy",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Pharmacy",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Pharmacy",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Pharmacy",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Pharmacy",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Pharmacy",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Nursing & Midwifery",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Nursing & Midwifery",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Nursing & Midwifery",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Nursing & Midwifery",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Nursing & Midwifery",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Nursing & Midwifery",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Nursing & Midwifery",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Nursing & Midwifery",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Public Health & Promotion",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Public Health & Promotion",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Public Health & Promotion",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Public Health & Promotion",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Public Health & Promotion",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Public Health & Promotion",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Public Health & Promotion",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Public Health & Promotion",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Nutrition & Dietetics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Nutrition & Dietetics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Nutrition & Dietetics",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Nutrition & Dietetics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Nutrition & Dietetics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Nutrition & Dietetics",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Nutrition & Dietetics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Allied Health Lab Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Rehabilitation Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Rehabilitation Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Rehabilitation Sciences",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Rehabilitation Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Rehabilitation Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Rehabilitation Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Rehabilitation Sciences",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Rehabilitation Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Optometry & Vision Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Optometry & Vision Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Optometry & Vision Science",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Optometry & Vision Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Optometry & Vision Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Optometry & Vision Science",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Optometry & Vision Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Biochemistry & Bioinformatics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Law",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Law",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Law",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Law",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Law",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Law",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Law",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Law",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Law",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Public Administration",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Public Administration",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Public Administration",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Public Administration",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Public Administration",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Public Administration",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Public Administration",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Public Administration",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Public Administration",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Biological Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Biological Sciences",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Biological Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Biological Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Biological Sciences",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Biological Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Biological Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Biological Sciences",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Biological Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Biological Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Biological Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Biological Sciences",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Biological Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Biological Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Chemical Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Chemical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Chemical Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Chemical Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Chemical Sciences",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Chemical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Chemical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Chemical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Chemical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Chemical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Chemical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Chemical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Chemical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Chemical Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Physical Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Physical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Physics",
+      "major_name": "Physical Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Physical Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Physical Sciences",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Physical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Physical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Physical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Physical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Physical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Physical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Physical Sciences",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Physical Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Physical Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Mathematics & Statistics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Mathematics & Statistics",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Mathematics & Statistics",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Mathematics & Statistics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Mathematics & Statistics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Mathematics & Statistics",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Mathematics & Statistics",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Logic",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Mathematics & Statistics",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Environmental Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Environmental Science",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Environmental Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Environmental Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Environmental Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Environmental Science",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Environmental Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Environmental Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Environmental Science",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Environmental Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Environmental Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Environmental Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Environmental Science",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Environmental Science",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Environmental Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Food Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Food Science",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Food Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Food Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Food Science",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Food Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Food Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Food Science",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Food Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Food Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Food Science",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Food Science",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Food Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Forensic Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Forensic Science",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Forensic Science",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Forensic Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Forensic Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Forensic Science",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Forensic Science",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Forensic Science",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Agriculture",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Agriculture",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Agriculture",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Efficiency & Order",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Agriculture",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Agriculture",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Agriculture",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Agriculture",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Veterinary Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Chemistry",
+      "major_name": "Veterinary Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Veterinary Sciences",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Stability",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Veterinary Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Veterinary Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Veterinary Sciences",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Veterinary Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Foreign Languages",
+      "major_name": "Languages & Translation",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Languages & Translation",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Languages & Translation",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Languages & Translation",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Languages & Translation",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Languages & Translation",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Languages & Translation",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Languages & Translation",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "History & Cultural Studies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "History & Cultural Studies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "History & Cultural Studies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "History & Cultural Studies",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "History & Cultural Studies",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "History & Cultural Studies",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "History & Cultural Studies",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "History & Cultural Studies",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Insight & Wisdom",
+      "major_name": "History & Cultural Studies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Philosophy & Religion",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Philosophy & Religion",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Philosophy & Religion",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Philosophy & Religion",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Philosophy & Religion",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Philosophy & Religion",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Philosophy & Religion",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Philosophy & Religion",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Insight & Wisdom",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Philosophy & Religion",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Political Science & Intl. Affairs",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Psychology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Psychology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Psychology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Psychology",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Psychology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Psychology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Psychology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Psychology",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Insight & Wisdom",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Psychology",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Sociology & Social Work",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Sociology & Social Work",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Sociology & Social Work",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Sociology & Social Work",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Sociology & Social Work",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Sociology & Social Work",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Sociology & Social Work",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Sociology & Social Work",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Service & Empathy",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Sociology & Social Work",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "C",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Geography & GIS",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Mathematics",
+      "major_name": "Geography & GIS",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Geography & GIS",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Geography & GIS",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Geography & GIS",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Geography & GIS",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Geography & GIS",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Geography & GIS",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Precision & Accuracy",
+      "major_name": "Geography & GIS",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Arts & Archaeology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Arts & Archaeology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Arts & Archaeology",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Arts & Archaeology",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Nature & Environment",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Arts & Archaeology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Arts & Archaeology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Arts & Archaeology",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Arts & Archaeology",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Sustainability & Preservation",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Curiosity & Discovery",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Research & Investigation",
+      "major_name": "Arts & Archaeology",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Biology",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "S",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "T",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Health & Prevention",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Responsibility & Discipline",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Physical Education & Sports Sciences",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Journalism",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Journalism",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Journalism",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Journalism",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Journalism",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Journalism",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Journalism",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Journalism",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "R",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Cinematic & Media Production",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Cinematic & Media Production",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Cinematic & Media Production",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Cinematic & Media Production",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Teamwork",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Cinematic & Media Production",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Cinematic & Media Production",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Cinematic & Media Production",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Cinematic & Media Production",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Cinematic & Media Production",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "E",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Public Relations & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Public Relations & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Business & Economics",
+      "major_name": "Public Relations & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Leadership & Public Speaking",
+      "major_name": "Public Relations & Advertising",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Prestige",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Leadership",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "E",
+      "major_name": "Public Relations & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Public Relations & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Public Relations & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Public Relations & Advertising",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Influence",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Public Relations & Advertising",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "S",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Social Sciences",
+      "major_name": "Communication Studies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Reading & Analysis",
+      "major_name": "Communication Studies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Communication Studies",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Research & Investigation",
+      "major_name": "Communication Studies",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Helping Others",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Impact",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Intellectual Challenge",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Communication Studies",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Communication Studies",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "J",
+      "major_name": "Communication Studies",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Communication & Connection",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Insight & Wisdom",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Justice / Truth / Ethics",
+      "major_name": "Communication Studies",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "A",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "RIASEC",
+      "option_value": "I",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Design & Creativity",
+      "major_name": "Animation & Multimedia",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Visual-Spatial Thinking",
+      "major_name": "Animation & Multimedia",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Programming & Logic",
+      "major_name": "Animation & Multimedia",
+      "score": 3
+    },
+    {
+      "category": "Academic Strength",
+      "option_value": "Writing & Communication",
+      "major_name": "Animation & Multimedia",
+      "score": 3
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Creativity",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Innovation",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Independence",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "Core Value",
+      "option_value": "Cultural Appreciation",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "Personality",
+      "option_value": "I",
+      "major_name": "Animation & Multimedia",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "N",
+      "major_name": "Animation & Multimedia",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "F",
+      "major_name": "Animation & Multimedia",
+      "score": 1
+    },
+    {
+      "category": "Personality",
+      "option_value": "P",
+      "major_name": "Animation & Multimedia",
+      "score": 1
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Self-Expression & Storytelling",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Cultural Expression",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    },
+    {
+      "category": "Micro Trait",
+      "option_value": "Problem Solving",
+      "major_name": "Animation & Multimedia",
+      "score": 2
+    }
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "category": "Academic Strength",
+      "topic": "Mathematics",
+      "question": "I enjoy solving equations and math problems in my free time.",
+      "micro_traits": [
+        "Problem Solving"
+      ]
+    },
+    {
+      "id": 2,
+      "category": "Academic Strength",
+      "topic": "Mathematics",
+      "question": "I am confident when working with formulas or complex calculations.",
+      "micro_traits": [
+        "Precision & Accuracy"
+      ]
+    },
+    {
+      "id": 3,
+      "category": "Academic Strength",
+      "topic": "Mathematics",
+      "question": "Mathematical concepts come naturally to me.",
+      "micro_traits": []
+    },
+    {
+      "id": 4,
+      "category": "Academic Strength",
+      "topic": "Physics",
+      "question": "I often wonder how physical forces like gravity or motion work.",
+      "micro_traits": [
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 5,
+      "category": "Academic Strength",
+      "topic": "Physics",
+      "question": "I enjoy solving real-world problems using physics concepts.",
+      "micro_traits": [
+        "Problem Solving",
+        "Logic"
+      ]
+    },
+    {
+      "id": 6,
+      "category": "Academic Strength",
+      "topic": "Physics",
+      "question": "I like understanding how machines or mechanisms function.",
+      "micro_traits": [
+        "Problem Solving",
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 7,
+      "category": "Academic Strength",
+      "topic": "Chemistry",
+      "question": "I’m interested in chemical reactions and what causes them.",
+      "micro_traits": [
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 8,
+      "category": "Academic Strength",
+      "topic": "Chemistry",
+      "question": "I enjoy conducting experiments and working in labs.",
+      "micro_traits": [
+        "Research & Investigation"
+      ]
+    },
+    {
+      "id": 9,
+      "category": "Academic Strength",
+      "topic": "Chemistry",
+      "question": "I can easily understand chemical equations and concepts."
+    },
+    {
+      "id": 10,
+      "category": "Academic Strength",
+      "topic": "Biology",
+      "question": "I enjoy learning how the human body or the environment works and how to keep them healthy over time.",
+      "micro_traits": [
+        "Health & Prevention",
+        "Sustainability & Preservation"
+      ]
+    },
+    {
+      "id": 11,
+      "category": "Academic Strength",
+      "topic": "Biology",
+      "question": "I remember details about anatomy, plants, or ecosystems."
+    },
+    {
+      "id": 12,
+      "category": "Academic Strength",
+      "topic": "Biology",
+      "question": "I find biology classes and scientific diagrams interesting.",
+      "micro_traits": [
+        "Knowledge",
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 13,
+      "category": "Academic Strength",
+      "topic": "Programming & Logic",
+      "question": "I enjoy solving logic puzzles or writing simple code.",
+      "micro_traits": [
+        "Logic",
+        "Problem Solving"
+      ]
+    },
+    {
+      "id": 14,
+      "category": "Academic Strength",
+      "topic": "Programming & Logic",
+      "question": "I can think through a problem step-by-step efficiently.",
+      "micro_traits": [
+        "Logic",
+        "Problem Solving"
+      ]
+    },
+    {
+      "id": 15,
+      "category": "Academic Strength",
+      "topic": "Programming & Logic",
+      "question": "I am curious about how software or applications are built.",
+      "micro_traits": [
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 16,
+      "category": "Academic Strength",
+      "topic": "Writing & Communication",
+      "question": "I express myself clearly through writing.",
+      "micro_traits": [
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 17,
+      "category": "Academic Strength",
+      "topic": "Writing & Communication",
+      "question": "I enjoy crafting stories, essays, or journal entries.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 18,
+      "category": "Academic Strength",
+      "topic": "Writing & Communication",
+      "question": "People understand my ideas when I speak or write them.",
+      "micro_traits": [
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 19,
+      "category": "Academic Strength",
+      "topic": "Reading & Analysis",
+      "question": "I enjoy analyzing texts and finding hidden meanings.",
+      "micro_traits": [
+        "Insight & Wisdom",
+        "Knowledge"
+      ]
+    },
+    {
+      "id": 20,
+      "category": "Academic Strength",
+      "topic": "Reading & Analysis",
+      "question": "I often read books, articles, or reports critically.",
+      "micro_traits": [
+        "Insight & Wisdom",
+        "Knowledge"
+      ]
+    },
+    {
+      "id": 21,
+      "category": "Academic Strength",
+      "topic": "Reading & Analysis",
+      "question": "Understanding complex written material is easy for me.",
+      "micro_traits": [
+        "Knowledge",
+        "Insight & Wisdom"
+      ]
+    },
+    {
+      "id": 22,
+      "category": "Academic Strength",
+      "topic": "Social Sciences",
+      "question": "I enjoy learning about society, politics, or human behavior.",
+      "micro_traits": [
+        "Justice / Truth / Ethics"
+      ]
+    },
+    {
+      "id": 23,
+      "category": "Academic Strength",
+      "topic": "Social Sciences",
+      "question": "I think deeply about social issues and historical events.",
+      "micro_traits": [
+        "Justice / Truth / Ethics",
+        "Insight & Wisdom"
+      ]
+    },
+    {
+      "id": 24,
+      "category": "Academic Strength",
+      "topic": "Social Sciences",
+      "question": "Subjects like psychology or sociology interest me."
+    },
+    {
+      "id": 25,
+      "category": "Academic Strength",
+      "topic": "Visual-Spatial Thinking",
+      "question": "I can easily imagine how objects look from different angles.",
+      "micro_traits": [
+        "Logic"
+      ]
+    },
+    {
+      "id": 26,
+      "category": "Academic Strength",
+      "topic": "Visual-Spatial Thinking",
+      "question": "I’m good at understanding maps, diagrams, or blueprints.",
+      "micro_traits": [
+        "Precision & Accuracy"
+      ]
+    },
+    {
+      "id": 27,
+      "category": "Academic Strength",
+      "topic": "Visual-Spatial Thinking",
+      "question": "I have a strong sense of how things fit together spatially."
+    },
+    {
+      "id": 28,
+      "category": "Academic Strength",
+      "topic": "Design & Creativity",
+      "question": "I enjoy drawing, designing, or making creative things, especially when they show nature or improve places around me.",
+      "micro_traits": [
+        "Self-Expression & Storytelling",
+        "Sustainability & Preservation"
+      ]
+    },
+    {
+      "id": 29,
+      "category": "Academic Strength",
+      "topic": "Design & Creativity",
+      "question": "I often come up with original ideas or artistic solutions.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 30,
+      "category": "Academic Strength",
+      "topic": "Design & Creativity",
+      "question": "I like experimenting with colors, shapes, and aesthetics.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 31,
+      "category": "Academic Strength",
+      "topic": "Business & Economics",
+      "question": "I’m interested in money, markets, and business strategy.",
+      "micro_traits": [
+        "Influence"
+      ]
+    },
+    {
+      "id": 32,
+      "category": "Academic Strength",
+      "topic": "Business & Economics",
+      "question": "I understand basic economic or financial principles.",
+      "micro_traits": [
+        "Knowledge",
+        "Logic"
+      ]
+    },
+    {
+      "id": 33,
+      "category": "Academic Strength",
+      "topic": "Business & Economics",
+      "question": "I enjoy thinking about profits, budgeting, or trade."
+    },
+    {
+      "id": 34,
+      "category": "Academic Strength",
+      "topic": "Foreign Languages",
+      "question": "I enjoy learning new languages and their cultures.",
+      "micro_traits": [
+        "Cultural Expression",
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 35,
+      "category": "Academic Strength",
+      "topic": "Foreign Languages",
+      "question": "I can memorize vocabulary or grammar rules easily.",
+      "micro_traits": [
+        "Knowledge"
+      ]
+    },
+    {
+      "id": 36,
+      "category": "Academic Strength",
+      "topic": "Foreign Languages",
+      "question": "Language learning feels natural and fun to me.",
+      "micro_traits": [
+        "Communication & Connection",
+        "Cultural Expression"
+      ]
+    },
+    {
+      "id": 37,
+      "category": "Academic Strength",
+      "topic": "Leadership & Public Speaking",
+      "question": "I enjoy leading group projects or making decisions.",
+      "micro_traits": [
+        "Influence",
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 38,
+      "category": "Academic Strength",
+      "topic": "Leadership & Public Speaking",
+      "question": "I feel comfortable speaking in front of an audience.",
+      "micro_traits": [
+        "Communication & Connection",
+        "Influence"
+      ]
+    },
+    {
+      "id": 39,
+      "category": "Academic Strength",
+      "topic": "Leadership & Public Speaking",
+      "question": "I like motivating or organizing people to achieve goals.",
+      "micro_traits": [
+        "Influence",
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 40,
+      "category": "Academic Strength",
+      "topic": "Research & Investigation",
+      "question": "I enjoy exploring topics deeply and asking questions.",
+      "micro_traits": [
+        "Research & Investigation",
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 41,
+      "category": "Academic Strength",
+      "topic": "Research & Investigation",
+      "question": "I’m good at gathering and interpreting information.",
+      "micro_traits": [
+        "Research & Investigation",
+        "Insight & Wisdom"
+      ]
+    },
+    {
+      "id": 42,
+      "category": "Academic Strength",
+      "topic": "Research & Investigation",
+      "question": "I am curious and enjoy discovering how things work.",
+      "micro_traits": [
+        "Curiosity & Discovery",
+        "Research & Investigation"
+      ]
+    },
+    {
+      "id": 43,
+      "category": "Core Value",
+      "topic": "Creativity",
+      "question": "I feel fulfilled when I’m inventing or creating something new."
+    },
+    {
+      "id": 44,
+      "category": "Core Value",
+      "topic": "Creativity",
+      "question": "I need space to express my ideas and imagination."
+    },
+    {
+      "id": 45,
+      "category": "Core Value",
+      "topic": "Stability",
+      "question": "Having a stable, predictable future is very important to me."
+    },
+    {
+      "id": 46,
+      "category": "Core Value",
+      "topic": "Stability",
+      "question": "I prefer secure jobs and reliable career paths."
+    },
+    {
+      "id": 47,
+      "category": "Core Value",
+      "topic": "Helping Others",
+      "question": "I want my work to improve people’s lives."
+    },
+    {
+      "id": 48,
+      "category": "Core Value",
+      "topic": "Helping Others",
+      "question": "I am motivated by making a positive difference in my community."
+    },
+    {
+      "id": 49,
+      "category": "Core Value",
+      "topic": "Leadership",
+      "question": "I want to lead teams or make impactful decisions."
+    },
+    {
+      "id": 50,
+      "category": "Core Value",
+      "topic": "Leadership",
+      "question": "I enjoy being responsible for group outcomes."
+    },
+    {
+      "id": 51,
+      "category": "Core Value",
+      "topic": "Prestige",
+      "question": "I want a career that is respected and recognized."
+    },
+    {
+      "id": 52,
+      "category": "Core Value",
+      "topic": "Prestige",
+      "question": "Status and reputation matter in my career choice."
+    },
+    {
+      "id": 53,
+      "category": "Core Value",
+      "topic": "Intellectual Challenge",
+      "question": "I like solving complex problems that require deep thought."
+    },
+    {
+      "id": 54,
+      "category": "Core Value",
+      "topic": "Intellectual Challenge",
+      "question": "I feel energized by mental challenges and learning new things."
+    },
+    {
+      "id": 55,
+      "category": "Core Value",
+      "topic": "Teamwork",
+      "question": "I enjoy working closely with others on shared goals."
+    },
+    {
+      "id": 56,
+      "category": "Core Value",
+      "topic": "Teamwork",
+      "question": "I thrive in group environments where people support each other."
+    },
+    {
+      "id": 57,
+      "category": "Core Value",
+      "topic": "Independence",
+      "question": "I like managing my own schedule and responsibilities."
+    },
+    {
+      "id": 58,
+      "category": "Core Value",
+      "topic": "Independence",
+      "question": "I prefer to work alone rather than depend on others."
+    },
+    {
+      "id": 59,
+      "category": "Core Value",
+      "topic": "Innovation",
+      "question": "I want to be at the forefront of new trends or technology."
+    },
+    {
+      "id": 60,
+      "category": "Core Value",
+      "topic": "Innovation",
+      "question": "I enjoy coming up with ideas that break the norm."
+    },
+    {
+      "id": 61,
+      "category": "Core Value",
+      "topic": "Impact",
+      "question": "Making a meaningful impact on the world is important to me."
+    },
+    {
+      "id": 62,
+      "category": "Core Value",
+      "topic": "Impact",
+      "question": "I want to leave a legacy through my work."
+    },
+    {
+      "id": 63,
+      "category": "Core Value",
+      "topic": "Efficiency & Order",
+      "question": "I enjoy organizing systems and streamlining processes."
+    },
+    {
+      "id": 64,
+      "category": "Core Value",
+      "topic": "Efficiency & Order",
+      "question": "I like when things are structured, clear, and efficient."
+    },
+    {
+      "id": 65,
+      "category": "Core Value",
+      "topic": "Cultural Appreciation",
+      "question": "I value learning about different cultures and histories."
+    },
+    {
+      "id": 66,
+      "category": "Core Value",
+      "topic": "Cultural Appreciation",
+      "question": "I’m drawn to experiences that celebrate diversity and identity."
+    },
+    {
+      "id": 67,
+      "category": "Core Value",
+      "topic": "Nature & Environment",
+      "question": "I care about protecting the environment and natural world."
+    },
+    {
+      "id": 68,
+      "category": "Core Value",
+      "topic": "Nature & Environment",
+      "question": "I feel connected to animals, plants, or nature settings."
+    },
+    {
+      "id": 69,
+      "category": "Core Value",
+      "topic": "Financial Reward",
+      "question": "I would be willing to do a job I don’t enjoy if it paid significantly more than other options."
+    },
+    {
+      "id": 70,
+      "category": "Core Value",
+      "topic": "Financial Reward",
+      "question": "When choosing a career path, I focus more on salary potential than personal interest or meaning."
+    },
+    {
+      "id": 71,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I enjoy using tools to build or repair things.",
+      "micro_traits": [
+        "Problem Solving"
+      ]
+    },
+    {
+      "id": 72,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I prefer working with my hands rather than sitting at a desk."
+    },
+    {
+      "id": 73,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I like fixing mechanical objects or equipment.",
+      "micro_traits": [
+        "Problem Solving"
+      ]
+    },
+    {
+      "id": 74,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I enjoy outdoor physical work like gardening or construction, especially when it helps take care of the land or improve the environment.",
+      "micro_traits": [
+        "Sustainability & Preservation",
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 75,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I would rather do something physical than read or write."
+    },
+    {
+      "id": 76,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I’m good at assembling or taking apart things.",
+      "micro_traits": [
+        "Curiosity & Discovery",
+        "Problem Solving"
+      ]
+    },
+    {
+      "id": 77,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I feel confident using machines or power tools.",
+      "micro_traits": [
+        "Precision & Accuracy"
+      ]
+    },
+    {
+      "id": 78,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I prefer action-oriented tasks to theoretical ones."
+    },
+    {
+      "id": 79,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I enjoy activities that involve physical movement and skill."
+    },
+    {
+      "id": 80,
+      "category": "RIASEC",
+      "topic": "R",
+      "question": "I like working with animals or in nature and helping to protect them.",
+      "micro_traits": [
+        "Sustainability & Preservation"
+      ]
+    },
+    {
+      "id": 81,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I enjoy solving math or science problems.",
+      "micro_traits": [
+        "Problem Solving",
+        "Logic"
+      ]
+    },
+    {
+      "id": 82,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I like doing experiments or investigations.",
+      "micro_traits": [
+        "Research & Investigation"
+      ]
+    },
+    {
+      "id": 83,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I often ask 'why' and like figuring things out.",
+      "micro_traits": [
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 84,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I am curious about how things work.",
+      "micro_traits": [
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 85,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I enjoy academic and intellectual tasks.",
+      "micro_traits": [
+        "Insight & Wisdom"
+      ]
+    },
+    {
+      "id": 86,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I prefer research projects over creative writing.",
+      "micro_traits": [
+        "Research & Investigation",
+        "Knowledge"
+      ]
+    },
+    {
+      "id": 87,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I like working with data, numbers, or evidence.",
+      "micro_traits": [
+        "Precision & Accuracy",
+        "Justice / Truth / Ethics"
+      ]
+    },
+    {
+      "id": 88,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I enjoy analyzing problems logically.",
+      "micro_traits": [
+        "Logic"
+      ]
+    },
+    {
+      "id": 89,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I feel excited by challenging mental tasks.",
+      "micro_traits": [
+        "Problem Solving"
+      ]
+    },
+    {
+      "id": 90,
+      "category": "RIASEC",
+      "topic": "I",
+      "question": "I enjoy learning and understanding complex subjects.",
+      "micro_traits": [
+        "Insight & Wisdom"
+      ]
+    },
+    {
+      "id": 91,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I like expressing myself through art, music, or writing.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 92,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I enjoy coming up with new and creative ideas."
+    },
+    {
+      "id": 93,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I prefer unstructured work environments."
+    },
+    {
+      "id": 94,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I’m interested in design, fashion, or aesthetics.",
+      "micro_traits": [
+        "Cultural Expression"
+      ]
+    },
+    {
+      "id": 95,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I like acting, painting, or writing creatively.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 96,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I value freedom and originality in my work."
+    },
+    {
+      "id": 97,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I enjoy activities like journaling or drawing.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 98,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I’m drawn to music, poetry, or film.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 99,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I enjoy being imaginative and spontaneous.",
+      "micro_traits": [
+        "Self-Expression & Storytelling"
+      ]
+    },
+    {
+      "id": 100,
+      "category": "RIASEC",
+      "topic": "A",
+      "question": "I often think of unconventional ways to solve problems.",
+      "micro_traits": [
+        "Problem Solving",
+        "Curiosity & Discovery"
+      ]
+    },
+    {
+      "id": 101,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I like helping others solve their problems.",
+      "micro_traits": [
+        "Service & Empathy",
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 102,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I enjoy helping others build healthy habits or make better lifestyle choices.",
+      "micro_traits": [
+        "Health & Prevention",
+        "Service & Empathy"
+      ]
+    },
+    {
+      "id": 103,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I am good at listening and offering support.",
+      "micro_traits": [
+        "Service & Empathy",
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 104,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I find meaning in caring for others and helping them stay healthy and safe.",
+      "micro_traits": [
+        "Service & Empathy",
+        "Health & Prevention"
+      ]
+    },
+    {
+      "id": 105,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I prefer cooperative work over competition.",
+      "micro_traits": [
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 106,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I enjoy making people feel welcome or cared for.",
+      "micro_traits": [
+        "Service & Empathy",
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 107,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I’m drawn to jobs like nursing, counseling, or teaching.",
+      "micro_traits": [
+        "Health & Prevention",
+        "Service & Empathy"
+      ]
+    },
+    {
+      "id": 108,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I like participating in group discussions or support groups.",
+      "micro_traits": [
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 109,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "I want a career where I can make a difference in people’s lives.",
+      "micro_traits": [
+        "Influence"
+      ]
+    },
+    {
+      "id": 110,
+      "category": "RIASEC",
+      "topic": "S",
+      "question": "People often turn to me when they need help or advice.",
+      "micro_traits": [
+        "Service & Empathy",
+        "Insight & Wisdom"
+      ]
+    },
+    {
+      "id": 111,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I enjoy leading group discussions or taking charge.",
+      "micro_traits": [
+        "Influence",
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 112,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I like starting new projects or businesses.",
+      "micro_traits": [
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 113,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I am comfortable persuading people or selling ideas.",
+      "micro_traits": [
+        "Influence",
+        "Communication & Connection"
+      ]
+    },
+    {
+      "id": 114,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I want to be influential in my field or community.",
+      "micro_traits": [
+        "Influence"
+      ]
+    },
+    {
+      "id": 115,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I enjoy taking risks to achieve a goal."
+    },
+    {
+      "id": 116,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I’m motivated by challenge and competition."
+    },
+    {
+      "id": 117,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I enjoy managing or coordinating others.",
+      "micro_traits": [
+        "Influence",
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 118,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I like being rewarded for performance and results."
+    },
+    {
+      "id": 119,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I prefer fast-paced and dynamic work environments."
+    },
+    {
+      "id": 120,
+      "category": "RIASEC",
+      "topic": "E",
+      "question": "I am interested in politics, law, or entrepreneurship.",
+      "micro_traits": [
+        "Justice / Truth / Ethics",
+        "Influence"
+      ]
+    },
+    {
+      "id": 121,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I like organizing data or keeping records.",
+      "micro_traits": [
+        "Precision & Accuracy"
+      ]
+    },
+    {
+      "id": 122,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I enjoy working in structured, rule-based environments.",
+      "micro_traits": [
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 123,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I am detail-oriented and methodical.",
+      "micro_traits": [
+        "Precision & Accuracy",
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 124,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I prefer routine and consistency in my work.",
+      "micro_traits": [
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 125,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I enjoy managing schedules or files.",
+      "micro_traits": [
+        "Precision & Accuracy",
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 126,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I like working with numbers and spreadsheets.",
+      "micro_traits": [
+        "Precision & Accuracy",
+        "Logic"
+      ]
+    },
+    {
+      "id": 127,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I feel confident following instructions closely.",
+      "micro_traits": [
+        "Responsibility & Discipline"
+      ]
+    },
+    {
+      "id": 128,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I like checking for accuracy and correcting errors.",
+      "micro_traits": [
+        "Precision & Accuracy"
+      ]
+    },
+    {
+      "id": 129,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I enjoy tasks like budgeting, filing, or planning events.",
+      "micro_traits": [
+        "Responsibility & Discipline",
+        "Precision & Accuracy"
+      ]
+    },
+    {
+      "id": 130,
+      "category": "RIASEC",
+      "topic": "C",
+      "question": "I prefer working in quiet, orderly settings.",
+      "micro_traits": [
+        "Responsibility & Discipline"
+      ]
+    }
+  ]
+}

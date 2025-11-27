@@ -1,0 +1,1 @@
+const fs=require('fs');const path=require('path');const DEFAULT='ALL - FInal.txt';const raw=fs.readFileSync(path.join(__dirname,DEFAULT),'utf8');const boundary=/\\]\\s*(?:\\r?\\n)+\\s*\\[/g;const normalized='['+raw.trim().replace(boundary,'],\\n[')+']';const parsed=JSON.parse(normalized);console.log('records',parsed.flat().length);

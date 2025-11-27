@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
+const os = require("os");
 const fsp = fs.promises;
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
@@ -59,40 +60,150 @@ function normalizeStringArray(input) {
     .filter(Boolean);
 }
 
-function resolveCandidateFile(candidate, defaultFileName) {
-  if (!candidate) return null;
+function normalizeCandidatePath(candidate) {
+  if (candidate === undefined || candidate === null) return "";
+  const trimmed = String(candidate).trim();
+  if (!trimmed) return "";
+  if (trimmed.startsWith("~/")) {
+    return path.join(os.homedir(), trimmed.slice(2));
+  }
+  if (trimmed.startsWith("~")) {
+    return path.join(os.homedir(), trimmed.slice(1));
+  }
+  return trimmed;
+}
+
+function findCaseInsensitiveFile(dir, targetName) {
   try {
-    if (!fs.existsSync(candidate)) return null;
-    const stats = fs.statSync(candidate);
+    const desired = String(targetName || "").toLowerCase();
+    if (!desired) return null;
+    const entries = fs.readdirSync(dir);
+    const match = entries.find(
+      (entry) => entry && entry.toLowerCase() === desired
+    );
+    return match ? path.join(dir, match) : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function resolveCandidateFile(candidate, defaultFileName) {
+  const normalized = normalizeCandidatePath(candidate);
+  if (!normalized) return null;
+  try {
+    const resolvedInput = path.isAbsolute(normalized)
+      ? normalized
+      : path.resolve(normalized);
+    let targetPath = resolvedInput;
+    if (!fs.existsSync(targetPath)) {
+      const dir = path.dirname(targetPath);
+      const fallback = findCaseInsensitiveFile(dir, path.basename(targetPath));
+      if (fallback) {
+        targetPath = fallback;
+      } else {
+        return null;
+      }
+    }
+    const stats = fs.statSync(targetPath);
     if (stats.isDirectory()) {
       if (!defaultFileName) return null;
-      const nested = path.join(candidate, defaultFileName);
-      return fs.existsSync(nested) ? nested : null;
+      const direct = path.join(targetPath, defaultFileName);
+      if (fs.existsSync(direct)) return direct;
+      const insensitive = findCaseInsensitiveFile(targetPath, defaultFileName);
+      return insensitive;
     }
-    return candidate;
+    return targetPath;
   } catch (err) {
     return null;
   }
 }
 
 const stackedArrayBoundary = /\]\s*(?:\r?\n)+\s*\[/g;
+const newlineDelimiter = /\r?\n/;
+
+function splitTopLevelJsonArrays(input) {
+  const segments = [];
+  if (!input) return segments;
+  let depth = 0;
+  let start = -1;
+  let inString = false;
+  let escaping = false;
+  for (let i = 0; i < input.length; i++) {
+    const char = input[i];
+    if (inString) {
+      if (escaping) {
+        escaping = false;
+      } else if (char === "\\") {
+        escaping = true;
+      } else if (char === '"') {
+        inString = false;
+      }
+      continue;
+    }
+    if (char === '"') {
+      inString = true;
+      continue;
+    }
+    if (char === "[") {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (char === "]") {
+      if (depth > 0) depth--;
+      if (depth === 0 && start !== -1) {
+        segments.push(input.slice(start, i + 1));
+        start = -1;
+      }
+    }
+  }
+  return segments;
+}
 
 function parseStackedJsonArrays(raw) {
   if (!raw) return [];
   const trimmed = raw.trim();
   if (!trimmed) return [];
-  try {
-    const direct = JSON.parse(trimmed);
-    return Array.isArray(direct) ? direct : [];
-  } catch (err) {
+
+  const flattenRecords = (parsed) => {
+    if (!Array.isArray(parsed)) return [];
+    const first = parsed[0];
+    if (Array.isArray(first)) {
+      return parsed.reduce((acc, item) => acc.concat(item), []);
+    }
+    return parsed;
+  };
+
+  const safeParseArray = (text) => {
     try {
-      const normalized = `[${trimmed.replace(stackedArrayBoundary, "],\n[")}]`;
-      const parsed = JSON.parse(normalized);
-      if (Array.isArray(parsed)) {
-        return parsed.reduce((acc, item) => acc.concat(item), []);
-      }
-    } catch (err2) {}
+      const parsed = JSON.parse(text);
+      return Array.isArray(parsed) ? parsed : null;
+    } catch (_) {
+      return null;
+    }
+  };
+
+  const direct = safeParseArray(trimmed);
+  if (direct && direct.length) {
+    return flattenRecords(direct);
   }
+
+  const normalizedInput = `[${trimmed.replace(stackedArrayBoundary, "],\n[")}]`;
+  const normalized = safeParseArray(normalizedInput);
+  if (normalized && normalized.length) {
+    return flattenRecords(normalized);
+  }
+
+  const segments = splitTopLevelJsonArrays(trimmed);
+  if (segments.length) {
+    const fallback = [];
+    for (const segment of segments) {
+      const parsedSegment = safeParseArray(segment);
+      if (parsedSegment && parsedSegment.length) {
+        fallback.push(...parsedSegment);
+      }
+    }
+    if (fallback.length) return fallback;
+  }
+
   return [];
 }
 
@@ -149,12 +260,17 @@ function loadMajorQuestionDocs(language = "en") {
   if (language === "en") {
     candidates.add(path.join(__dirname, DEFAULT_MAJOR_QUESTIONS_FILENAME));
     candidates.add(path.join(process.cwd(), DEFAULT_MAJOR_QUESTIONS_FILENAME));
+    candidates.add(path.join(__dirname, "Mapping"));
+    candidates.add(path.join(process.cwd(), "Mapping"));
   }
   for (const candidate of candidates) {
     const resolved = resolveCandidateFile(candidate, defaultFileName);
     if (!resolved) continue;
     try {
-      const raw = fs.readFileSync(resolved, "utf8").replace(/^\uFEFF/, "");
+      const raw = fs
+        .readFileSync(resolved, "utf8")
+        .replace(/^\uFEFF/, "")
+        .replace(/,\s*([\]}])/g, "$1");
       const parsed = parseQuestionList(raw);
       if (Array.isArray(parsed) && parsed.length) {
         return { docs: mapQuestionRecords(parsed, language), source: resolved };
@@ -239,27 +355,55 @@ function loadMajorMappingDataset() {
     candidates.add(process.env.MAPPING_ROOT_PATH);
   candidates.add(path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME));
   candidates.add(path.join(process.cwd(), DEFAULT_MAJOR_MAPPING_FILENAME));
+  candidates.add(path.join(__dirname, "Mapping"));
+  candidates.add(path.join(process.cwd(), "Mapping"));
+  candidates.add(
+    path.join(__dirname, "Mapping", DEFAULT_MAJOR_MAPPING_FILENAME)
+  );
+  candidates.add(
+    path.join(process.cwd(), "Mapping", DEFAULT_MAJOR_MAPPING_FILENAME)
+  );
+
+  const checked = new Set();
 
   for (const candidate of candidates) {
     const resolved = resolveCandidateFile(
       candidate,
       DEFAULT_MAJOR_MAPPING_FILENAME
     );
-    if (!resolved) continue;
+    const normalizedCandidate = normalizeCandidatePath(candidate) || candidate;
+    const displayPath = resolved || normalizedCandidate || String(candidate);
+    if (displayPath) {
+      checked.add(displayPath);
+    }
+    if (!resolved) {
+      console.warn(`[Mapping] Candidate not found: ${displayPath}`);
+      continue;
+    }
     try {
-      const raw = fs.readFileSync(resolved, "utf8").replace(/^\uFEFF/, "");
+      const raw = fs
+        .readFileSync(resolved, "utf8")
+        .replace(/^\uFEFF/, "")
+        .replace(/,\s*([\]}])/g, "$1");
       const records = parseStackedJsonArrays(raw);
       if (Array.isArray(records) && records.length) {
-        return { records, source: resolved };
+        console.log(
+          `[Mapping] Parsed ${records.length} record chunks from ${resolved}`
+        );
+        return { records, source: resolved, checked: Array.from(checked) };
+      } else {
+        console.warn(
+          `[Mapping] ${resolved} was readable but contained no records`
+        );
       }
     } catch (err) {
       console.warn(
-        `[Mapping] Failed to load mapping data from ${candidate}:`,
+        `[Mapping] Failed to load mapping data from ${resolved}:`,
         err.message
       );
     }
   }
-  return null;
+  return { records: [], source: null, checked: Array.from(checked) };
 }
 
 const PERSONALITIES_DISPLAY_PATH = path.join(
@@ -524,7 +668,14 @@ const userSchema = new mongoose.Schema({
   reset_expires: { type: Date, default: null },
   reset_last_sent_at: { type: Date, default: null },
 });
-userSchema.index({ google_id: 1 }, { unique: true, sparse: true });
+userSchema.index(
+  { google_id: 1 },
+  {
+    unique: true,
+    background: true,
+    partialFilterExpression: { google_id: { $exists: true, $ne: null } },
+  }
+);
 const User = mongoose.model("User", userSchema);
 
 const personalityResultSchema = new mongoose.Schema({
@@ -589,7 +740,6 @@ mongoose.connection.once("open", async () => {
     const matchesDesired =
       googleIndex &&
       googleIndex.unique &&
-      googleIndex.sparse &&
       JSON.stringify(googleIndex.partialFilterExpression || {}) ===
         JSON.stringify(desiredPartial);
 
@@ -620,12 +770,12 @@ mongoose.connection.once("open", async () => {
         {
           name: "google_id_1",
           unique: true,
-          sparse: true,
+          sparse: false,
           partialFilterExpression: desiredPartial,
           background: true,
         }
       );
-      console.log("[Schema] google_id index ensured (sparse + partial)");
+      console.log("[Schema] google_id index ensured (partial filter)");
     }
   } catch (e) {
     console.warn("[Schema] Could not ensure google_id index:", e.message || e);
@@ -1146,7 +1296,7 @@ async function ensurePersonalitySeedMongo() {
         if (fs.existsSync(qPath)) {
           const raw = fs.readFileSync(qPath, "utf8");
           const lines = raw
-            .split(/\r?\n/)
+            .split(newlineDelimiter)
             .filter((line) => line.trim().length > 0);
           const docs = [];
           for (const line of lines) {
@@ -1225,7 +1375,7 @@ async function ensurePersonalitySeedMongo() {
           console.log(`[Seed] Arabic questions file found, loading...`);
           const raw = fs.readFileSync(qPathAr, "utf8");
           const lines = raw
-            .split(/\r?\n/)
+            .split(newlineDelimiter)
             .filter((line) => line.trim().length > 0);
           console.log(`[Seed] Parsed ${lines.length} lines from Arabic file`);
           const docs = [];
@@ -1584,8 +1734,16 @@ async function ensureMajorSeedMongo() {
     const mapCount = await MajorMapping.countDocuments({});
     if (majCount === 0 || mapCount === 0) {
       const dataset = loadMajorMappingDataset();
+      console.log(
+        `[Seed] Mapping dataset summary: source=${dataset.source}, records=${
+          dataset?.records?.length || 0
+        }, checked=${dataset?.checked ? dataset.checked.join(", ") : "none"}`
+      );
       if (dataset?.records?.length) {
         const built = buildMappingsFromRecords(dataset.records);
+        console.log(
+          `[Seed] Built dataset summary: majors=${built.majors.length}, mappings=${built.mappings.length}`
+        );
         if (majCount === 0 && built.majors.length) {
           await Major.insertMany(
             built.majors.map((name) => ({
@@ -1607,8 +1765,13 @@ async function ensureMajorSeedMongo() {
           );
         }
       } else {
+        const checkedPaths = dataset?.checked?.length
+          ? dataset.checked
+          : ["(no paths attempted)"];
         console.warn(
-          "[Seed] Mapping dataset not found. Set MAPPING_DATA_PATH or place ALL - FInal.txt in project root."
+          `[Seed] Mapping dataset not found. Checked: ${checkedPaths.join(
+            ", "
+          )}`
         );
       }
     }
@@ -1643,7 +1806,10 @@ function parseQuestionFile(language) {
     return [];
   }
   const raw = fs.readFileSync(filePath, "utf8");
-  const lines = raw.split(/\r?\n/).filter((line) => line.trim());
+  const lines = raw
+    .split(newlineDelimiter)
+    .map((line) => line.trim())
+    .filter(Boolean);
   const docs = [];
   for (const line of lines) {
     const parts = line.split("\t");
@@ -2927,13 +3093,18 @@ app.post("/api/admin/mapping/bulk", authMiddleware, async (req, res) => {
 app.post("/api/admin/mapping/reload", authMiddleware, async (req, res) => {
   try {
     const dataset = loadMajorMappingDataset();
+    const checkedPaths = dataset?.checked?.length
+      ? dataset.checked
+      : [
+          process.env.MAPPING_DATA_PATH,
+          process.env.MAPPING_ROOT_PATH,
+          path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME),
+          path.join(__dirname, "Mapping", DEFAULT_MAJOR_MAPPING_FILENAME),
+        ].filter(Boolean);
     if (!dataset?.records?.length) {
       return res.status(404).json({
         error: "Mapping dataset not found",
-        checked: [
-          process.env.MAPPING_DATA_PATH,
-          path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME),
-        ],
+        checked: checkedPaths,
       });
     }
     const built = buildMappingsFromRecords(dataset.records);
@@ -2958,13 +3129,18 @@ app.post("/api/admin/mapping/reload", authMiddleware, async (req, res) => {
 app.post("/api/admin/major/reload", authMiddleware, async (req, res) => {
   try {
     const dataset = loadMajorMappingDataset();
+    const checkedPaths = dataset?.checked?.length
+      ? dataset.checked
+      : [
+          process.env.MAPPING_DATA_PATH,
+          process.env.MAPPING_ROOT_PATH,
+          path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME),
+          path.join(__dirname, "Mapping", DEFAULT_MAJOR_MAPPING_FILENAME),
+        ].filter(Boolean);
     if (!dataset?.records?.length) {
       return res.status(404).json({
         error: "Mapping dataset not found",
-        checked: [
-          process.env.MAPPING_DATA_PATH,
-          path.join(__dirname, DEFAULT_MAJOR_MAPPING_FILENAME),
-        ],
+        checked: checkedPaths,
       });
     }
     const built = buildMappingsFromRecords(dataset.records);
