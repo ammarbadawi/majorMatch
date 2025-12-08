@@ -143,10 +143,8 @@ const Home: React.FC = () => {
             color: theme.palette.success.main
         },
         {
-            title: isAr ? 'تطابق التخصصات' : 'Major Matches',
-            description: isAr
-                ? 'توصيات دقيقة لأفضل التخصصات المتوافقة مع شخصيتك وطموحاتك'
-                : 'Accurate major recommendations aligned to your personality and goals',
+            title: t('home.features.universityMatches'),
+            description: t('home.features.universityMatchesDesc'),
             icon: <School />,
             color: theme.palette.primary.main
         }

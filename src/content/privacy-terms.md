@@ -1,6 +1,6 @@
 PRIVACY POLICY & TERMS OF USE
 
-This document contains two parts: (1) Privacy Policy and (2) Terms of Use. It is a template draft and should be reviewed by a qualified lawyer before public launch.
+This document contains two parts: (1) Privacy Policy and (2) Terms of Use.
 
 PART 1 — PRIVACY POLICY
 

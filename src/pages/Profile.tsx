@@ -722,106 +722,36 @@ const Profile: React.FC = () => {
                                             <CircularProgress size={48} />
                                         </Box>
                                     ) : (
-                                        <Grid container spacing={{ xs: 3, sm: 4 }}>
-                                            <Grid item xs={12} md={4}>
-                                                <Box sx={{ textAlign: 'center', p: { xs: 2, sm: 3 }, borderRadius: 2, backgroundColor: theme.palette.grey[50] }}>
-                                                    <Rating
-                                                        value={ratingSummary?.average || 0}
-                                                        precision={0.1}
-                                                        readOnly
-                                                        size="large"
-                                                        sx={{ mb: 1 }}
-                                                    />
-                                                    <Typography variant="h4" sx={{ fontWeight: 800, lineHeight: 1 }}>
-                                                        {(ratingSummary?.average ?? 0).toFixed(1)}
-                                                    </Typography>
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {(ratingSummary?.total ?? 0)} {t('profile.ratingsCount')}
-                                                    </Typography>
-                                                    <Divider sx={{ my: 2 }} />
-                                                    <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                                                        {t('profile.ratingSummary')}
-                                                    </Typography>
-                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                                                        {[5, 4, 3, 2, 1].map((star) => (
-                                                            <Box key={star} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                                                                    <Star sx={{ fontSize: 18, color: theme.palette.warning.main }} />
-                                                                    <Typography variant="body2">{star}</Typography>
-                                                                </Box>
-                                                                <Typography variant="body2" color="text.secondary">
-                                                                    {ratingSummary?.distribution?.[star] ?? 0}
-                                                                </Typography>
-                                                            </Box>
-                                                        ))}
-                                                    </Box>
-                                                </Box>
-                                            </Grid>
-                                            <Grid item xs={12} md={8}>
-                                                <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
-                                                    {t('profile.yourRatingLabel')}
-                                                </Typography>
-                                                <Rating
-                                                    value={myRating ?? 0}
-                                                    precision={1}
-                                                    size="large"
-                                                    onChange={(_, value) => setMyRating(value)}
-                                                    sx={{ mb: 1 }}
-                                                />
-                                                <TextField
-                                                    fullWidth
-                                                    multiline
-                                                    minRows={3}
-                                                    maxRows={6}
-                                                    value={ratingComment}
-                                                    onChange={(e) => setRatingComment(e.target.value)}
-                                                    placeholder={t('profile.ratingPlaceholder')}
-                                                    sx={{ mb: 2 }}
-                                                />
-                                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                                    <Button
-                                                        variant="contained"
-                                                        onClick={handleSubmitRating}
-                                                        disabled={ratingSubmitting}
-                                                        startIcon={ratingSubmitting ? <CircularProgress size={20} /> : undefined}
-                                                    >
-                                                        {myRating ? t('profile.updateRating') : t('profile.submitRating')}
-                                                    </Button>
-                                                    <Button
-                                                        variant="outlined"
-                                                        onClick={fetchRatings}
-                                                        disabled={ratingSubmitting}
-                                                    >
-                                                        {t('profile.refreshRatings')}
-                                                    </Button>
-                                                </Box>
-                                                <Divider sx={{ my: 3 }} />
-                                                <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-                                                    {t('profile.recentFeedback')}
-                                                </Typography>
-                                                {ratingSummary?.recent?.length ? (
-                                                    <Grid container spacing={2}>
-                                                        {ratingSummary.recent.map((item, idx) => (
-                                                            <Grid item xs={12} sm={6} key={idx}>
-                                                                <Box sx={{ p: 2, borderRadius: 2, border: `1px solid ${theme.palette.divider}`, height: '100%' }}>
-                                                                    <Rating value={item.value} readOnly size="small" sx={{ mb: 0.5 }} />
-                                                                    <Typography variant="body2" sx={{ mb: 1.5 }}>
-                                                                        {item.comment}
-                                                                    </Typography>
-                                                                    <Typography variant="caption" color="text.secondary">
-                                                                        {t('profile.lastUpdated')} {formatDate(item.updated_at)}
-                                                                    </Typography>
-                                                                </Box>
-                                                            </Grid>
-                                                        ))}
-                                                    </Grid>
-                                                ) : (
-                                                    <Typography variant="body2" color="text.secondary">
-                                                        {t('profile.noRecentFeedback')}
-                                                    </Typography>
-                                                )}
-                                            </Grid>
-                                        </Grid>
+                                        <Box>
+                                            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
+                                                {t('profile.yourRatingLabel')}
+                                            </Typography>
+                                            <Rating
+                                                value={myRating ?? 0}
+                                                precision={1}
+                                                size="large"
+                                                onChange={(_, value) => setMyRating(value)}
+                                                sx={{ mb: 2 }}
+                                            />
+                                            <TextField
+                                                fullWidth
+                                                multiline
+                                                minRows={3}
+                                                maxRows={6}
+                                                value={ratingComment}
+                                                onChange={(e) => setRatingComment(e.target.value)}
+                                                placeholder={t('profile.ratingPlaceholder')}
+                                                sx={{ mb: 2 }}
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleSubmitRating}
+                                                disabled={ratingSubmitting}
+                                                startIcon={ratingSubmitting ? <CircularProgress size={20} /> : undefined}
+                                            >
+                                                {t('profile.submitRating')}
+                                            </Button>
+                                        </Box>
                                     )}
                                 </CardContent>
                             </Card>
