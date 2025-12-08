@@ -3677,6 +3677,69 @@ app.post(
   }
 );
 
+// Force reload personality questions from local files (MBTI Questions*.txt)
+app.post(
+  "/api/admin/personality/questions/reload",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const requested = req.body?.languages;
+      const languages = Array.isArray(requested) && requested.length
+        ? requested.map((l) => (l === "ar" ? "ar" : "en"))
+        : ["en", "ar"];
+
+      const results = {};
+
+      for (const language of languages) {
+        const docs = parseQuestionFile(language);
+        if (!docs.length) {
+          results[language] = {
+            reloaded: 0,
+            error: `No questions found in ${
+              QUESTION_FILE_MAP[language] || "unknown file"
+            }`,
+          };
+          continue;
+        }
+        await PersonalityQuestion.deleteMany({ language });
+
+        // De-duplicate by id to avoid violating the (id, language) unique index
+        const uniqueMap = new Map();
+        for (const doc of docs) {
+          if (!uniqueMap.has(doc.id)) {
+            uniqueMap.set(doc.id, doc);
+          }
+        }
+        const uniqueDocs = Array.from(uniqueMap.values());
+
+        await PersonalityQuestion.insertMany(uniqueDocs, { ordered: false });
+        results[language] = {
+          reloaded: uniqueDocs.length,
+          skippedDuplicates: docs.length - uniqueDocs.length,
+        };
+        console.log(
+          `[Admin] Reloaded ${uniqueDocs.length} personality questions for ${language} from file (skipped ${docs.length - uniqueDocs.length} duplicates by id)`
+        );
+      }
+
+      await loadPersonalityCache();
+
+      res.json({
+        ok: true,
+        results,
+        message: "Personality questions reloaded from MBTI question files",
+      });
+    } catch (e) {
+      console.error("Personality questions reload error:", e);
+      res.status(500).json({
+        error: "Server error",
+        details: e.message,
+        stack: process.env.NODE_ENV === "development" ? e.stack : undefined,
+      });
+    }
+  }
+);
+
 // Force reload personalities from PersonalityDisplay.txt file
 app.post("/api/admin/personality/reload", authMiddleware, async (req, res) => {
   try {

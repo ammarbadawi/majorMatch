@@ -57,4 +57,4 @@
 57	Shown a new idea, your mind jumps to what it could become in the future.	SN → N
 58	You often imagine what someone else might be thinking or feeling.	TF → F
 59	You’re given an unexpected task—you take a breath and just begin.	AT → A
-60	A catchy beat starts playing in public—you tap your foot without thinking twice. IE → E
+60	A catchy beat starts playing in public—you tap your foot without thinking twice.	IE → E
