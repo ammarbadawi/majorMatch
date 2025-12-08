@@ -152,6 +152,29 @@ const Home: React.FC = () => {
         }
     ];
 
+    // Shared styling to keep Journey Tools buttons consistent in size/shape
+    const journeyButtonBaseSx = {
+        mt: 'auto',
+        backdropFilter: 'blur(10px)',
+        border: '2px solid rgba(255,255,255,0.2)',
+        color: 'white',
+        fontSize: { xs: '1rem', sm: '1.05rem', md: '1.125rem' },
+        fontWeight: 700,
+        borderRadius: 2,
+        height: { xs: 64, sm: 68, md: 72 },
+        minHeight: { xs: 64, sm: 68, md: 72 },
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        lineHeight: 1.4,
+        textAlign: 'center',
+        whiteSpace: 'normal',
+        wordWrap: 'break-word',
+        boxSizing: 'border-box',
+        px: { xs: 2, sm: 3 }
+    } as const;
+
     const handleStartJourney = async () => {
         if (ctaLoading) return;
         if (!hasPersonality) {
@@ -1218,15 +1241,8 @@ const Home: React.FC = () => {
                                         onClick={() => navigate('/personality-test')}
                                         startIcon={<PlayArrow />}
                                         sx={{
-                                            mt: 'auto',
+                                            ...journeyButtonBaseSx,
                                             backgroundColor: 'rgba(255,255,255,0.15)',
-                                            backdropFilter: 'blur(10px)',
-                                            border: '2px solid rgba(255,255,255,0.2)',
-                                            color: 'white',
-                                            py: { xs: 2, sm: 2.5 },
-                                            fontSize: { xs: '1rem', sm: '1.05rem', md: '1.125rem' },
-                                            fontWeight: 700,
-                                            borderRadius: 2,
                                             '&:hover': {
                                                 backgroundColor: 'rgba(255,255,255,0.25)',
                                                 transform: 'scale(1.02)'
@@ -1394,14 +1410,8 @@ const Home: React.FC = () => {
                                                 startIcon={i18n.language === 'ar' ? undefined : (hasPersonality ? <ArrowForward /> : <Lock />)}
                                                 endIcon={i18n.language === 'ar' ? (hasPersonality ? <ArrowBack /> : <Lock />) : undefined}
                                                 sx={{
+                                                    ...journeyButtonBaseSx,
                                                     backgroundColor: hasPersonality ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.1)',
-                                                    backdropFilter: 'blur(10px)',
-                                                    border: '2px solid rgba(255,255,255,0.2)',
-                                                    color: 'white',
-                                                    py: { xs: 2, sm: 2.5 },
-                                                    fontSize: { xs: '1rem', sm: '1.05rem', md: '1.125rem' },
-                                                    fontWeight: 700,
-                                                    borderRadius: 2,
                                                     '&:hover': {
                                                         backgroundColor: hasPersonality ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.1)',
                                                         transform: hasPersonality ? 'scale(1.02)' : 'none'
@@ -1590,15 +1600,8 @@ const Home: React.FC = () => {
                                         onClick={() => navigate('/chat')}
                                         startIcon={<SupportAgent />}
                                         sx={{
-                                            mt: 'auto',
+                                            ...journeyButtonBaseSx,
                                             backgroundColor: 'rgba(255,255,255,0.15)',
-                                            backdropFilter: 'blur(10px)',
-                                            border: '2px solid rgba(255,255,255,0.2)',
-                                            color: 'white',
-                                            py: { xs: 2, sm: 2.5 },
-                                            fontSize: { xs: '1rem', sm: '1.05rem', md: '1.125rem' },
-                                            fontWeight: 700,
-                                            borderRadius: 2,
                                             '&:hover': {
                                                 backgroundColor: 'rgba(255,255,255,0.25)',
                                                 transform: 'scale(1.02)'
