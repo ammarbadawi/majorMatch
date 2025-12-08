@@ -1,13 +1,13 @@
 About the Platform & Its Purpose
 
 1. What exactly does Major Match do, and how is it different from other career guidance platforms?
-Major Match helps you discover the major that fits your strengths, interests, and future goals. Our system combines a detailed personality assessment with an advanced major-matching engine and an AI counselor that can answer your questions in real time. Unlike general career quizzes, Major Match provides personalized guidance, explains why a major fits you, and connects your results to actual university data.
+Major Match helps you discover the major that fits you best based on the results of the assessments you complete. Our system combines a detailed personality assessment with an advanced major-matching engine tailored for Lebanese students and an AI counselor that can answer your questions in real time. Unlike general career quizzes, Major Match provides personalized guidance and explains why a major may fit you.
 
 2. How does the AI counselor work, and what data does it use to guide me?
 The AI counselor uses your personality profile, your major test results, and program information from universities to give tailored explanations and recommendations. It can compare majors, clarify your results, and help you understand your options.
 
 3. Do I need to create an account before taking any test?
-You can take the free personality test without an account. Creating an account is required only if you want to save your results, access the paid major test, or revisit your reports later.
+Creating an account is required for all services provided by Major Match.
 
 About the Tests
 
@@ -19,35 +19,22 @@ The paid test analyzes your interests, strengths, future goals, academic prefere
 
 3. How long does each test take to finish?
 The personality test takes about 7–10 minutes.
-The full Major Match Test usually takes 15–20 minutes.
+The full Major Match Test usually takes 15–25 minutes.
 
 4. Can I retake the personality test or the major test?
 Yes. You may retake the personality test anytime.
-The major test can also be retaken, and your previous results will remain saved.
+The major test can be taken once per payment, and you can take it again by paying for another attempt.
 
 5. Will the system save my previous test results?
-Yes. If you have an account, all your results are stored securely and can be accessed anytime.
+Yes all your results are stored securely and can be accessed anytime.
 
-AI, Majors, and Universities
-
-1. How does the AI match me with majors and universities?
-The AI cross-checks your test results with a structured database of majors, academic requirements, and university programs. It evaluates your strengths and preferences, then recommends the majors and universities that align best with your profile.
-
-2. Are the university programs updated automatically or manually?
-They are updated through a combination of automated tools and manual review to ensure accuracy.
-
-3. Does the AI take my personality results into account when recommending majors?
-Yes. Your personality type influences your learning style, work environment, and long-term satisfaction. The AI incorporates this alongside your major test scores.
 
 Payments & Access
 
-1. What payment methods do you accept?
-We accept major credit and debit cards, as well as other secure online payment options listed at checkout.
+1. If I purchase the Major Match Test, can I access it later or is it a one-time use?
+You can access your test results anytime after purchase. It is not limited to one session.
 
-2. If I purchase the Major Match Test, can I access it later or is it a one-time use?
-You can access your test and all your results anytime after purchase. It is not limited to one session.
-
-3. Is there a refund policy if I am not satisfied with the results?
+2. Is there a refund policy if I am not satisfied with the results?
 Refunds are available only in specific cases, such as technical issues that prevent you from using the service. Completed tests are generally non-refundable.
 
 Data Privacy & Security
@@ -55,15 +42,12 @@ Data Privacy & Security
 1. How does Major Match protect my data and test results?
 We use secure, encrypted systems to store your data and follow strict privacy and access-control standards.
 
-2. Will my information be shared with universities or third parties?
-No. Your data is not shared with universities or external parties without your explicit permission.
-
-3. Can I delete my account and data whenever I want?
+2. Can I delete my account and data whenever I want?
 Yes. You can request full deletion of your account and all associated data through the settings page or by contacting support.
 
 Language & Accessibility
 
-1. Is the platform available in languages other than English and Arabic?
+1. Is the platform available in languages other than English?
 The platform supports multiple languages, starting with English and Arabic. More may be added over time.
 
 2. Does the AI counselor support multiple languages?
@@ -79,4 +63,3 @@ Check your spam or junk folder. If it is not there, request another link or cont
 
 3. How can I contact support if I face technical issues?
 You can reach our support team through the “Contact Us” section or by email. We respond as quickly as possible.
-
