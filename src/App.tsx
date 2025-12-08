@@ -12,10 +12,14 @@ import PersonalityResults from './pages/PersonalityResults';
 import MajorMatchingResults from './pages/MajorMatchingResults';
 import Profile from './pages/Profile';
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import VerifyEmail from './pages/VerifyEmail';
 import Chat from './pages/Chat';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import FAQ from './pages/FAQ';
+import PrivacyTerms from './pages/PrivacyTerms';
 
 const getTheme = (direction: 'ltr' | 'rtl') => createTheme({
     direction: direction,
@@ -347,6 +351,7 @@ function AppContent() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Router>
+                <ScrollToTop />
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<Home />} />
@@ -391,7 +396,10 @@ function AppContent() {
                             </RequireAuth>
                         }
                     />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/privacy-terms" element={<PrivacyTerms />} />
                 </Routes>
+                <Footer />
             </Router>
         </ThemeProvider>
     );

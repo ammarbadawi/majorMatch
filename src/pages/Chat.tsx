@@ -48,6 +48,20 @@ type ChatMessage = {
     content: string;
 };
 
+type AiContextSnapshot = {
+    personality?: {
+        type: string;
+        description?: string;
+    };
+    topMajors?: Array<{
+        name: string;
+        match?: number;
+        description?: string;
+    }>;
+    collectedAt?: string;
+    source?: string;
+};
+
 type ConversationSummary = {
     id: string;
     title: string;
@@ -105,6 +119,7 @@ const Chat: React.FC = () => {
         open: false,
         conversation: null
     });
+    const [contextSnapshot, setContextSnapshot] = useState<AiContextSnapshot | null>(null);
 
     const listRef = useRef<HTMLDivElement | null>(null);
     const prefillSentRef = useRef<boolean>(false);
@@ -210,6 +225,58 @@ const Chat: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        let cancelled = false;
+        const loadContext = async () => {
+            try {
+                const resp = await fetch('/api/profile', { credentials: 'include' });
+                if (!resp.ok) {
+                    return;
+                }
+                const data = await resp.json();
+                if (cancelled) return;
+
+                const personality = data?.personality_result
+                    ? {
+                        type: String(data.personality_result.type || ''),
+                        description: data.personality_result.description
+                            ? String(data.personality_result.description)
+                            : undefined
+                    }
+                    : undefined;
+
+                const topMajors = Array.isArray(data?.major_result?.top_majors)
+                    ? data.major_result.top_majors.map((major: any) => ({
+                        name: String(major.name || ''),
+                        match: typeof major.match === 'number' ? major.match : major.score,
+                        description: major.description ? String(major.description) : undefined
+                    }))
+                        .filter((item: any) => item.name)
+                        .slice(0, 5)
+                    : undefined;
+
+                if (personality || (topMajors && topMajors.length)) {
+                    setContextSnapshot({
+                        personality,
+                        topMajors,
+                        collectedAt: new Date().toISOString(),
+                        source: 'profile_endpoint'
+                    });
+                } else {
+                    setContextSnapshot(null);
+                }
+            } catch (err) {
+                console.warn('Failed to load AI context snapshot', err);
+                if (!cancelled) setContextSnapshot(null);
+            }
+        };
+
+        loadContext();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    useEffect(() => {
         if (isMdUp) {
             setMobileSidebarOpen(false);
         }
@@ -278,7 +345,8 @@ const Chat: React.FC = () => {
                 credentials: 'include',
                 body: JSON.stringify({
                     conversationId,
-                    messages: next.map((m) => ({ role: m.role, content: m.content }))
+                    messages: next.map((m) => ({ role: m.role, content: m.content })),
+                    contextSnapshot: contextSnapshot || undefined
                 })
             });
             if (!resp.ok) {

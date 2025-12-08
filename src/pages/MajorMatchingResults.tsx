@@ -19,6 +19,7 @@ import {
     Avatar,
     Stack,
     LinearProgress,
+    Alert,
     useTheme
 } from '@mui/material';
 import {
@@ -44,6 +45,7 @@ import {
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { getMajorDescription } from '../services/majorDescriptions';
+import { loadMajorReports, MajorReport, normalizeMajorName } from '../services/majorsDisplay';
 
 interface Major {
     name: string;
@@ -63,6 +65,9 @@ const MajorMatchingResults: React.FC = () => {
     const location = useLocation();
     const theme = useTheme();
     const { t } = useTranslation();
+    const [majorReports, setMajorReports] = React.useState<Record<string, MajorReport>>({});
+    const [isLoadingReports, setIsLoadingReports] = React.useState<boolean>(true);
+    const [reportError, setReportError] = React.useState<string | null>(null);
 
     const apiResults: Major[] | undefined = location.state?.results;
 
@@ -95,19 +100,10 @@ const MajorMatchingResults: React.FC = () => {
     ];
 
     // Enhance major recommendations with detailed descriptions from our service
+    // Only use this as fallback if report data is not available
     const enhanceMajorRecommendations = (majors: Major[]): Major[] => {
         return majors.map(major => {
-            const detailedDescription = getMajorDescription(major.name);
-            if (detailedDescription) {
-                return {
-                    ...major,
-                    description: detailedDescription.description,
-                    careerPaths: detailedDescription.careerPaths,
-                    requiredSkills: detailedDescription.careerPaths, // Using career paths as skills for now
-                    workEnvironment: detailedDescription.industries.join(', '),
-                    jobGrowth: detailedDescription.whyFutureProof
-                };
-            }
+            // Don't enhance if we'll have report data - let the report take precedence
             return major;
         });
     };
@@ -115,6 +111,47 @@ const MajorMatchingResults: React.FC = () => {
     const majorRecommendations: Major[] = apiResults && apiResults.length > 0
         ? enhanceMajorRecommendations(apiResults)
         : enhanceMajorRecommendations(sampleRecommendations);
+
+    React.useEffect(() => {
+        let isMounted = true;
+
+        loadMajorReports()
+            .then(reports => {
+                if (isMounted) {
+                    setMajorReports(reports);
+                }
+            })
+            .catch(error => {
+                console.error('Failed to load MajorsDisplay.txt', error);
+                if (isMounted) {
+                    setReportError('Unable to load detailed major reports right now.');
+                }
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setIsLoadingReports(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    const resolveMajorReport = (majorName: string): MajorReport | undefined => {
+        const primaryKey = normalizeMajorName(majorName);
+        if (majorReports[primaryKey]) {
+            return majorReports[primaryKey];
+        }
+
+        const majorDescription = getMajorDescription(majorName);
+        if (majorDescription) {
+            const altKey = normalizeMajorName(majorDescription.name);
+            return majorReports[altKey];
+        }
+
+        return undefined;
+    };
 
     const getMatchColor = (match: number) => {
         if (match >= 90) return theme.palette.success.main;
@@ -195,6 +232,19 @@ const MajorMatchingResults: React.FC = () => {
             </AppBar>
 
             <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4, md: 6 }, px: { xs: 2, sm: 3 } }}>
+                {isLoadingReports && (
+                    <Paper variant="outlined" sx={{ mb: { xs: 2, sm: 3 }, p: { xs: 1.5, sm: 2 } }}>
+                        <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+                            {t('majorMatchingResults.loadingMajorsDisplay', 'Loading detailed major reports...')}
+                        </Typography>
+                        <LinearProgress />
+                    </Paper>
+                )}
+                {reportError && (
+                    <Alert severity="warning" sx={{ mb: { xs: 2, sm: 3 } }}>
+                        {reportError}
+                    </Alert>
+                )}
                 {/* Results Header */}
                 <Card
                     elevation={8}
@@ -267,6 +317,50 @@ const MajorMatchingResults: React.FC = () => {
                 {majorRecommendations.map((major, index) => {
                     const IconComponent = getMajorIcon(index);
                     const matchColor = getMatchColor(major.match);
+                    const report = resolveMajorReport(major.name);
+                    
+                    // Helper to deduplicate arrays
+                    const deduplicateArray = (arr: string[]): string[] => {
+                        return Array.from(new Set(arr.map(item => item.trim()).filter(Boolean)));
+                    };
+                    
+                    // Prioritize report data, fallback to major data, then defaults
+                    const displayDescription = report?.personalFitSummary || major.description || t('majorMatchingResults.noDescriptionAvailable');
+                    
+                    const displayCareerPaths = report?.careerPaths && report.careerPaths.length > 0
+                        ? deduplicateArray(report.careerPaths)
+                        : (major.careerPaths && major.careerPaths.length > 0
+                            ? deduplicateArray(major.careerPaths)
+                            : []);
+                    
+                    const displaySkills = report?.skills && report.skills.length > 0
+                        ? deduplicateArray(report.skills)
+                        : (major.requiredSkills && major.requiredSkills.length > 0
+                            ? deduplicateArray(major.requiredSkills)
+                            : []);
+                    
+                    const displayWorkEnvironment = report?.workSettings && report.workSettings.length > 0
+                        ? report.workSettings.join(' • ')
+                        : (major.workEnvironment || t('majorMatchingResults.variesByRoleLocation'));
+                    
+                    const displaySnapshot = report?.studySnapshot;
+                    const displayProsChallenges = report?.prosChallenges;
+                    const coreSubjects = report?.coreSubjects ? deduplicateArray(report.coreSubjects) : [];
+                    const connectionSummary = report?.connectionSummary;
+                    const studyOverview = report?.studyOverview;
+                    const childMajors = report?.childMajors ? deduplicateArray(report.childMajors) : [];
+
+                    const parseLinesToList = (text?: string): string[] => {
+                        if (!text) return [];
+                        return deduplicateArray(
+                            text
+                                .split('\n')
+                                .map(line => line.trim().replace(/^[-•]\s*/, ''))
+                                .filter(Boolean)
+                        );
+                    };
+
+                    const studyChips = coreSubjects.length > 0 ? coreSubjects : parseLinesToList(studyOverview);
 
                     return (
                         <Card key={index} elevation={6} sx={{
@@ -298,34 +392,73 @@ const MajorMatchingResults: React.FC = () => {
                                         }
                                     }}
                                 >
-                                    <Grid container spacing={3} alignItems="center" justifyContent="space-between">
+                                    <Grid container spacing={3} alignItems="flex-start" justifyContent="space-between">
                                         <Grid item xs={12} sm={8}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
-                                                <Avatar
-                                                    sx={{
-                                                        backgroundColor: 'rgba(255,255,255,0.2)',
-                                                        mr: 2,
-                                                        width: { xs: 40, sm: 48 },
-                                                        height: { xs: 40, sm: 48 },
-                                                        mb: { xs: 1, sm: 0 }
-                                                    }}
-                                                >
-                                                    <IconComponent sx={{ fontSize: { xs: 20, sm: 28 } }} />
-                                                </Avatar>
-                                                <Typography variant="h4" component="h2" sx={{
-                                                    fontWeight: 700,
-                                                    textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
-                                                    fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' }
-                                                }}>
-                                                    #{index + 1} {major.name}
-                                                </Typography>
+                                            <Box sx={{ mb: 2 }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, flexWrap: 'wrap', gap: 1.5 }}>
+                                                    <Avatar
+                                                        sx={{
+                                                            backgroundColor: 'rgba(255,255,255,0.2)',
+                                                            width: { xs: 48, sm: 56 },
+                                                            height: { xs: 48, sm: 56 },
+                                                            border: '2px solid rgba(255,255,255,0.3)'
+                                                        }}
+                                                    >
+                                                        <IconComponent sx={{ fontSize: { xs: 24, sm: 32 } }} />
+                                                    </Avatar>
+                                                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                                                        <Typography variant="h4" component="h2" sx={{
+                                                            fontWeight: 700,
+                                                            textShadow: '1px 1px 2px rgba(0,0,0,0.2)',
+                                                            fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.25rem' },
+                                                            mb: 0.5
+                                                        }}>
+                                                            #{index + 1} {major.name}
+                                                        </Typography>
+                                                        {report?.tagline && (
+                                                            <Typography variant="subtitle1" sx={{
+                                                                opacity: 0.95,
+                                                                fontWeight: 500,
+                                                                fontSize: { xs: '0.9rem', sm: '1rem' },
+                                                                fontStyle: 'italic',
+                                                                textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
+                                                            }}>
+                                                                {report.tagline}
+                                                            </Typography>
+                                                        )}
+                                                    </Box>
+                                                </Box>
+                                                {report?.traitChips && report.traitChips.length > 0 && (
+                                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                                                        {report.traitChips.map((chip, chipIdx) => (
+                                                            <Chip
+                                                                key={chipIdx}
+                                                                label={chip}
+                                                                size="small"
+                                                                sx={{
+                                                                    backgroundColor: 'rgba(255,255,255,0.25)',
+                                                                    color: 'white',
+                                                                    fontWeight: 600,
+                                                                    border: '1px solid rgba(255,255,255,0.4)',
+                                                                    fontSize: { xs: '0.75rem', sm: '0.8125rem' },
+                                                                    height: { xs: 24, sm: 28 },
+                                                                    '&:hover': {
+                                                                        backgroundColor: 'rgba(255,255,255,0.35)'
+                                                                    }
+                                                                }}
+                                                                variant="outlined"
+                                                            />
+                                                        ))}
+                                                    </Box>
+                                                )}
                                             </Box>
                                             <Typography variant="body1" sx={{
                                                 fontSize: { xs: '0.95rem', sm: '1rem', md: '1.125rem' },
-                                                lineHeight: 1.6,
-                                                opacity: 0.95
+                                                lineHeight: 1.7,
+                                                opacity: 0.95,
+                                                whiteSpace: 'pre-line'
                                             }}>
-                                                {major.description || t('majorMatchingResults.noDescriptionAvailable')}
+                                                {displayDescription}
                                             </Typography>
                                         </Grid>
                                         <Grid item xs={12} sm={4}>
@@ -391,62 +524,151 @@ const MajorMatchingResults: React.FC = () => {
                                             </Typography>
                                         </AccordionSummary>
                                         <AccordionDetails sx={{ p: { xs: 2, sm: 3, md: 4 } }}>
+                                            {/* Connection and Study Overview Section */}
+                                            {(connectionSummary || studyOverview) && (
+                                                <Stack spacing={2.5} sx={{ mb: { xs: 3, sm: 4 } }}>
+                                                    {connectionSummary && (
+                                                        <Paper 
+                                                            elevation={0}
+                                                            sx={{ 
+                                                                p: { xs: 2, sm: 2.5 },
+                                                                backgroundColor: `${matchColor}08`,
+                                                                border: `1px solid ${matchColor}20`,
+                                                                borderRadius: 2
+                                                            }}
+                                                        >
+                                                            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1.5, color: matchColor }}>
+                                                                {t('majorMatchingResults.connectionTitle', 'Where You and This Major Connect')}
+                                                            </Typography>
+                                                            <Typography variant="body2" sx={{ lineHeight: 1.7, whiteSpace: 'pre-line', color: 'text.primary' }}>
+                                                                {connectionSummary}
+                                                            </Typography>
+                                                        </Paper>
+                                                    )}
+                                                    {studyChips.length > 0 && (
+                                                        <Paper 
+                                                            elevation={0}
+                                                            sx={{ 
+                                                                p: { xs: 2, sm: 2.5 },
+                                                                backgroundColor: `${matchColor}08`,
+                                                                border: `1px solid ${matchColor}20`,
+                                                                borderRadius: 2
+                                                            }}
+                                                        >
+                                                            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1.5, color: matchColor }}>
+                                                                {t('majorMatchingResults.studyOverview', 'What You Study in This Major')}
+                                                            </Typography>
+                                                            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                                                                {studyChips.map((subject, subjIdx) => (
+                                                                    <Chip
+                                                                        key={subjIdx}
+                                                                        label={subject}
+                                                                        size="small"
+                                                                        sx={{
+                                                                            backgroundColor: `${matchColor}20`,
+                                                                            color: matchColor,
+                                                                            fontWeight: 600,
+                                                                            fontSize: '0.8125rem'
+                                                                        }}
+                                                                    />
+                                                                ))}
+                                                            </Stack>
+                                                        </Paper>
+                                                    )}
+                                                </Stack>
+                                            )}
+                                            
+                                            {/* Child Majors Section */}
+                                            {childMajors.length > 0 && (
+                                                <Box sx={{ mb: { xs: 3, sm: 4 } }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                                        <Group sx={{ color: matchColor, mr: 1, fontSize: 24 }} />
+                                                        <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                                            {t('majorMatchingResults.specializations', 'Specializations')}
+                                                        </Typography>
+                                                    </Box>
+                                                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                                                        {childMajors.map((childMajor, childIdx) => (
+                                                            <Chip
+                                                                key={childIdx}
+                                                                label={childMajor}
+                                                                sx={{
+                                                                    backgroundColor: `${matchColor}15`,
+                                                                    color: matchColor,
+                                                                    fontWeight: 600,
+                                                                    border: `1px solid ${matchColor}30`
+                                                                }}
+                                                                variant="outlined"
+                                                            />
+                                                        ))}
+                                                    </Stack>
+                                                </Box>
+                                            )}
                                             <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} alignItems="stretch" justifyContent="center">
                                                 <Grid item xs={12} md={6}>
-                                                    <Box sx={{ mb: 4 }}>
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                                            <BusinessCenter sx={{
-                                                                color: matchColor,
-                                                                mr: 1,
-                                                                fontSize: 24
-                                                            }} />
-                                                            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                                                {t('majorMatchingResults.careerOpportunities')}
-                                                            </Typography>
+                                                    {displayCareerPaths.length > 0 && (
+                                                        <Box sx={{ mb: 4 }}>
+                                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                                                <BusinessCenter sx={{
+                                                                    color: matchColor,
+                                                                    mr: 1.5,
+                                                                    fontSize: 28
+                                                                }} />
+                                                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                                                    {t('majorMatchingResults.careerOpportunities')}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Paper 
+                                                                elevation={0}
+                                                                sx={{ 
+                                                                    p: 2,
+                                                                    backgroundColor: `${matchColor}08`,
+                                                                    border: `1px solid ${matchColor}20`,
+                                                                    borderRadius: 2
+                                                                }}
+                                                            >
+                                                                <Stack spacing={1.25}>
+                                                                    {displayCareerPaths.map((career, idx) => (
+                                                                        <Typography key={idx} variant="body1" sx={{ lineHeight: 1.6 }}>
+                                                                            • {career}
+                                                                        </Typography>
+                                                                    ))}
+                                                                </Stack>
+                                                            </Paper>
                                                         </Box>
-                                                        <Stack spacing={1}>
-                                                            {(major.careerPaths || [
-                                                                'Software Engineer', 'Data Scientist', 'Product Manager', 'UX Designer'
-                                                            ]).map((career, idx) => (
-                                                                <Box key={idx} sx={{ display: 'flex', alignItems: 'center' }}>
-                                                                    <CheckCircle sx={{
-                                                                        color: matchColor,
-                                                                        mr: 1,
-                                                                        fontSize: 18
-                                                                    }} />
-                                                                    <Typography variant="body1">{career}</Typography>
-                                                                </Box>
-                                                            ))}
-                                                        </Stack>
-                                                    </Box>
+                                                    )}
 
-                                                    <Box sx={{ mb: 4 }}>
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                                            <Star sx={{
-                                                                color: matchColor,
-                                                                mr: 1,
-                                                                fontSize: 24
-                                                            }} />
-                                                            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                                                                {t('majorMatchingResults.requiredSkills')}
-                                                            </Typography>
+                                                    {displaySkills.length > 0 && (
+                                                        <Box sx={{ mb: 4 }}>
+                                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                                                <Star sx={{
+                                                                    color: matchColor,
+                                                                    mr: 1.5,
+                                                                    fontSize: 28
+                                                                }} />
+                                                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                                                    {t('majorMatchingResults.requiredSkills')}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Paper 
+                                                                elevation={0}
+                                                                sx={{ 
+                                                                    p: 2,
+                                                                    backgroundColor: `${matchColor}08`,
+                                                                    border: `1px solid ${matchColor}20`,
+                                                                    borderRadius: 2
+                                                                }}
+                                                            >
+                                                                <Stack spacing={1}>
+                                                                    {displaySkills.map((skill, idx) => (
+                                                                        <Typography key={idx} variant="body1" sx={{ lineHeight: 1.6 }}>
+                                                                            • {skill}
+                                                                        </Typography>
+                                                                    ))}
+                                                                </Stack>
+                                                            </Paper>
                                                         </Box>
-                                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                                                            {(major.requiredSkills || [
-                                                                'Critical Thinking', 'Communication', 'Teamwork', 'Problem Solving'
-                                                            ]).map((skill, idx) => (
-                                                                <Chip
-                                                                    key={idx}
-                                                                    label={skill}
-                                                                    sx={{
-                                                                        backgroundColor: `${matchColor}20`,
-                                                                        color: matchColor,
-                                                                        fontWeight: 600
-                                                                    }}
-                                                                />
-                                                            ))}
-                                                        </Box>
-                                                    </Box>
+                                                    )}
                                                 </Grid>
 
                                                 <Grid item xs={12} md={6}>
@@ -454,14 +676,22 @@ const MajorMatchingResults: React.FC = () => {
                                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                                                             <AttachMoney sx={{
                                                                 color: theme.palette.success.main,
-                                                                mr: 1,
-                                                                fontSize: 24
+                                                                mr: 1.5,
+                                                                fontSize: 28
                                                             }} />
                                                             <Typography variant="h6" sx={{ fontWeight: 700 }}>
                                                                 {t('majorMatchingResults.salaryGrowth')}
                                                             </Typography>
                                                         </Box>
-                                                        <Paper sx={{ p: 2, backgroundColor: theme.palette.success.light + '20' }}>
+                                                        <Paper 
+                                                            elevation={0}
+                                                            sx={{ 
+                                                                p: 2.5,
+                                                                backgroundColor: `${theme.palette.success.main}08`,
+                                                                border: `1px solid ${theme.palette.success.main}20`,
+                                                                borderRadius: 2
+                                                            }}
+                                                        >
                                                             <Typography variant="h6" sx={{
                                                                 color: theme.palette.success.dark,
                                                                 fontWeight: 700,
@@ -469,12 +699,14 @@ const MajorMatchingResults: React.FC = () => {
                                                             }}>
                                                                 {major.averageSalary || t('majorMatchingResults.variesByRoleLocation')}
                                                             </Typography>
-                                                            <Typography variant="body2" color="text.secondary">
+                                                            <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
                                                                 {t('majorMatchingResults.averageAnnualSalaryRange')}
                                                             </Typography>
-                                                            <Typography variant="body2" sx={{ mt: 1, fontWeight: 600 }}>
-                                                                {t('majorMatchingResults.jobOutlook')}: {major.jobOutlook || 'Good'}
-                                                            </Typography>
+                                                            {major.jobOutlook && (
+                                                                <Typography variant="body2" sx={{ fontWeight: 600, color: theme.palette.success.dark }}>
+                                                                    {t('majorMatchingResults.jobOutlook')}: {major.jobOutlook}
+                                                                </Typography>
+                                                            )}
                                                         </Paper>
                                                     </Box>
 
@@ -482,24 +714,78 @@ const MajorMatchingResults: React.FC = () => {
                                                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                                                             <LocationOn sx={{
                                                                 color: theme.palette.primary.main,
-                                                                mr: 1,
-                                                                fontSize: 24
+                                                                mr: 1.5,
+                                                                fontSize: 28
                                                             }} />
                                                             <Typography variant="h6" sx={{ fontWeight: 700 }}>
                                                                 {t('majorMatchingResults.workEnvironment')}
                                                             </Typography>
                                                         </Box>
-                                                        <Typography variant="body1" sx={{
-                                                            backgroundColor: theme.palette.primary.light + '20',
-                                                            p: 2,
-                                                            borderRadius: 2,
-                                                            border: `1px solid ${theme.palette.primary.light}30`
-                                                        }}>
-                                                            {major.workEnvironment || t('majorMatchingResults.variesByRoleLocation')}
-                                                        </Typography>
+                                                        <Paper 
+                                                            elevation={0}
+                                                            sx={{
+                                                                p: 2.5,
+                                                                backgroundColor: `${theme.palette.primary.main}08`,
+                                                                border: `1px solid ${theme.palette.primary.main}20`,
+                                                                borderRadius: 2
+                                                            }}
+                                                        >
+                                                            <Typography variant="body1" sx={{ lineHeight: 1.7 }}>
+                                                                {displayWorkEnvironment}
+                                                            </Typography>
+                                                        </Paper>
                                                     </Box>
+                                                    
+                                                    {displaySnapshot && (
+                                                        <Box sx={{ mb: 4 }}>
+                                                            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                                                                <Schedule sx={{
+                                                                    color: theme.palette.info.main,
+                                                                    mr: 1.5,
+                                                                    fontSize: 28
+                                                                }} />
+                                                                <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                                                                    {t('majorMatchingResults.studySnapshot', 'Study Snapshot')}
+                                                                </Typography>
+                                                            </Box>
+                                                            <Paper 
+                                                                elevation={0}
+                                                                sx={{
+                                                                    p: 2.5,
+                                                                    backgroundColor: `${theme.palette.info.main}08`,
+                                                                    border: `1px solid ${theme.palette.info.main}20`,
+                                                                    borderRadius: 2
+                                                                }}
+                                                            >
+                                                                <Typography variant="body2" sx={{ lineHeight: 1.7, whiteSpace: 'pre-line' }}>
+                                                                    {displaySnapshot}
+                                                                </Typography>
+                                                            </Paper>
+                                                        </Box>
+                                                    )}
                                                 </Grid>
                                             </Grid>
+                                            {displayProsChallenges && (
+                                                <Box sx={{ mt: { xs: 3, sm: 4 } }}>
+                                                    <Divider sx={{ mb: 3 }} />
+                                                    <Paper 
+                                                        elevation={0}
+                                                        sx={{
+                                                            p: { xs: 2.5, sm: 3 },
+                                                            backgroundColor: `${matchColor}08`,
+                                                            border: `1px solid ${matchColor}20`,
+                                                            borderRadius: 2
+                                                        }}
+                                                    >
+                                                        <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: matchColor }}>
+                                                            {t('majorMatchingResults.prosChallenges', 'Pros, Challenges & Misconceptions')}
+                                                        </Typography>
+                                                        <Typography variant="body2" sx={{ lineHeight: 1.7, whiteSpace: 'pre-line', color: 'text.primary' }}>
+                                                            {displayProsChallenges}
+                                                        </Typography>
+                                                    </Paper>
+                                                </Box>
+                                            )}
                                         </AccordionDetails>
                                     </Accordion>
                                 </Box>
@@ -535,6 +821,7 @@ const MajorMatchingResults: React.FC = () => {
                             variant="contained"
                             size="large"
                             startIcon={<School />}
+                            onClick={() => navigate('/chat')}
                             sx={{
                                 py: { xs: 1.5, sm: 2 },
                                 px: { xs: 3, sm: 5 },

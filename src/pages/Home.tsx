@@ -46,12 +46,12 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import SubscriptionStatus from '../components/SubscriptionStatus';
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
     const { t, i18n } = useTranslation();
+    const isAr = i18n.language === 'ar';
     const [hasPersonality, setHasPersonality] = useState<boolean>(() => {
         try { return localStorage.getItem('hasPersonality') === '1'; } catch { return false; }
     });
@@ -143,8 +143,10 @@ const Home: React.FC = () => {
             color: theme.palette.success.main
         },
         {
-            title: t('home.features.universityMatches'),
-            description: t('home.features.universityMatchesDesc'),
+            title: isAr ? 'تطابق التخصصات' : 'Major Matches',
+            description: isAr
+                ? 'توصيات دقيقة لأفضل التخصصات المتوافقة مع شخصيتك وطموحاتك'
+                : 'Accurate major recommendations aligned to your personality and goals',
             icon: <School />,
             color: theme.palette.primary.main
         }
@@ -609,11 +611,6 @@ const Home: React.FC = () => {
                 </Container>
             </Box>
 
-            {/* Subscription Status */}
-            <Container maxWidth="lg" sx={{ py: 4, px: { xs: 2, sm: 3, md: 4 } }}>
-                <SubscriptionStatus />
-            </Container>
-
             {/* Stats Section */}
             <Container maxWidth="lg" sx={{ py: { xs: 6, sm: 8, md: 10 }, mt: { xs: -4, sm: -6, md: -8 }, position: 'relative', zIndex: 2, px: { xs: 2, sm: 3, md: 4 } }}>
                 <Grid container spacing={{ xs: 2, sm: 4, md: 6 }} alignItems="stretch" justifyContent="center">
@@ -825,7 +822,12 @@ const Home: React.FC = () => {
                                         {t('home.majorMatchingDesc')}
                                     </Typography>
                                     <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap', mb: 3 }}>
-                                        {[t('home.premiumAnalysis'), t('home.universityMatches'), t('home.careerPathways'), t('home.salaryInsights')].map((feature, index) => (
+                                        {[
+                                            isAr ? 'تحليل مميز' : t('home.premiumAnalysis'),
+                                            isAr ? 'تطابق التخصصات' : 'Major matches',
+                                            isAr ? 'مسارات مهنية' : t('home.careerPathways'),
+                                            isAr ? 'تحليلات مخصصة' : 'Personalized breakdowns'
+                                        ].map((feature, index) => (
                                             <Chip
                                                 key={index}
                                                 label={feature}
@@ -934,7 +936,13 @@ const Home: React.FC = () => {
                                     </Typography>
 
                                     <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap', mb: 3 }}>
-                                        {[t('home.aiCounselor'), t('home.careerPlanning'), t('home.expertGuidance'), t('home.ongoingSupport'), t('home.industryInsights'), t('home.strategicPlanning')].map((feature, index) => (
+                                        {[
+                                            isAr ? 'حقق أهدافك' : 'Achieve your goals',
+                                            t('home.careerPlanning'),
+                                            t('home.ongoingSupport'),
+                                            t('home.industryInsights'),
+                                            t('home.strategicPlanning')
+                                        ].map((feature, index) => (
                                             <Chip
                                                 key={index}
                                                 label={feature}
@@ -1148,10 +1156,10 @@ const Home: React.FC = () => {
                                                 mb: 1.5,
                                                 fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
                                             }}>
-                                                {t('home.step1')}
+                                                {isAr ? 'الخطوة 1: اكتشف نفسك' : 'Step 1: Discover Yourself'}
                                             </Typography>
                                             <Chip
-                                                label={t('home.freeStartHere')}
+                                                label={isAr ? 'مجاني • ابدأ هنا' : 'FREE • START HERE'}
                                                 sx={{
                                                     backgroundColor: theme.palette.success.main,
                                                     color: 'white',
@@ -1163,43 +1171,58 @@ const Home: React.FC = () => {
                                     </Box>
 
                                     <Typography variant="body1" sx={{
-                                        mb: { xs: 3, sm: 4 },
+                                        mb: 2,
                                         lineHeight: 1.7,
-                                        flexGrow: 1,
-                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.05rem' },
                                         textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                     }}>
-                                        {t('home.step1CardDesc')}
+                                        {isAr
+                                            ? 'ابدأ برحلتنا القصصية المكونة من 60 سؤالاً للشخصية. إجاباتك توصلك إلى واحدة من 32 شخصية من Major Match.'
+                                            : 'Start with our story-driven 60-question personality journey. Your choices match you to 1 of 32 Major Match personalities.'}
+                                    </Typography>
+                                    <Typography variant="body1" sx={{
+                                        mb: { xs: 3, sm: 4 },
+                                        lineHeight: 1.7,
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.05rem' },
+                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
+                                    }}>
+                                        {isAr
+                                            ? 'ستحصل على ملف واضح يشرح كيف تفكر وتتعلم وتتخذ القرارات — صُمم بالكامل بواسطة Major Match. هذا الناتج يصبح الأساس لتوصياتك في الخطوة 2.'
+                                            : 'You’ll receive a clear profile of how you think, learn, and make decisions—built entirely by Major Match. This result becomes the foundation for your recommendations in Step 2.'}
                                     </Typography>
 
                                     <Box sx={{ mb: { xs: 3, sm: 4 }, flexGrow: 1 }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
-                                            mb: 3,
-                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                                            mb: 2,
+                                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' },
                                             textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
-                                        }}>{t('home.journeyBeginsWith')}</Typography>
+                                        }}>
+                                            {isAr ? 'تبدأ رحلتك بـ:' : 'Your journey begins with:'}
+                                        </Typography>
                                         {[
-                                            t('home.personalityAnalysis'),
-                                            t('home.detailedBreakdown'),
-                                            t('home.foundationForMatching')
+                                            isAr ? 'واحدة من 32 شخصية من Major Match' : 'Your 1 of 32 Major Match personalities',
+                                            isAr ? 'تفصيل شخصي لنقاط قوتك وميولك' : 'A personalized breakdown of your strengths and tendencies',
+                                            isAr ? 'أساس يبني عليه تطابق التخصصات' : 'A foundation that powers major matching'
                                         ].map((feature, index) => (
                                             <Box key={index} sx={{
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                mb: 1.5,
+                                                mb: 1.25,
                                                 flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row'
                                             }}>
                                                 <CheckCircle sx={{
-                                                    fontSize: { xs: 20, sm: 24 },
+                                                    fontSize: { xs: 20, sm: 22 },
                                                     mr: i18n.language === 'ar' ? 0 : 2,
                                                     ml: i18n.language === 'ar' ? 2 : 0,
                                                     color: theme.palette.success.light
                                                 }} />
                                                 <Typography variant="body2" sx={{
-                                                    fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
+                                                    fontSize: { xs: '0.88rem', sm: '0.95rem', md: '1rem' },
                                                     textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
-                                                }}>{feature}</Typography>
+                                                }}>
+                                                    {feature}
+                                                </Typography>
                                             </Box>
                                         ))}
                                     </Box>
@@ -1226,7 +1249,7 @@ const Home: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        {t('home.beginJourney')}
+                                        {isAr ? 'ابدأ رحلتك' : 'Begin Your Journey'}
                                     </Button>
                                 </CardContent>
                             </Card>
@@ -1296,10 +1319,14 @@ const Home: React.FC = () => {
                                                 mb: 1.5,
                                                 fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
                                             }}>
-                                                {t('home.step2')}
+                                                {isAr ? 'الخطوة 2: اختر تخصصك' : 'Step 2: Find Your Major'}
                                             </Typography>
                                             <Chip
-                                                label={hasPersonality ? t('home.premiumReady') : t('home.premiumLocked')}
+                                                label={
+                                                    hasPersonality
+                                                        ? (isAr ? 'بريميوم • جاهز' : 'PREMIUM • READY')
+                                                        : (isAr ? 'بريميوم • مقفل' : 'PREMIUM • LOCKED')
+                                                }
                                                 sx={{
                                                     backgroundColor: hasPersonality ? theme.palette.warning.main : theme.palette.grey[500],
                                                     color: 'white',
@@ -1313,60 +1340,67 @@ const Home: React.FC = () => {
                                     <Typography variant="body1" sx={{
                                         lineHeight: 1.7,
                                         fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
-                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
+                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' },
+                                        mb: 2
                                     }}>
-                                        {t('home.step2CardDescActive')}
+                                        {isAr
+                                            ? 'افتح اختبار Major Match لتحصل على قائمة مرتبة بالتخصصات مع تقرير بريميوم كامل لكل منها — حتى لا ترى ما يناسبك فقط بل تفهم السبب.'
+                                            : 'Unlock the Major Match Test to receive a ranked list of majors with a full, premium report for each one—so you don’t just see what matches you, you understand why.'}
                                     </Typography>
-                                    {!hasPersonality && (
-                                        <Typography variant="body2" sx={{
-                                            color: 'rgba(255,255,255,0.85)',
-                                            fontSize: { xs: '0.85rem', sm: '0.95rem' },
-                                            textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
-                                        }}>
-                                            {t('home.step2CardDescInactive')}
-                                        </Typography>
-                                    )}
+                                    <Typography variant="body1" sx={{
+                                        lineHeight: 1.7,
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
+                                        textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' },
+                                        mb: { xs: 3, sm: 4 }
+                                    }}>
+                                        {isAr
+                                            ? 'تصلك النتائج كبطاقات تقرير للتخصصات تترجم شخصيتك واهتماماتك وثقتك الأكاديمية وقيمك إلى رؤى واضحة قابلة للتطبيق.'
+                                            : 'Your results are presented as detailed Major Report Cards that translate your personality, interests, academic confidence, and values into clear insights you can actually use.'}
+                                    </Typography>
 
                                     <Box sx={{ mb: { xs: 3, sm: 4 }, flexGrow: 1 }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
-                                            mb: 3,
+                                            mb: 2,
                                             fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
                                             textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
                                         }}>
-                                            {hasPersonality ? t('home.journeyContinuesWith') : t('home.unlockFeatures')}
+                                            {isAr ? 'افتح هذه المزايا:' : 'Unlock these features:'}
                                         </Typography>
                                         {[
-                                            t('home.comprehensiveAnalysis'),
-                                            t('home.universityMatches'),
-                                            t('home.careerPathway'),
-                                            t('home.salaryInsights'),
-                                            t('home.personalRoadmap'),
-                                            t('home.industryGuidance'),
-                                            t('home.futureOpportunities')
+                                            isAr ? 'توصيات تخصصات مرتبة مع درجات الملاءمة ومستويات التطابق' : 'Ranked major recommendations with fit scores and match levels',
+                                            isAr ? 'بطاقة تقرير كاملة لكل تخصص من التخصصات المتصدرة' : 'A full Major Report Card for every top major',
+                                            isAr ? 'تفصيل واضح: ملخص الملاءمة الشخصية وأين تتوافق' : 'Clear breakdowns: Personal Fit Summary and Where You Connect',
+                                            isAr ? 'ما ستدرسه: المواد الأساسية وعلامات التخصص' : 'What you’ll study: core subjects and major tags',
+                                            isAr ? 'تخصصات فرعية / مسارات يمكنك التعمق فيها' : 'Specializations / child majors you can branch into',
+                                            isAr ? 'مسارات مهنية وأدوار عمل ببيئات حقيقية' : 'Career paths and job roles with real work settings',
+                                            isAr ? 'المهارات التي تكتسبها (تقنية + قابلة للنقل)' : 'Skills you gain (technical + transferable)',
+                                            isAr ? 'لمحة دراسية واقعية: المدة، العبء، الصعوبة، والتدريب العملي' : 'A realistic study snapshot: duration, workload, difficulty, and practical training'
                                         ].map((feature, index) => (
                                             <Box key={index} sx={{
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                mb: 1.5,
+                                                mb: 1.25,
                                                 flexDirection: i18n.language === 'ar' ? 'row-reverse' : 'row'
                                             }}>
                                                 <CheckCircle sx={{
-                                                    fontSize: { xs: 20, sm: 24 },
+                                                    fontSize: { xs: 20, sm: 22 },
                                                     mr: i18n.language === 'ar' ? 0 : 2,
                                                     ml: i18n.language === 'ar' ? 2 : 0,
                                                     color: hasPersonality ? theme.palette.warning.light : theme.palette.grey[400]
                                                 }} />
                                                 <Typography variant="body2" sx={{
-                                                    fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
-                                                    opacity: hasPersonality ? 1 : 0.6,
+                                                    fontSize: { xs: '0.88rem', sm: '0.95rem', md: '1rem' },
+                                                    opacity: hasPersonality ? 1 : 0.65,
                                                     textAlign: { xs: 'center', sm: i18n.language === 'ar' ? 'right' : 'left' }
-                                                }}>{feature}</Typography>
+                                                }}>
+                                                    {feature}
+                                                </Typography>
                                             </Box>
                                         ))}
                                     </Box>
 
-                                    <Tooltip title={t('home.completeTestFirst')} disableHoverListener={hasPersonality}>
+                                    <Tooltip title={isAr ? 'أكمل الخطوة 1 أولاً' : 'Complete Step 1 first'} disableHoverListener={hasPersonality}>
                                         <Box component="span" sx={{ width: '100%', mt: 'auto' }}>
                                             <Button
                                                 variant="contained"
@@ -1391,7 +1425,7 @@ const Home: React.FC = () => {
                                                 }}
                                                 disabled={!hasPersonality}
                                             >
-                                                {hasPersonality ? t('home.continueJourney') : t('home.completeStep1First')}
+                                                {hasPersonality ? (isAr ? 'ابدأ اختبار التخصص' : 'Start Major Match') : (isAr ? 'أكمل الخطوة 1 أولاً' : 'Complete Step 1 First')}
                                             </Button>
                                         </Box>
                                     </Tooltip>
@@ -1479,10 +1513,10 @@ const Home: React.FC = () => {
                                                 mb: 1.5,
                                                 fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
                                             }}>
-                                                {t('home.step3')}
+                                                {isAr ? 'الخطوة 3: المستشار الذكي' : 'Step 3: AI Counselor'}
                                             </Typography>
                                             <Chip
-                                                label={t('home.premiumAIPowered')}
+                                                label={isAr ? 'بريميوم • مدعوم بالذكاء الاصطناعي' : 'PREMIUM • AI POWERED'}
                                                 sx={{
                                                     backgroundColor: theme.palette.info.main,
                                                     color: 'white',
@@ -1494,6 +1528,19 @@ const Home: React.FC = () => {
                                     </Box>
 
                                     <Typography variant="body1" sx={{
+                                        mb: 2,
+                                        lineHeight: 1.7,
+                                        flexGrow: 1,
+                                        fontSize: { xs: '0.95rem', sm: '1rem', md: '1.1rem' },
+                                        textAlign: i18n.language === 'ar'
+                                            ? { xs: 'right', sm: 'right' }
+                                            : { xs: 'center', sm: 'left' }
+                                    }}>
+                                        {isAr
+                                            ? 'أكمل رحلتك مع مستشار Major Mentor الذكي — دليلك الشخصي الذي يحول النتائج إلى قرارات واضحة. يساعدك على تفسير التخصصات وفهم دلالات النتائج واتخاذ قرار بثقة.'
+                                            : 'Complete your journey with the Major Mentor AI Counselor—your private, personalized guide that turns your results into clear decisions. It helps you interpret your matches, understand what each result means, and choose confidently.'}
+                                    </Typography>
+                                    <Typography variant="body1" sx={{
                                         mb: { xs: 3, sm: 4 },
                                         lineHeight: 1.7,
                                         flexGrow: 1,
@@ -1502,22 +1549,27 @@ const Home: React.FC = () => {
                                             ? { xs: 'right', sm: 'right' }
                                             : { xs: 'center', sm: 'left' }
                                     }}>
-                                        {t('home.step3CardDesc')}
+                                        {isAr
+                                            ? 'اسأل عن التخصصات والحياة الجامعية والمهارات والمسارات المهنية. ستحصل على إجابات مخصصة لملفك ونتائجك باللغتين العربية والإنجليزية.'
+                                            : 'Ask anything about majors, university life, skills, and career paths. You’ll get responses tailored to your profile and results in English & Arabic.'}
                                     </Typography>
 
                                     <Box sx={{ mb: { xs: 3, sm: 4 }, flexGrow: 1 }}>
                                         <Typography variant="h6" sx={{
                                             fontWeight: 700,
-                                            mb: 3,
+                                            mb: 2,
                                             fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
                                             textAlign: i18n.language === 'ar'
                                                 ? { xs: 'right', sm: 'right' }
                                                 : { xs: 'center', sm: 'left' }
-                                        }}>{t('home.journeyCompletesWith')}</Typography>
+                                        }}>
+                                            {isAr ? 'تكتمل رحلتك بـ:' : 'Your journey completes with:'}
+                                        </Typography>
                                         {[
-                                            t('home.aiCareerCounseling'),
-                                            t('home.personalizedGuidance'),
-                                            t('home.expertAdvice')
+                                            isAr ? 'استكشاف موجه بالذكاء الاصطناعي بناءً على نتائجك وتفضيلاتك' : 'AI-guided exploration based on your results and preferences',
+                                            isAr ? 'مقارنات مبنية على النتائج بين التخصصات الموصى بها' : 'Result-based comparisons between your top recommended majors',
+                                            isAr ? 'تفسيرات أعمق لدرجاتك ونقاط قوتك وأسباب التطابق' : 'Deeper explanations of your scores, strengths, and fit reasons',
+                                            isAr ? 'دعم فوري عند الطلب — بلا انتظار أو مواعيد' : 'On-demand support anytime—no waiting, no appointment needed'
                                         ].map((feature, index) => (
                                             <Box key={index} sx={{
                                                 display: 'flex',
@@ -1540,7 +1592,9 @@ const Home: React.FC = () => {
                                                         ? { xs: 'right', sm: 'right' }
                                                         : { xs: 'center', sm: 'left' },
                                                     flex: 1
-                                                }}>{feature}</Typography>
+                                                }}>
+                                                    {feature}
+                                                </Typography>
                                             </Box>
                                         ))}
                                     </Box>
@@ -1567,7 +1621,7 @@ const Home: React.FC = () => {
                                             }
                                         }}
                                     >
-                                        {t('home.startAICounseling')}
+                                        {isAr ? 'ابدأ مع المستشار الذكي' : t('home.startAICounseling')}
                                     </Button>
                                 </CardContent>
                             </Card>

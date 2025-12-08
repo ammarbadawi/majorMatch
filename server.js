@@ -46,6 +46,12 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 const googleClient = GOOGLE_CLIENT_ID
   ? new OAuth2Client(GOOGLE_CLIENT_ID)
   : null;
+const MAJOR_SEED_FILE =
+  process.env.MAJOR_SEED_FILE ||
+  path.join(__dirname, "data", "major-seed-payloads.json");
+const MAJOR_TARGET_COUNT = parseInt(process.env.MAJOR_TARGET_COUNT || "67", 10);
+const FORCE_SEED =
+  String(process.env.FORCE_SEED || "").toLowerCase() === "true";
 
 const DEFAULT_MAJOR_QUESTIONS_FILENAME = "Question 2 Final.txt";
 const DEFAULT_MAJOR_MAPPING_FILENAME = "ALL - FInal.txt";
@@ -254,12 +260,18 @@ function loadMajorQuestionDocs(language = "en") {
       ? process.env.MAJOR_QUESTIONS_PATH_AR
       : process.env.MAJOR_QUESTIONS_PATH;
   const defaultFileName =
-    language === "en" ? DEFAULT_MAJOR_QUESTIONS_FILENAME : null;
+    language === "en"
+      ? DEFAULT_MAJOR_QUESTIONS_FILENAME
+      : language === "ar"
+      ? "Question 2 Final - Arabic.txt"
+      : null;
   const candidates = new Set();
   if (envPath) candidates.add(envPath);
+  if (defaultFileName) {
+    candidates.add(path.join(__dirname, defaultFileName));
+    candidates.add(path.join(process.cwd(), defaultFileName));
+  }
   if (language === "en") {
-    candidates.add(path.join(__dirname, DEFAULT_MAJOR_QUESTIONS_FILENAME));
-    candidates.add(path.join(process.cwd(), DEFAULT_MAJOR_QUESTIONS_FILENAME));
     candidates.add(path.join(__dirname, "Mapping"));
     candidates.add(path.join(process.cwd(), "Mapping"));
   }
@@ -408,7 +420,7 @@ function loadMajorMappingDataset() {
 
 const PERSONALITIES_DISPLAY_PATH = path.join(
   __dirname,
-  "PersonalitiesDisplay.txt"
+  "PersonalityDisplay.txt"
 );
 let personalitiesDisplayCache = null;
 let personalitiesDisplayMtime = null;
@@ -460,14 +472,14 @@ async function loadPersonalitiesDisplay(force = false) {
       console.log(
         `[DisplayData] Loaded ${
           Object.keys(map).length
-        } display personalities from PersonalitiesDisplay.txt`
+        } display personalities from PersonalityDisplay.txt`
       );
     }
     return personalitiesDisplayCache;
   } catch (err) {
     if (!["ENOENT", "ENAMETOOLONG"].includes(err.code)) {
       console.error(
-        "[DisplayData] Unable to read PersonalitiesDisplay.txt:",
+        "[DisplayData] Unable to read PersonalityDisplay.txt:",
         err.message || err
       );
     }
@@ -503,7 +515,7 @@ async function upsertPersonalitiesFromDisplay({ forceReload = false } = {}) {
     await loadPersonalitiesDisplay(forceReload);
   } catch (err) {
     console.error(
-      "[DisplayData] Unable to load PersonalitiesDisplay.txt:",
+      "[DisplayData] Unable to load PersonalityDisplay.txt:",
       err.message || err
     );
     throw err;
@@ -514,7 +526,7 @@ async function upsertPersonalitiesFromDisplay({ forceReload = false } = {}) {
     : [];
   if (!records.length) {
     console.warn(
-      "[DisplayData] PersonalitiesDisplay.txt loaded but contains no valid records"
+      "[DisplayData] PersonalityDisplay.txt loaded but contains no valid records"
     );
     return 0;
   }
@@ -546,7 +558,7 @@ async function upsertPersonalitiesFromDisplay({ forceReload = false } = {}) {
   }
 
   console.log(
-    `[DisplayData] Upserted ${count} personality profiles from PersonalitiesDisplay.txt`
+    `[DisplayData] Upserted ${count} personality profiles from PersonalityDisplay.txt`
   );
   return count;
 }
@@ -656,6 +668,11 @@ const userSchema = new mongoose.Schema({
   },
   avatar_url: { type: String, default: null },
   university: { type: String, default: null },
+  gender: {
+    type: String,
+    enum: ["male", "female", "other", "prefer_not_to_say"],
+    required: true,
+  },
   created_at: { type: Date, default: Date.now },
   last_login: { type: Date, default: null },
   // Email verification fields
@@ -840,6 +857,29 @@ const subscriptionSchema = new mongoose.Schema({
   updated_at: { type: Date, default: Date.now },
 });
 const Subscription = mongoose.model("Subscription", subscriptionSchema);
+
+const ratingSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    unique: true,
+    index: true,
+  },
+  value: { type: Number, required: true, min: 1, max: 5 },
+  comment: { type: String, default: "", maxlength: 500 },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
+});
+ratingSchema.pre("save", function (next) {
+  this.updated_at = new Date();
+  next();
+});
+ratingSchema.pre("findOneAndUpdate", function (next) {
+  this.set({ updated_at: new Date() });
+  next();
+});
+const Rating = mongoose.model("Rating", ratingSchema);
 
 // Manual payments (e.g., Whish Money) submissions for later verification
 const manualPaymentSchema = new mongoose.Schema({
@@ -1148,9 +1188,68 @@ async function sendPasswordResetEmail(toEmail, code) {
   }
 }
 
+function loadJsonFileSafe(filePath) {
+  try {
+    if (!filePath) return null;
+    if (!fs.existsSync(filePath)) return null;
+    const raw = fs.readFileSync(filePath, "utf8");
+    return JSON.parse(raw);
+  } catch (err) {
+    console.warn(`[Seed] Failed to read JSON from ${filePath}:`, err.message);
+    return null;
+  }
+}
+
+async function dedupeCollectionByFields(model, fields, label) {
+  if (!model || !Array.isArray(fields) || !fields.length) return;
+  const groupId = fields.reduce((acc, field) => {
+    acc[field] = `$${field}`;
+    return acc;
+  }, {});
+  try {
+    const duplicates = await model.aggregate([
+      {
+        $group: {
+          _id: groupId,
+          ids: { $addToSet: "$_id" },
+          count: { $sum: 1 },
+        },
+      },
+      { $match: { count: { $gt: 1 } } },
+    ]);
+
+    let removed = 0;
+    for (const dup of duplicates) {
+      const ids = Array.isArray(dup.ids) ? dup.ids : [];
+      if (ids.length <= 1) continue;
+      // Keep the first id, remove the rest
+      const [, ...toDelete] = ids;
+      if (!toDelete.length) continue;
+      const res = await model.deleteMany({ _id: { $in: toDelete } });
+      removed += res.deletedCount || 0;
+    }
+    if (removed > 0) {
+      console.log(
+        `[Seed] Deduped ${removed} duplicate documents for ${label || "model"}`
+      );
+    }
+  } catch (err) {
+    console.warn(
+      `[Seed] Failed to dedupe ${label || "model"}:`,
+      err.message || err
+    );
+  }
+}
+
 // Auto-seed from local files into MongoDB (runs once if collections are empty)
 async function ensurePersonalitySeedMongo() {
   try {
+    await dedupeCollectionByFields(
+      PersonalityQuestion,
+      ["id", "language"],
+      "PersonalityQuestion (id+language)"
+    );
+    await dedupeCollectionByFields(Personality, ["type"], "Personality (type)");
     // Aggressively drop old unique index on id only - this is critical for multi-language support
     try {
       const indexes = await PersonalityQuestion.collection.getIndexes();
@@ -1506,7 +1605,7 @@ async function ensurePersonalitySeedMongo() {
       seededP = await upsertPersonalitiesFromDisplay();
       if (seededP > 0) {
         console.log(
-          `[Seed] Upserted ${seededP} personality types from PersonalitiesDisplay.txt`
+          `[Seed] Upserted ${seededP} personality types from PersonalityDisplay.txt`
         );
       }
     } catch (e) {
@@ -1588,8 +1687,122 @@ async function ensurePersonalitySeedMongo() {
   }
 }
 
+function loadMajorSeedPayload() {
+  const payload = loadJsonFileSafe(MAJOR_SEED_FILE);
+  if (payload && payload.majors && Array.isArray(payload.majors)) {
+    return payload;
+  }
+  return null;
+}
+
+async function seedMajorsFromPayload(payload) {
+  if (!payload) return false;
+  const majors = Array.isArray(payload.majors) ? payload.majors : [];
+  const mapping = Array.isArray(payload.mapping) ? payload.mapping : [];
+  const questions = payload.questions || {};
+  const enQuestions = Array.isArray(questions.en) ? questions.en : [];
+  const arQuestions = Array.isArray(questions.ar) ? questions.ar : [];
+  const targetMajors = majors.length || MAJOR_TARGET_COUNT;
+
+  const [majCount, mapCount, enCount, arCount] = await Promise.all([
+    Major.countDocuments({}),
+    MajorMapping.countDocuments({}),
+    MajorQuestion.countDocuments({ language: "en" }),
+    MajorQuestion.countDocuments({ language: "ar" }),
+  ]);
+
+  const shouldSeedMajors =
+    FORCE_SEED || (targetMajors && majCount !== targetMajors);
+  const shouldSeedMapping =
+    FORCE_SEED || (mapping.length && mapCount !== mapping.length);
+  const shouldSeedEnQuestions =
+    FORCE_SEED || (enQuestions.length && enCount !== enQuestions.length);
+  const shouldSeedArQuestions =
+    FORCE_SEED || (arQuestions.length && arCount !== arQuestions.length);
+
+  if (
+    !shouldSeedMajors &&
+    !shouldSeedMapping &&
+    !shouldSeedEnQuestions &&
+    !shouldSeedArQuestions
+  ) {
+    return false;
+  }
+
+  console.log(
+    `[Seed] Using payload from ${MAJOR_SEED_FILE} to normalize majors/mapping/questions`
+  );
+
+  if (shouldSeedMajors) {
+    await Major.deleteMany({});
+    await Major.insertMany(majors);
+    console.log(`[Seed] Reloaded ${majors.length} majors from payload`);
+  }
+
+  if (shouldSeedMapping) {
+    await MajorMapping.deleteMany({});
+    await MajorMapping.insertMany(mapping);
+    console.log(`[Seed] Reloaded ${mapping.length} mappings from payload`);
+  }
+
+  if (shouldSeedEnQuestions) {
+    await MajorQuestion.deleteMany({ language: "en" });
+    await MajorQuestion.insertMany(
+      enQuestions.map((q, idx) => ({
+        ...q,
+        id: parseInt(q.id ?? idx + 1),
+        category: String(q.category || "General"),
+        topic: q.topic ? String(q.topic) : null,
+        question: String(q.question || q.text || ""),
+        language: "en",
+      }))
+    );
+    console.log(
+      `[Seed] Reloaded ${enQuestions.length} English major questions from payload`
+    );
+  }
+
+  if (shouldSeedArQuestions) {
+    await MajorQuestion.deleteMany({ language: "ar" });
+    await MajorQuestion.insertMany(
+      arQuestions.map((q, idx) => ({
+        ...q,
+        id: parseInt(q.id ?? idx + 1),
+        category: String(q.category || "General"),
+        topic: q.topic ? String(q.topic) : null,
+        question: String(q.question || q.text || ""),
+        language: "ar",
+      }))
+    );
+    console.log(
+      `[Seed] Reloaded ${arQuestions.length} Arabic major questions from payload`
+    );
+  }
+
+  return true;
+}
+
 async function ensureMajorSeedMongo() {
   try {
+    await dedupeCollectionByFields(Major, ["name"], "Major (name)");
+    await dedupeCollectionByFields(
+      MajorMapping,
+      ["category", "option_value", "major_name"],
+      "MajorMapping (category/option_value/major_name)"
+    );
+    await dedupeCollectionByFields(
+      MajorQuestion,
+      ["id", "language"],
+      "MajorQuestion (id+language)"
+    );
+
+    const payload = loadMajorSeedPayload();
+    if (payload) {
+      await seedMajorsFromPayload(payload);
+      // If the payload exists, treat it as the single source of truth to avoid mixing datasets
+      return;
+    }
+
     // Drop old unique index on id only if it exists
     try {
       const indexes = await MajorQuestion.collection.getIndexes();
@@ -2599,8 +2812,9 @@ app.get("/api/personality/latest", authMiddleware, async (req, res) => {
 // Auth
 app.post("/api/auth/signup", async (req, res) => {
   try {
-    const { firstName, lastName, email, password, university } = req.body;
-    if (!firstName || !lastName || !email || !password)
+    const { firstName, lastName, email, password, university, gender } =
+      req.body || {};
+    if (!firstName || !lastName || !email || !password || !gender)
       return res.status(400).json({ error: "Missing required fields" });
 
     // Validate password requirements
@@ -2635,12 +2849,27 @@ app.post("/api/auth/signup", async (req, res) => {
     const codeHash = bcrypt.hashSync(code, 8);
     const expires = new Date(Date.now() + 15 * 60 * 1000);
     const now = new Date();
+    const allowedGenders = new Set([
+      "male",
+      "female",
+      "other",
+      "prefer_not_to_say",
+    ]);
+    if (
+      typeof gender !== "string" ||
+      !allowedGenders.has(gender.toLowerCase())
+    ) {
+      return res.status(400).json({ error: "Invalid gender value" });
+    }
+    const normalizedGender = gender.toLowerCase();
+
     const doc = await User.create({
       first_name: firstName,
       last_name: lastName,
       email: lower,
       password_hash,
       university: university || null,
+      gender: normalizedGender,
       is_verified: false,
       verification_code_hash: codeHash,
       verification_expires: expires,
@@ -2696,6 +2925,7 @@ app.post("/api/auth/google", async (req, res) => {
         email,
         password_hash: null,
         university: null,
+        gender: "prefer_not_to_say", // Default for Google signups
         is_verified: emailVerified,
         auth_provider: "google",
         google_id: googleId,
@@ -2714,6 +2944,11 @@ app.post("/api/auth/google", async (req, res) => {
       if (emailVerified && !user.is_verified) {
         user.is_verified = true;
       }
+    }
+
+    // Legacy accounts might be missing gender (schema now requires it)
+    if (!user.gender) {
+      user.gender = "prefer_not_to_say";
     }
 
     user.last_login = new Date();
@@ -2759,6 +2994,12 @@ app.post("/api/auth/login", async (req, res) => {
         requiresVerification: true,
         email: user.email,
       });
+
+    // Legacy accounts might be missing required fields (e.g., gender).
+    // Ensure a safe default before saving.
+    if (!user.gender) {
+      user.gender = "prefer_not_to_say";
+    }
 
     // Update last login timestamp
     user.last_login = new Date();
@@ -2850,9 +3091,118 @@ app.get("/api/me", authMiddleware, async (req, res) => {
     lastName: user.last_name,
     email: user.email,
     university: user.university,
+    gender: user.gender,
     authProvider: user.auth_provider,
     avatarUrl: user.avatar_url,
   });
+});
+
+async function buildRatingsSummary() {
+  const distribution = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+
+  const [aggregate] = await Rating.aggregate([
+    {
+      $group: {
+        _id: null,
+        average: { $avg: "$value" },
+        total: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const distributionRaw = await Rating.aggregate([
+    { $group: { _id: "$value", count: { $sum: 1 } } },
+  ]);
+  distributionRaw.forEach((item) => {
+    const key = String(item._id);
+    if (distribution[key] !== undefined) {
+      distribution[key] = item.count;
+    }
+  });
+
+  const recent = await Rating.find({ comment: { $exists: true, $ne: "" } })
+    .sort({ updated_at: -1 })
+    .limit(6)
+    .select({ value: 1, comment: 1, updated_at: 1 })
+    .lean();
+
+  return {
+    average: aggregate?.average ? Number(aggregate.average.toFixed(2)) : 0,
+    total: aggregate?.total || 0,
+    distribution,
+    recent: recent.map((item) => ({
+      value: item.value,
+      comment: item.comment,
+      updated_at: item.updated_at,
+    })),
+  };
+}
+
+app.get("/api/ratings/summary", async (req, res) => {
+  try {
+    const summary = await buildRatingsSummary();
+    res.json(summary);
+  } catch (e) {
+    res.status(500).json({ error: "Failed to load ratings summary" });
+  }
+});
+
+app.get("/api/ratings/me", authMiddleware, async (req, res) => {
+  try {
+    const rating = await Rating.findOne({ user_id: req.user.id }).lean();
+    res.json({
+      rating: rating ? rating.value : null,
+      comment: rating ? rating.comment : "",
+      updated_at: rating ? rating.updated_at : null,
+    });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to load your rating" });
+  }
+});
+
+app.post("/api/ratings", authMiddleware, async (req, res) => {
+  try {
+    const { rating, comment } = req.body || {};
+    const value = Number(rating);
+    if (!Number.isFinite(value) || value < 1 || value > 5) {
+      return res.status(400).json({ error: "Rating must be between 1 and 5" });
+    }
+    const trimmedComment = String(comment || "").trim();
+    if (trimmedComment.length > 500) {
+      return res
+        .status(400)
+        .json({ error: "Comment must be 500 characters or fewer" });
+    }
+
+    const updated = await Rating.findOneAndUpdate(
+      { user_id: req.user.id },
+      {
+        $set: {
+          value,
+          comment: trimmedComment,
+          updated_at: new Date(),
+        },
+        $setOnInsert: {
+          user_id: req.user.id,
+          created_at: new Date(),
+        },
+      },
+      { new: true, upsert: true }
+    );
+
+    const summary = await buildRatingsSummary();
+    res.json({
+      ok: true,
+      rating: {
+        value: updated.value,
+        comment: updated.comment,
+        updated_at: updated.updated_at,
+      },
+      summary,
+    });
+  } catch (e) {
+    res.status(500).json({ error: "Failed to submit rating" });
+  }
 });
 
 // Profile update endpoints
@@ -3327,7 +3677,7 @@ app.post(
   }
 );
 
-// Force reload personalities from PersonalitiesDisplay.txt file
+// Force reload personalities from PersonalityDisplay.txt file
 app.post("/api/admin/personality/reload", authMiddleware, async (req, res) => {
   try {
     const count = await upsertPersonalitiesFromDisplay({ forceReload: true });
@@ -3335,13 +3685,13 @@ app.post("/api/admin/personality/reload", authMiddleware, async (req, res) => {
     res.json({
       ok: true,
       count,
-      message: "Personalities reloaded from PersonalitiesDisplay.txt",
+      message: "Personalities reloaded from PersonalityDisplay.txt",
     });
   } catch (e) {
     console.error("Personality reload error:", e);
     if (e.code === "ENOENT") {
       return res.status(404).json({
-        error: "PersonalitiesDisplay.txt file not found",
+        error: "PersonalityDisplay.txt file not found",
         path: PERSONALITIES_DISPLAY_PATH,
       });
     }
@@ -4610,6 +4960,85 @@ app.get("/api/profile", authMiddleware, async (req, res) => {
 });
 
 // Helper: build major-test/personality context for AI grounding
+function sanitizeContextSnapshot(input) {
+  if (!input || typeof input !== "object") return null;
+  const safe = {};
+
+  if (
+    input.personality &&
+    typeof input.personality === "object" &&
+    typeof input.personality.type === "string"
+  ) {
+    safe.personality = {
+      type: String(input.personality.type).slice(0, 32),
+      description:
+        typeof input.personality.description === "string"
+          ? String(input.personality.description).slice(0, 2000)
+          : undefined,
+    };
+  }
+
+  if (Array.isArray(input.topMajors)) {
+    const mapped = input.topMajors
+      .map((item) => {
+        if (!item || typeof item !== "object" || !item.name) return null;
+        return {
+          name: String(item.name).slice(0, 200),
+          match: Number.isFinite(Number(item.match))
+            ? Math.max(0, Math.min(100, parseInt(item.match, 10)))
+            : undefined,
+          description:
+            typeof item.description === "string"
+              ? String(item.description).slice(0, 2000)
+              : undefined,
+        };
+      })
+      .filter(Boolean)
+      .slice(0, 5);
+    if (mapped.length) safe.topMajors = mapped;
+  }
+
+  if (Array.isArray(input.majorAnswers)) {
+    const answers = input.majorAnswers
+      .map((ans) => {
+        if (!ans || typeof ans !== "object") return null;
+        return {
+          id: Number.isFinite(Number(ans.id)) ? Number(ans.id) : undefined,
+          category: ans.category ? String(ans.category).slice(0, 120) : null,
+          topic: ans.topic ? String(ans.topic).slice(0, 120) : null,
+          question: ans.question ? String(ans.question).slice(0, 400) : null,
+          choice: ans.choice ? String(ans.choice).slice(0, 120) : null,
+        };
+      })
+      .filter(Boolean)
+      .slice(0, 50);
+    if (answers.length) safe.majorAnswers = answers;
+  }
+
+  if (Number.isFinite(Number(input.answeredCount))) {
+    safe.answeredCount = Number(input.answeredCount);
+  }
+
+  if (!Object.keys(safe).length) return null;
+  safe.source =
+    typeof input.source === "string"
+      ? String(input.source).slice(0, 64)
+      : "client";
+  safe.collected_at = new Date().toISOString();
+  return safe;
+}
+
+function mergeContextSources(serverContext, clientContext) {
+  if (serverContext && clientContext) {
+    return {
+      ...serverContext,
+      personality: clientContext.personality || serverContext.personality,
+      clientSnapshot: clientContext,
+    };
+  }
+  return serverContext || clientContext || null;
+}
+
 async function buildMajorAiContext(userId) {
   try {
     // Latest major test answers
@@ -4850,7 +5279,9 @@ app.post("/api/chat", authMiddleware, async (req, res) => {
       "You are Major Match AI, a helpful assistant for students exploring majors and careers. Your role is to explain and explore connections, not to justify or defend recommendations. When users ask about their major match, help them understand how their test responses connect to the major. Focus on explaining the connections between their answers and the major's characteristics. Be educational, exploratory, and supportive. Prioritize their specific major test results over personality test results. Always reference their actual test answers, categories, and topics that contributed to the match. Be specific, avoid generic statements, and format every response using clean HTML (use <p>, <strong>, <em>, <ul>, <ol>, <li>, <code>, and <br /> as needed). Never return Markdown.";
 
     // Build latest test/personality context for grounding
-    const majorContext = await buildMajorAiContext(req.user.id);
+    const providedContext = sanitizeContextSnapshot(body.contextSnapshot);
+    const serverContext = await buildMajorAiContext(req.user.id);
+    const majorContext = mergeContextSources(serverContext, providedContext);
     const contextMessage = majorContext
       ? {
           role: "system",

@@ -101,7 +101,7 @@ majorMatch/
 │   └── index.tsx
 ├── server.js               # Express backend server
 ├── MBTI Questions.txt      # Optional: legacy local file, not used by Mongo backend
-├── PersonalitiesDisplay.txt       # Personality data (display + seed source)
+├── PersonalityDisplay.txt        # Personality data (display + seed source)
 ├── package.json
 └── README.md
 ```
@@ -140,7 +140,7 @@ majorMatch/
 
 - `POST /api/admin/mbti/questions/bulk` — Replace MBTI questions with the provided array
 - `POST /api/admin/mbti/personalities/bulk` — Replace MBTI personalities
-- `POST /api/admin/personality/reload` — Reload personalities from "PersonalitiesDisplay.txt" file (updates existing records)
+- `POST /api/admin/personality/reload` — Reload personalities from "PersonalityDisplay.txt" file (updates existing records)
 - `POST /api/admin/majors/bulk` — Replace majors master list
 - `POST /api/admin/mapping/bulk` — Replace major mapping data
 - `POST /api/major/calculate` — Calculate major matches

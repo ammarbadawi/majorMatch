@@ -13,7 +13,8 @@ import {
     useTheme,
     Alert,
     CircularProgress,
-    Divider
+    Divider,
+    MenuItem
 } from '@mui/material';
 import {
     Email,
@@ -44,7 +45,8 @@ const SignUp: React.FC = () => {
         email: '',
         password: '',
         confirmPassword: '',
-        university: ''
+        university: '',
+        gender: ''
     });
     const isGoogleAuthEnabled = Boolean(process.env.REACT_APP_GOOGLE_CLIENT_ID);
 
@@ -100,7 +102,7 @@ const SignUp: React.FC = () => {
             ...formData,
             [e.target.name]: value
         });
-        
+
         // Validate password in real-time
         if (e.target.name === 'password') {
             const error = validatePassword(value);
@@ -111,7 +113,7 @@ const SignUp: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
-        
+
         // Validate password requirements
         const passwordValidationError = validatePassword(formData.password);
         if (passwordValidationError) {
@@ -119,9 +121,14 @@ const SignUp: React.FC = () => {
             setPasswordError(passwordValidationError);
             return;
         }
-        
+
         if (formData.password !== formData.confirmPassword) {
             setError(t('signup.passwordsDoNotMatch'));
+            return;
+        }
+
+        if (!formData.gender) {
+            setError(t('signup.genderRequired'));
             return;
         }
         setLoading(true);
@@ -135,7 +142,8 @@ const SignUp: React.FC = () => {
                     lastName: formData.lastName,
                     email: formData.email,
                     password: formData.password,
-                    university: formData.university || undefined
+                    university: formData.university || undefined,
+                    gender: formData.gender
                 })
             });
             if (!res.ok) {
@@ -348,6 +356,52 @@ const SignUp: React.FC = () => {
                                             },
                                         }}
                                     />
+                                </Grid>
+
+                                <Grid item xs={12} >
+                                    <TextField
+                                        select
+                                        fullWidth
+                                        label={t('signup.gender')}
+                                        name="gender"
+                                        value={formData.gender}
+                                        onChange={handleChange}
+                                        required
+                                        variant="outlined"
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Person sx={{ color: theme.palette.primary.main }} />
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.9)'
+                                                },
+                                                '&.Mui-focused': {
+                                                    backgroundColor: '#FFFFFF',
+                                                    boxShadow: `0px 0px 0px 3px ${theme.palette.primary.main}20`,
+                                                    '& .MuiOutlinedInput-notchedOutline': {
+                                                        borderColor: theme.palette.primary.main,
+                                                        borderWidth: '2px'
+                                                    }
+                                                }
+                                            },
+                                            '& .MuiInputLabel-root.Mui-focused': {
+                                                color: theme.palette.primary.main,
+                                                fontWeight: 600
+                                            }
+                                        }}
+                                    >
+                                        <MenuItem value="">{t('signup.genderPlaceholder')}</MenuItem>
+                                        <MenuItem value="female">{t('signup.genderFemale')}</MenuItem>
+                                        <MenuItem value="male">{t('signup.genderMale')}</MenuItem>
+                                        <MenuItem value="other">{t('signup.genderOther')}</MenuItem>
+                                        <MenuItem value="prefer_not_to_say">{t('signup.genderPreferNot')}</MenuItem>
+                                    </TextField>
                                 </Grid>
 
                                 <Grid item xs={12}>

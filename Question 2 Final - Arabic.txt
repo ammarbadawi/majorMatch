@@ -1,0 +1,166 @@
+[
+  {"id": 1, "category": "Academic Strength", "topic": "Mathematics", "question": "أستمتع بحل المعادلات ومسائل الرياضيات في وقت فراغي.", "micro_traits": ["Problem Solving"]},
+  {"id": 2, "category": "Academic Strength", "topic": "Mathematics", "question": "أشعر بالثقة عند التعامل مع الصيغ أو الحسابات المعقدة.", "micro_traits": ["Precision & Accuracy"]},
+  {"id": 3, "category": "Academic Strength", "topic": "Mathematics", "question": "أفهم المفاهيم الرياضية بسهولة وبشكل طبيعي.","micro_traits": []},
+
+  {"id": 4, "category": "Academic Strength", "topic": "Physics", "question": "كثيراً ما أتساءل عن كيفية عمل القوى الفيزيائية مثل الجاذبية أو الحركة.", "micro_traits": ["Curiosity & Discovery"]},
+  {"id": 5, "category": "Academic Strength", "topic": "Physics", "question": "أستمتع بحل المشكلات الواقعية باستخدام مفاهيم الفيزياء.", "micro_traits": ["Problem Solving", "Logic"]},
+  {"id": 6, "category": "Academic Strength", "topic": "Physics", "question": "أحب فهم كيفية عمل الآلات أو الآليات.", "micro_traits": ["Problem Solving", "Curiosity & Discovery"]},
+
+  {"id": 7, "category": "Academic Strength", "topic": "Chemistry", "question": "أهتم بالتفاعلات الكيميائية وأسباب حدوثها.", "micro_traits": ["Curiosity & Discovery"]},
+  {"id": 8, "category": "Academic Strength", "topic": "Chemistry", "question": "أستمتع بإجراء التجارب والعمل في المختبرات.", "micro_traits": ["Research & Investigation"]},
+  {"id": 9, "category": "Academic Strength", "topic": "Chemistry", "question": "أستوعب المعادلات والمفاهيم الكيميائية بسهولة."},
+
+  {"id": 10, "category": "Academic Strength", "topic": "Biology", "question": "أستمتع بتعلم كيفية عمل جسم الإنسان أو البيئة وكيفية الحفاظ عليهما صحياً مع مرور الوقت.", "micro_traits": ["Health & Prevention", "Sustainability & Preservation"]},
+  {"id": 11, "category": "Academic Strength", "topic": "Biology", "question": "أتذكر التفاصيل المتعلقة بالتشريح أو النباتات أو النظم البيئية."},
+  {"id": 12, "category": "Academic Strength", "topic": "Biology", "question": "أجد دروس علم الأحياء والمخططات العلمية ممتعة.", "micro_traits": ["Knowledge", "Curiosity & Discovery"]},
+
+  {"id": 13, "category": "Academic Strength", "topic": "Programming & Logic", "question": "أستمتع بحل الألغاز المنطقية أو كتابة أكواد بسيطة.", "micro_traits": ["Logic", "Problem Solving"]},
+  {"id": 14, "category": "Academic Strength", "topic": "Programming & Logic", "question": "أستطيع التفكير في حل مشكلة خطوة بخطوة بكفاءة.", "micro_traits": ["Logic", "Problem Solving"]},
+  {"id": 15, "category": "Academic Strength", "topic": "Programming & Logic", "question": "أشعر بالفضول تجاه كيفية بناء البرامج أو التطبيقات.", "micro_traits": ["Curiosity & Discovery"]},
+
+  {"id": 16, "category": "Academic Strength", "topic": "Writing & Communication", "question": "أعبر عن نفسي بوضوح من خلال الكتابة.", "micro_traits": ["Communication & Connection"]},
+  {"id": 17, "category": "Academic Strength", "topic": "Writing & Communication", "question": "أستمتع بكتابة القصص أو المقالات أو اليوميات.", "micro_traits": ["Self-Expression & Storytelling"]},
+  {"id": 18, "category": "Academic Strength", "topic": "Writing & Communication", "question": "يفهم الناس أفكاري عندما أتحدث أو أكتبها.", "micro_traits": ["Communication & Connection"]},
+
+  {"id": 19, "category": "Academic Strength", "topic": "Reading & Analysis", "question": "أستمتع بتحليل النصوص والبحث عن المعاني الخفية.", "micro_traits": ["Insight & Wisdom", "Knowledge"]},
+  {"id": 20, "category": "Academic Strength", "topic": "Reading & Analysis", "question": "أقرأ الكتب أو المقالات أو التقارير بعمق.", "micro_traits": ["Insight & Wisdom", "Knowledge"]},
+  {"id": 21, "category": "Academic Strength", "topic": "Reading & Analysis", "question": "أجد سهولة في فهم المواد المكتوبة المعقدة.", "micro_traits": ["Knowledge", "Insight & Wisdom"]},
+
+  {"id": 22, "category": "Academic Strength", "topic": "Social Sciences", "question": "أستمتع بتعلم المجتمع أو السياسة أو السلوك الإنساني.", "micro_traits": ["Justice / Truth / Ethics"]},
+  {"id": 23, "category": "Academic Strength", "topic": "Social Sciences", "question": "أفكر بعمق في القضايا الاجتماعية والأحداث التاريخية.", "micro_traits": ["Justice / Truth / Ethics", "Insight & Wisdom"]},
+  {"id": 24, "category": "Academic Strength", "topic": "Social Sciences", "question": "تجذبني مواد مثل علم النفس أو علم الاجتماع."},
+
+  {"id": 25, "category": "Academic Strength", "topic": "Visual-Spatial Thinking", "question": "أستطيع تخيل بسهولة كيف تبدو الأشياء من زوايا مختلفة.", "micro_traits": ["Logic"]},
+  {"id": 26, "category": "Academic Strength", "topic": "Visual-Spatial Thinking", "question": "أنا بارع في فهم الخرائط أو المخططات أو الرسومات الهندسية.", "micro_traits": ["Precision & Accuracy"]},
+  {"id": 27, "category": "Academic Strength", "topic": "Visual-Spatial Thinking", "question": "أمتلك إحساساً قوياً بكيفية تلاءم الأشياء مع بعضها مكانياً."},
+
+  {"id": 28, "category": "Academic Strength", "topic": "Design & Creativity", "question": "أستمتع بالرسم أو التصميم أو صنع أشياء إبداعية، خاصة عندما تُظهر الطبيعة أو تحسن الأماكن من حولي.", "micro_traits": ["Self-Expression & Storytelling", "Sustainability & Preservation"]},
+  {"id": 29, "category": "Academic Strength", "topic": "Design & Creativity", "question": "أبتكر كثيراً أفكاراً أصلية أو حلولاً فنية.", "micro_traits": ["Self-Expression & Storytelling"]},
+  {"id": 30, "category": "Academic Strength", "topic": "Design & Creativity", "question": "أحب التجربة بالألوان والأشكال والجماليات.", "micro_traits": ["Self-Expression & Storytelling"]},
+
+  {"id": 31, "category": "Academic Strength", "topic": "Business & Economics", "question": "أهتم بالمال والأسواق والاستراتيجية التجارية.", "micro_traits": ["Influence"]},
+  {"id": 32, "category": "Academic Strength", "topic": "Business & Economics", "question": "أفهم المبادئ الاقتصادية أو المالية الأساسية.", "micro_traits": ["Knowledge", "Logic"]},
+  {"id": 33, "category": "Academic Strength", "topic": "Business & Economics", "question": "أستمتع بالتفكير في الأرباح أو الميزانيات أو التجارة."},
+
+  {"id": 34, "category": "Academic Strength", "topic": "Foreign Languages", "question": "أستمتع بتعلم لغات جديدة وثقافاتها.", "micro_traits": ["Cultural Expression", "Communication & Connection"]},
+  {"id": 35, "category": "Academic Strength", "topic": "Foreign Languages", "question": "أستطيع حفظ المفردات أو قواعد اللغة بسهولة.", "micro_traits": ["Knowledge"]},
+  {"id": 36, "category": "Academic Strength", "topic": "Foreign Languages", "question": "يبدو تعلم اللغات طبيعياً وممتعاً بالنسبة لي.", "micro_traits": ["Communication & Connection", "Cultural Expression"]},
+
+  {"id": 37, "category": "Academic Strength", "topic": "Leadership & Public Speaking", "question": "أستمتع بقيادة المشاريع الجماعية أو اتخاذ القرارات.", "micro_traits": ["Influence", "Responsibility & Discipline"]},
+  {"id": 38, "category": "Academic Strength", "topic": "Leadership & Public Speaking", "question": "أشعر بالراحة عند التحدث أمام الجمهور.", "micro_traits": ["Communication & Connection", "Influence"]},
+  {"id": 39, "category": "Academic Strength", "topic": "Leadership & Public Speaking", "question": "أحب تحفيز الناس أو تنظيمهم لتحقيق الأهداف.", "micro_traits": ["Influence", "Responsibility & Discipline"]},
+
+  {"id": 40, "category": "Academic Strength", "topic": "Research & Investigation", "question": "أستمتع باستكشاف المواضيع بعمق وطرح الأسئلة.", "micro_traits": ["Research & Investigation", "Curiosity & Discovery"]},
+  {"id": 41, "category": "Academic Strength", "topic": "Research & Investigation", "question": "أنا جيد في جمع المعلومات وتفسيرها.", "micro_traits": ["Research & Investigation", "Insight & Wisdom"]},
+  {"id": 42, "category": "Academic Strength", "topic": "Research & Investigation", "question": "أشعر بالفضول وأستمتع باكتشاف كيفية عمل الأشياء.", "micro_traits": ["Curiosity & Discovery", "Research & Investigation"]},
+
+  {"id": 43, "category": "Core Value", "topic": "Creativity", "question": "أشعر بالرضا عندما أخترع أو أبتكر شيئاً جديداً."},
+  {"id": 44, "category": "Core Value", "topic": "Creativity", "question": "أحتاج مساحة للتعبير عن أفكاري وخيالي."},
+
+  {"id": 45, "category": "Core Value", "topic": "Stability", "question": "المستقبل المستقر والمتوقع مهم جداً بالنسبة لي."},
+  {"id": 46, "category": "Core Value", "topic": "Stability", "question": "أفضل الوظائف الآمنة والمسارات المهنية الموثوقة."},
+
+  {"id": 47, "category": "Core Value", "topic": "Helping Others", "question": "أريد أن يجعل عملي حياة الناس أفضل."},
+  {"id": 48, "category": "Core Value", "topic": "Helping Others", "question": "يحفزني إحداث فرق إيجابي في مجتمعي."},
+
+  {"id": 49, "category": "Core Value", "topic": "Leadership", "question": "أرغب في قيادة الفرق أو اتخاذ قرارات مؤثرة."},
+  {"id": 50, "category": "Core Value", "topic": "Leadership", "question": "أستمتع بتحمل المسؤولية عن نتائج المجموعة."},
+
+  {"id": 51, "category": "Core Value", "topic": "Prestige", "question": "أريد مهنة تحظى بالاحترام والتقدير."},
+  {"id": 52, "category": "Core Value", "topic": "Prestige", "question": "المكانة والسمعة مهمة بالنسبة لي عند اختيار المهنة."},
+
+  {"id": 53, "category": "Core Value", "topic": "Intellectual Challenge", "question": "أحب حل المشكلات المعقدة التي تتطلب تفكيراً عميقاً."},
+  {"id": 54, "category": "Core Value", "topic": "Intellectual Challenge", "question": "أشعر بالنشاط عندما أواجه تحديات ذهنية وأتعلم أشياء جديدة."},
+
+  {"id": 55, "category": "Core Value", "topic": "Teamwork", "question": "أستمتع بالعمل عن قرب مع الآخرين لتحقيق أهداف مشتركة."},
+  {"id": 56, "category": "Core Value", "topic": "Teamwork", "question": "أزدهر في البيئات الجماعية التي يدعم فيها الناس بعضهم."},
+
+  {"id": 57, "category": "Core Value", "topic": "Independence", "question": "أحب إدارة جدولي ومسؤولياتي بنفسي."},
+  {"id": 58, "category": "Core Value", "topic": "Independence", "question": "أفضل العمل منفرداً بدلاً من الاعتماد على الآخرين."},
+
+  {"id": 59, "category": "Core Value", "topic": "Innovation", "question": "أرغب في أن أكون في طليعة الاتجاهات أو التقنيات الجديدة."},
+  {"id": 60, "category": "Core Value", "topic": "Innovation", "question": "أستمتع بابتكار أفكار تكسر المألوف."},
+
+  {"id": 61, "category": "Core Value", "topic": "Impact", "question": "إحداث تأثير ملموس في العالم أمر مهم بالنسبة لي."},
+  {"id": 62, "category": "Core Value", "topic": "Impact", "question": "أريد أن أترك أثراً من خلال عملي."},
+
+  {"id": 63, "category": "Core Value", "topic": "Efficiency & Order", "question": "أستمتع بتنظيم الأنظمة وتبسيط العمليات."},
+  {"id": 64, "category": "Core Value", "topic": "Efficiency & Order", "question": "أحب عندما تكون الأمور منظمة وواضحة وفعالة."},
+
+  {"id": 65, "category": "Core Value", "topic": "Cultural Appreciation", "question": "أقدر التعرف على الثقافات والتاريخ المختلفة."},
+  {"id": 66, "category": "Core Value", "topic": "Cultural Appreciation", "question": "تجذبني التجارب التي تحتفي بالتنوع والهوية."},
+
+  {"id": 67, "category": "Core Value", "topic": "Nature & Environment", "question": "يهمني حماية البيئة والعالم الطبيعي."},
+  {"id": 68, "category": "Core Value", "topic": "Nature & Environment", "question": "أشعر بالارتباط بالحيوانات أو النباتات أو الأماكن الطبيعية."},
+
+  {"id": 69, "category": "Core Value", "topic": "Financial Reward", "question": "قد أقبل بعمل لا أحبه إذا كان راتبه أعلى بكثير من الخيارات الأخرى."},
+  {"id": 70, "category": "Core Value", "topic": "Financial Reward", "question": "عندما أختار مساراً مهنياً، أركز أكثر على إمكانية الدخل من الاهتمام الشخصي أو المعنى."},
+
+  {"id": 71, "category": "RIASEC", "topic": "R", "question": "أستمتع باستخدام الأدوات لبناء الأشياء أو إصلاحها.", "micro_traits": ["Problem Solving"]},
+  {"id": 72, "category": "RIASEC", "topic": "R", "question": "أفضل العمل بيدي على الجلوس خلف مكتب."},
+  {"id": 73, "category": "RIASEC", "topic": "R", "question": "أحب إصلاح الأشياء الميكانيكية أو تفكيكها.", "micro_traits": ["Problem Solving"]},
+  {"id": 74, "category": "RIASEC", "topic": "R", "question": "أستمتع بالأعمال الخارجية مثل البستنة أو البناء، خصوصاً عندما تساعد في رعاية الأرض أو تحسين البيئة.", "micro_traits": ["Sustainability & Preservation", "Responsibility & Discipline"]},
+  {"id": 75, "category": "RIASEC", "topic": "R", "question": "أفضل القيام بشيء حركي على القراءة أو الكتابة."},
+  {"id": 76, "category": "RIASEC", "topic": "R", "question": "أنا جيد في تجميع الأشياء أو تفكيكها.", "micro_traits": ["Curiosity & Discovery", "Problem Solving"]},
+  {"id": 77, "category": "RIASEC", "topic": "R", "question": "أشعر بالثقة عند استخدام الآلات أو الأدوات الكهربائية.", "micro_traits": ["Precision & Accuracy"]},
+  {"id": 78, "category": "RIASEC", "topic": "R", "question": "أفضل المهام العملية على النظرية."},
+  {"id": 79, "category": "RIASEC", "topic": "R", "question": "أستمتع بالأنشطة التي تتطلب حركة ومهارة جسدية."},
+  {"id": 80, "category": "RIASEC", "topic": "R", "question": "أحب العمل مع الحيوانات أو في الطبيعة والمساعدة في حمايتها.", "micro_traits": ["Sustainability & Preservation"]},
+
+  {"id": 81, "category": "RIASEC", "topic": "I", "question": "أستمتع بحل مسائل الرياضيات أو العلوم.", "micro_traits": ["Problem Solving", "Logic"]},
+  {"id": 82, "category": "RIASEC", "topic": "I", "question": "أحب القيام بالتجارب أو التحقيقات.", "micro_traits": ["Research & Investigation"]},
+  {"id": 83, "category": "RIASEC", "topic": "I", "question": "كثيراً ما أسأل \"لماذا\" وأحب اكتشاف الأسباب.", "micro_traits": ["Curiosity & Discovery"]},
+  {"id": 84, "category": "RIASEC", "topic": "I", "question": "أشعر بالفضول لمعرفة كيفية عمل الأشياء.", "micro_traits": ["Curiosity & Discovery"]},
+  {"id": 85, "category": "RIASEC", "topic": "I", "question": "أستمتع بالمهام الأكاديمية والفكرية.", "micro_traits": ["Insight & Wisdom"]},
+  {"id": 86, "category": "RIASEC", "topic": "I", "question": "أفضل مشاريع البحث على الكتابة الإبداعية.", "micro_traits": ["Research & Investigation", "Knowledge"]},
+  {"id": 87, "category": "RIASEC", "topic": "I", "question": "أحب العمل مع البيانات أو الأرقام أو الأدلة.", "micro_traits": ["Precision & Accuracy", "Justice / Truth / Ethics"]},
+  {"id": 88, "category": "RIASEC", "topic": "I", "question": "أستمتع بتحليل المشكلات بطريقة منطقية.", "micro_traits": ["Logic"]},
+  {"id": 89, "category": "RIASEC", "topic": "I", "question": "أشعر بالحماس عندما أواجه تحديات ذهنية.", "micro_traits": ["Problem Solving"]},
+  {"id": 90, "category": "RIASEC", "topic": "I", "question": "أستمتع بتعلم وفهم الموضوعات المعقدة.", "micro_traits": ["Insight & Wisdom"]},
+
+  {"id": 91, "category": "RIASEC", "topic": "A", "question": "أحب التعبير عن نفسي من خلال الفن أو الموسيقى أو الكتابة.", "micro_traits": ["Self-Expression & Storytelling"]},
+  {"id": 92, "category": "RIASEC", "topic": "A", "question": "أستمتع بابتكار أفكار جديدة وإبداعية."},
+  {"id": 93, "category": "RIASEC", "topic": "A", "question": "أفضل بيئات العمل غير المقيدة."},
+  {"id": 94, "category": "RIASEC", "topic": "A", "question": "أهتم بالتصميم أو الموضة أو الجماليات.", "micro_traits": ["Cultural Expression"]},
+  {"id": 95, "category": "RIASEC", "topic": "A", "question": "أحب التمثيل أو الرسم أو الكتابة الإبداعية.", "micro_traits": ["Self-Expression & Storytelling"]},
+  {"id": 96, "category": "RIASEC", "topic": "A", "question": "أُقدّر الحرية والأصالة في عملي."},
+  {"id": 97, "category": "RIASEC", "topic": "A", "question": "أستمتع بأنشطة مثل كتابة اليوميات أو الرسم.", "micro_traits": ["Self-Expression & Storytelling"]},
+  {"id": 98, "category": "RIASEC", "topic": "A", "question": "تجذبني الموسيقى أو الشعر أو السينما.", "micro_traits": ["Self-Expression & Storytelling"]},
+  {"id": 99, "category": "RIASEC", "topic": "A", "question": "أستمتع بكوني خيالياً وعفوياً.", "micro_traits": ["Self-Expression & Storytelling"]},
+  {"id": 100, "category": "RIASEC", "topic": "A", "question": "أفكر غالباً بطرق غير تقليدية لحل المشكلات.", "micro_traits": ["Problem Solving", "Curiosity & Discovery"]},
+
+  {"id": 101, "category": "RIASEC", "topic": "S", "question": "أحب مساعدة الآخرين على حل مشكلاتهم.", "micro_traits": ["Service & Empathy", "Communication & Connection"]},
+  {"id": 102, "category": "RIASEC", "topic": "S", "question": "أستمتع بمساعدة الآخرين على بناء عادات صحية أو اتخاذ قرارات أفضل.", "micro_traits": ["Health & Prevention", "Service & Empathy"]},
+  {"id": 103, "category": "RIASEC", "topic": "S", "question": "أنا جيد في الاستماع وتقديم الدعم.", "micro_traits": ["Service & Empathy", "Communication & Connection"]},
+  {"id": 104, "category": "RIASEC", "topic": "S", "question": "أجد معنى في رعاية الآخرين ومساعدتهم على البقاء بصحة جيدة وآمنة.", "micro_traits": ["Service & Empathy", "Health & Prevention"]},
+  {"id": 105, "category": "RIASEC", "topic": "S", "question": "أفضل العمل التعاوني على المنافسة.", "micro_traits": ["Communication & Connection"]},
+  {"id": 106, "category": "RIASEC", "topic": "S", "question": "أستمتع بجعل الناس يشعرون بالترحيب أو الاهتمام.", "micro_traits": ["Service & Empathy", "Communication & Connection"]},
+  {"id": 107, "category": "RIASEC", "topic": "S", "question": "أنجذب إلى وظائف مثل التمريض أو الإرشاد أو التدريس.", "micro_traits": ["Health & Prevention", "Service & Empathy"]},
+  {"id": 108, "category": "RIASEC", "topic": "S", "question": "أحب المشاركة في المناقشات الجماعية أو مجموعات الدعم.", "micro_traits": ["Communication & Connection"]},
+  {"id": 109, "category": "RIASEC", "topic": "S", "question": "أريد مهنة أستطيع من خلالها إحداث فرق في حياة الناس.", "micro_traits": ["Influence"]},
+  {"id": 110, "category": "RIASEC", "topic": "S", "question": "يلجأ إليّ الناس غالباً عندما يحتاجون إلى المساعدة أو النصيحة.", "micro_traits": ["Service & Empathy", "Insight & Wisdom"]},
+
+  {"id": 111, "category": "RIASEC", "topic": "E", "question": "أستمتع بقيادة المناقشات أو تولي زمام الأمور.", "micro_traits": ["Influence", "Communication & Connection"]},
+  {"id": 112, "category": "RIASEC", "topic": "E", "question": "أحب بدء مشاريع أو أعمال جديدة.", "micro_traits": ["Responsibility & Discipline"]},
+  {"id": 113, "category": "RIASEC", "topic": "E", "question": "أرتاح لإقناع الناس أو بيع الأفكار.", "micro_traits": ["Influence", "Communication & Connection"]},
+  {"id": 114, "category": "RIASEC", "topic": "E", "question": "أرغب في أن أكون مؤثراً في مجالي أو مجتمعي.", "micro_traits": ["Influence"]},
+  {"id": 115, "category": "RIASEC", "topic": "E", "question": "أستمتع بالمخاطرة لتحقيق هدف ما."},
+  {"id": 116, "category": "RIASEC", "topic": "E", "question": "تحفزني التحديات والمنافسة."},
+  {"id": 117, "category": "RIASEC", "topic": "E", "question": "أستمتع بإدارة الآخرين أو تنسيقهم.", "micro_traits": ["Influence", "Responsibility & Discipline"]},
+  {"id": 118, "category": "RIASEC", "topic": "E", "question": "أحب أن تتم مكافأتي على الأداء والنتائج."},
+  {"id": 119, "category": "RIASEC", "topic": "E", "question": "أفضل بيئات العمل السريعة الإيقاع والديناميكية."},
+  {"id": 120, "category": "RIASEC", "topic": "E", "question": "أهتم بالسياسة أو القانون أو ريادة الأعمال.", "micro_traits": ["Justice / Truth / Ethics", "Influence"]},
+
+  {"id": 121, "category": "RIASEC", "topic": "C", "question": "أحب تنظيم البيانات أو حفظ السجلات.", "micro_traits": ["Precision & Accuracy"]},
+  {"id": 122, "category": "RIASEC", "topic": "C", "question": "أستمتع بالعمل في بيئات منظمة تعتمد على القواعد.", "micro_traits": ["Responsibility & Discipline"]},
+  {"id": 123, "category": "RIASEC", "topic": "C", "question": "أنا دقيق ومنهجي.", "micro_traits": ["Precision & Accuracy", "Responsibility & Discipline"]},
+  {"id": 124, "category": "RIASEC", "topic": "C", "question": "أفضل الروتين والثبات في عملي.", "micro_traits": ["Responsibility & Discipline"]},
+  {"id": 125, "category": "RIASEC", "topic": "C", "question": "أستمتع بإدارة الجداول أو الملفات.", "micro_traits": ["Precision & Accuracy", "Responsibility & Discipline"]},
+  {"id": 126, "category": "RIASEC", "topic": "C", "question": "أحب العمل مع الأرقام وجداول البيانات.", "micro_traits": ["Precision & Accuracy", "Logic"]},
+  {"id": 127, "category": "RIASEC", "topic": "C", "question": "أشعر بالثقة عندما أتبع التعليمات بدقة.", "micro_traits": ["Responsibility & Discipline"]},
+  {"id": 128, "category": "RIASEC", "topic": "C", "question": "أستمتع بالتحقق من الدقة وتصحيح الأخطاء.", "micro_traits": ["Precision & Accuracy"]},
+  {"id": 129, "category": "RIASEC", "topic": "C", "question": "أستمتع بمهام مثل إعداد الميزانيات أو تنظيم الملفات أو التخطيط للفعاليات.", "micro_traits": ["Responsibility & Discipline", "Precision & Accuracy"]},
+  {"id": 130, "category": "RIASEC", "topic": "C", "question": "أفضل العمل في أماكن هادئة ومنظمة.", "micro_traits": ["Responsibility & Discipline"]}
+]
+

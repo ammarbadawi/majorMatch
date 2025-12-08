@@ -22,7 +22,8 @@ import {
     Tabs,
     Tab,
     InputAdornment,
-    useMediaQuery
+    useMediaQuery,
+    Rating
 } from '@mui/material';
 import {
     Email,
@@ -35,7 +36,8 @@ import {
     Visibility,
     VisibilityOff,
     Person,
-    Replay
+    Replay,
+    Star
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -65,6 +67,17 @@ interface MajorResult {
         career_paths: string[];
     }>;
     created_at: string;
+}
+
+interface RatingSummary {
+    average: number;
+    total: number;
+    distribution: Record<number, number>;
+    recent: Array<{
+        value: number;
+        comment: string;
+        updated_at: string;
+    }>;
 }
 
 interface ProfileData {
@@ -100,9 +113,16 @@ const Profile: React.FC = () => {
         newPassword: '',
         confirmPassword: ''
     });
+    const [ratingSummary, setRatingSummary] = useState<RatingSummary | null>(null);
+    const [myRating, setMyRating] = useState<number | null>(null);
+    const [ratingComment, setRatingComment] = useState('');
+    const [ratingStatus, setRatingStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+    const [ratingLoading, setRatingLoading] = useState(false);
+    const [ratingSubmitting, setRatingSubmitting] = useState(false);
 
     useEffect(() => {
         fetchProfileData();
+        fetchRatings();
     }, []);
 
     const fetchProfileData = async () => {
@@ -139,6 +159,36 @@ const Profile: React.FC = () => {
         }
     };
 
+    const fetchRatings = async () => {
+        try {
+            setRatingLoading(true);
+            setRatingStatus(null);
+            const [summaryRes, myRes] = await Promise.all([
+                fetch('/api/ratings/summary', { credentials: 'include' }),
+                fetch('/api/ratings/me', { credentials: 'include' })
+            ]);
+
+            if (summaryRes.ok) {
+                const summaryData = await summaryRes.json();
+                setRatingSummary(summaryData);
+            } else {
+                setRatingStatus({ type: 'error', message: t('profile.ratingLoadError') });
+            }
+
+            if (myRes.ok) {
+                const myData = await myRes.json();
+                setMyRating(myData.rating ?? null);
+                setRatingComment(myData.comment ?? '');
+            } else if (myRes.status !== 401) {
+                setRatingStatus({ type: 'error', message: t('profile.ratingLoadError') });
+            }
+        } catch (err) {
+            setRatingStatus({ type: 'error', message: t('profile.ratingLoadError') });
+        } finally {
+            setRatingLoading(false);
+        }
+    };
+
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
             year: 'numeric',
@@ -147,6 +197,39 @@ const Profile: React.FC = () => {
             hour: '2-digit',
             minute: '2-digit'
         });
+    };
+
+    const handleSubmitRating = async () => {
+        if (!myRating) {
+            setRatingStatus({ type: 'error', message: t('profile.selectRating') });
+            return;
+        }
+
+        try {
+            setRatingSubmitting(true);
+            setRatingStatus(null);
+            const res = await fetch('/api/ratings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ rating: myRating, comment: ratingComment })
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || t('profile.ratingSubmitError'));
+            }
+            setRatingStatus({ type: 'success', message: t('profile.ratingThanks') });
+            setRatingSummary(data.summary || null);
+            setMyRating(data.rating?.value ?? myRating);
+            setRatingComment(data.rating?.comment ?? ratingComment);
+        } catch (err: any) {
+            setRatingStatus({
+                type: 'error',
+                message: err?.message || t('profile.ratingSubmitError')
+            });
+        } finally {
+            setRatingSubmitting(false);
+        }
     };
 
     const formatLastLogin = (dateString: string) => {
@@ -606,6 +689,140 @@ const Profile: React.FC = () => {
                                     <Typography variant="body1" sx={{ lineHeight: 1.6, fontSize: { xs: '0.95rem', sm: '1rem' } }}>
                                         {t('profile.aiCounselorDescription')}
                                     </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+
+                        {/* Ratings */}
+                        <Grid item xs={12}>
+                            <Card elevation={3}>
+                                <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', mb: { xs: 1.5, sm: 0 } }}>
+                                            <Star sx={{ mr: 2, fontSize: { xs: 24, sm: 32 }, color: theme.palette.warning.main }} />
+                                            <Box>
+                                                <Typography variant="h5" component="h3" sx={{ fontWeight: 700, fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+                                                    {t('profile.rateExperience')}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary" sx={{ fontSize: { xs: '0.85rem', sm: '0.9rem' } }}>
+                                                    {t('profile.ratingSubtitle')}
+                                                </Typography>
+                                            </Box>
+                                        </Box>
+                                    </Box>
+
+                                    {ratingStatus && (
+                                        <Alert severity={ratingStatus.type} sx={{ mb: 2 }}>
+                                            {ratingStatus.message}
+                                        </Alert>
+                                    )}
+
+                                    {ratingLoading ? (
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+                                            <CircularProgress size={48} />
+                                        </Box>
+                                    ) : (
+                                        <Grid container spacing={{ xs: 3, sm: 4 }}>
+                                            <Grid item xs={12} md={4}>
+                                                <Box sx={{ textAlign: 'center', p: { xs: 2, sm: 3 }, borderRadius: 2, backgroundColor: theme.palette.grey[50] }}>
+                                                    <Rating
+                                                        value={ratingSummary?.average || 0}
+                                                        precision={0.1}
+                                                        readOnly
+                                                        size="large"
+                                                        sx={{ mb: 1 }}
+                                                    />
+                                                    <Typography variant="h4" sx={{ fontWeight: 800, lineHeight: 1 }}>
+                                                        {(ratingSummary?.average ?? 0).toFixed(1)}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        {(ratingSummary?.total ?? 0)} {t('profile.ratingsCount')}
+                                                    </Typography>
+                                                    <Divider sx={{ my: 2 }} />
+                                                    <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                                                        {t('profile.ratingSummary')}
+                                                    </Typography>
+                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                                                        {[5, 4, 3, 2, 1].map((star) => (
+                                                            <Box key={star} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                                    <Star sx={{ fontSize: 18, color: theme.palette.warning.main }} />
+                                                                    <Typography variant="body2">{star}</Typography>
+                                                                </Box>
+                                                                <Typography variant="body2" color="text.secondary">
+                                                                    {ratingSummary?.distribution?.[star] ?? 0}
+                                                                </Typography>
+                                                            </Box>
+                                                        ))}
+                                                    </Box>
+                                                </Box>
+                                            </Grid>
+                                            <Grid item xs={12} md={8}>
+                                                <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
+                                                    {t('profile.yourRatingLabel')}
+                                                </Typography>
+                                                <Rating
+                                                    value={myRating ?? 0}
+                                                    precision={1}
+                                                    size="large"
+                                                    onChange={(_, value) => setMyRating(value)}
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                <TextField
+                                                    fullWidth
+                                                    multiline
+                                                    minRows={3}
+                                                    maxRows={6}
+                                                    value={ratingComment}
+                                                    onChange={(e) => setRatingComment(e.target.value)}
+                                                    placeholder={t('profile.ratingPlaceholder')}
+                                                    sx={{ mb: 2 }}
+                                                />
+                                                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        onClick={handleSubmitRating}
+                                                        disabled={ratingSubmitting}
+                                                        startIcon={ratingSubmitting ? <CircularProgress size={20} /> : undefined}
+                                                    >
+                                                        {myRating ? t('profile.updateRating') : t('profile.submitRating')}
+                                                    </Button>
+                                                    <Button
+                                                        variant="outlined"
+                                                        onClick={fetchRatings}
+                                                        disabled={ratingSubmitting}
+                                                    >
+                                                        {t('profile.refreshRatings')}
+                                                    </Button>
+                                                </Box>
+                                                <Divider sx={{ my: 3 }} />
+                                                <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+                                                    {t('profile.recentFeedback')}
+                                                </Typography>
+                                                {ratingSummary?.recent?.length ? (
+                                                    <Grid container spacing={2}>
+                                                        {ratingSummary.recent.map((item, idx) => (
+                                                            <Grid item xs={12} sm={6} key={idx}>
+                                                                <Box sx={{ p: 2, borderRadius: 2, border: `1px solid ${theme.palette.divider}`, height: '100%' }}>
+                                                                    <Rating value={item.value} readOnly size="small" sx={{ mb: 0.5 }} />
+                                                                    <Typography variant="body2" sx={{ mb: 1.5 }}>
+                                                                        {item.comment}
+                                                                    </Typography>
+                                                                    <Typography variant="caption" color="text.secondary">
+                                                                        {t('profile.lastUpdated')} {formatDate(item.updated_at)}
+                                                                    </Typography>
+                                                                </Box>
+                                                            </Grid>
+                                                        ))}
+                                                    </Grid>
+                                                ) : (
+                                                    <Typography variant="body2" color="text.secondary">
+                                                        {t('profile.noRecentFeedback')}
+                                                    </Typography>
+                                                )}
+                                            </Grid>
+                                        </Grid>
+                                    )}
                                 </CardContent>
                             </Card>
                         </Grid>

@@ -1,5 +1,5 @@
 {
-  "personalityType": "INFP-A",
+  "personalityType": "INFP(A)",
   "codeName": "The Soul",
   "label": "The Gentle Idealist",
   "lifeQuote": "Even soft voices can shake the world—if they speak the truth.",
@@ -18,7 +18,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Soul (INFP-A)",
+      "title": "The Soul (INFP(A))",
       "subtitle": "The Gentle Idealist",
       "quote": "Your heart is your compass, and your dreams are your map.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -193,30 +193,36 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented"
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "A deep soul meets a quiet light."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional"
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Idealism with sparks and freedom."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Understanding of silence"
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Understanding of silence",
+	  "why?": "Kindred spirits who understand silence."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Results-focused • Direct"
+          "type": "Supervisor",
+          "description": "Structured • Results-focused • Direct",
+	  "why?": "Structured environments may feel stifling."
         },
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Logical • Strong-willed"
+          "type": "Commander",
+          "description": "Decisive • Logical • Strong-willed",
+	  "why?": "Logic overrules emotions."
         },
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Practical • Responsible • Traditional"
+          "type": "Inspector",
+          "description": "Practical • Responsible • Traditional",
+	  "why?": "Practicality may overlook passion."
         }
       ]
     },
@@ -243,7 +249,7 @@
       "items": [
         {
           "name": "Princess Diana",
-          "description": "Compassion and grace."
+          "description": "Grace, compassion, and emotional depth."
         },
         {
           "name": "Johnny Depp",
@@ -251,7 +257,7 @@
         },
         {
           "name": "J.K. Rowling",
-          "description": "Quiet resilience, extraordinary imagination."
+          "description": "Quiet resilience with an extraordinary inner world."
         }
       ]
     },
@@ -285,7 +291,7 @@
 ---
 
 {
-  "personalityType": "INFP-T",
+  "personalityType": "INFP(T)",
   "codeName": "The Soul",
   "label": "The Gentle Soul",
   "lifeQuote": "You don’t have to be loud to be powerful—sometimes, the soul whispers and the world listens.",
@@ -304,7 +310,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Soul (INFP-T)",
+      "title": "The Soul (INFP(T))",
       "subtitle": "The Gentle Soul",
       "quote": "Your heart is your compass, and your doubts are part of the journey.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -479,37 +485,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven"
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Gentle souls, silent understanding."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional"
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Inspiration meets introspection."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous"
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "Sensitive spirits with shared rhythms."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused"
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "Their structure may overwhelm you." 
         },
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious"
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "Might dismiss your emotional process."
         },
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional"
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "Logic may feel cold when you seek warmth."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for INFP-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -571,7 +583,7 @@
 
 
 {
-  "personalityType": "INFJ-A",
+  "personalityType": "INFJ(A)",
   "codeName": "The Visionary",
   "label": "The Quiet Force",
   "lifeQuote": "You don’t need a stage to change the world. Just a vision—and the courage to live it.",
@@ -590,7 +602,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Visionary (INFJ-A)",
+      "title": "The Visionary (INFJ(A))",
       "subtitle": "The Quiet Force",
       "quote": "You don’t raise your voice—you raise your impact.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -765,37 +777,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented"
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Dreamers who feel your mission."
         },
         {
-          "type": "Protagonist (ENFJ)",
-          "description": "Charismatic • Caring • Inspiring"
+          "type": "Protagonist",
+          "description": "Charismatic • Caring • Inspiring",
+	  "why?": "Leaders who share your emotional vision."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient"
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Focused minds who respect your depth."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking"
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "May dismiss your internal process."
         },
         {
-          "type": "Virtuoso (ISTP)",
-          "description": "Practical • Independent • Hands-on"
+          "type": "Virtuoso",
+          "description": "Practical • Independent • Hands-on",
+	  "why?": "Emotionally distant when you crave connection."
         },
         {
-          "type": "Entertainer (ESFP)",
-          "description": "Expressive • Fun-loving • Spontaneous"
+          "type": "Entertainer",
+          "description": "Expressive • Fun-loving • Spontaneous",
+	  "why?": "May seem too spontaneous or surface-level."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for INFJ-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -854,7 +872,7 @@
 
 ---
 {
-  "personalityType": "INFJ-T",
+  "personalityType": "INFJ(T)",
   "codeName": "The Visionary",
   "label": "The Quiet Flame",
   "lifeQuote": "The flame may be quiet—but it can light a thousand others.",
@@ -873,7 +891,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Visionary (INFJ-T)",
+      "title": "The Visionary (INFJ(T))",
       "subtitle": "The Quiet Flame",
       "quote": "You don’t shout to be heard—you glow from within, and the right people notice.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -1048,37 +1066,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented"
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "You share emotional depth and purpose."
         },
         {
-          "type": "Protagonist (ENFJ)",
-          "description": "Charismatic • Caring • Inspiring"
+          "type": "Protagonist",
+          "description": "Charismatic • Caring • Inspiring",
+	  "why?": "You inspire each other’s leadership."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient"
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "They respect your vision and your values."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; may misread your depth as hesitation."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "May misread your depth as hesitation."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; can feel emotionally guarded when you seek deeper connection."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "Can feel emotionally guarded when you seek deeper connection."
         },
         {
-          "type": "Entertainer (ESFP)",
-          "description": "Expressive • Fun-loving • Lively; may seem chaotic or surface-level compared to your focus."
+          "type": "Entertainer",
+          "description": "Expressive • Fun-loving • Lively",
+	  "why?": "May seem chaotic or surface-level compared to your focus."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for INFJ-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -1139,7 +1163,7 @@
 -------
 
 {
-  "personalityType": "ENFP-A",
+  "personalityType": "ENFP(A)",
   "codeName": "The Explorer",
   "label": "The Spark Seeker",
   "lifeQuote": "Be the fire that dances, the light that leads, and the heart that never dims.",
@@ -1158,7 +1182,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Explorer (ENFP-A)",
+      "title": "The Explorer (ENFP(A))",
       "subtitle": "The Spark Seeker",
       "quote": "You chase moments that feel alive—and turn them into stories worth remembering.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -1333,37 +1357,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; they ground your fire and see your soul."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "They ground your fire and see your soul."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; kindred spirits who match your depth and whimsy."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Kindred spirits who match your depth and whimsy."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; idea-rich minds with your pace and humor."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "Idea-rich minds with your pace and humor."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; may seem too rigid or skeptical."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional"
+	  "why?": "May seem too rigid or skeptical."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; may criticize your spontaneity."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused"
+	  "why?": "May criticize your spontaneity."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; might need more structure than you enjoy."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient"
+	  "why?": "Might need more structure than you enjoy."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENFP-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -1423,7 +1453,7 @@
 --------
 
 {
-  "personalityType": "ENFP-T",
+  "personalityType": "ENFP(T)",
   "codeName": "The Explorer",
   "label": "The Bright Flame",
   "lifeQuote": "You weren’t born to burn quietly. You were made to ignite hearts.",
@@ -1442,7 +1472,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Explorer (ENFP-T)",
+      "title": "The Explorer (ENFP(T))",
       "subtitle": "The Bright Flame",
       "quote": "You burn brightly—not to be seen, but because you can’t help but shine.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -1617,37 +1647,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; their quiet vision grounds your radiant motion."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Their quiet vision grounds your radiant motion."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; emotionally resonant, dream-driven connection."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Emotionally resonant, dream-driven connection."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; they match your pace and challenge your mind."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "They match your pace and challenge your mind."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; may shut down your spontaneity."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "May shut down your spontaneity."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; may view your passion as impractical."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "May view your passion as impractical."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; their emotional distance can confuse your heart-led approach."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Their emotional distance can confuse your heart-led approach."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENFP-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -1708,7 +1744,7 @@
 ------------
 
 {
-  "personalityType": "ENFJ-A",
+  "personalityType": "ENFJ(A)",
   "codeName": "The Mentor",
   "label": "The Radiant Leader",
   "lifeQuote": "Lead with your heart, and the world will follow—not because you asked, but because you inspired.",
@@ -1727,7 +1763,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Mentor (ENFJ-A)",
+      "title": "The Mentor (ENFJ(A))",
       "subtitle": "The Radiant Leader",
       "quote": "You don’t just lead with your voice—you lead with your heart, and people follow the warmth.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -1902,37 +1938,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; their depth balances your drive."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Their depth balances your drive."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; you share emotional vision and conviction."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "You share emotional vision and conviction."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; their energy matches your optimism and insight."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Their energy matches your optimism and insight."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Virtuoso (ISTP)",
-          "description": "Practical • Independent • Hands-on; may resist emotional connection."
+          "type": "Virtuoso",
+          "description": "Practical • Independent • Hands-on",
+	  "why?": "May resist emotional connection."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; their spontaneity can clash with your structure and long-range plans."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "Their spontaneity can clash with your structure and long-range plans."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; may dismiss your emotional lens on decisions."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "May dismiss your emotional lens on decisions."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENFJ-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -1993,7 +2035,7 @@
 ------
 
 {
-  "personalityType": "ENFJ-T",
+  "personalityType": "ENFJ(T)",
   "codeName": "The Mentor",
   "label": "The Compassionate Flame",
   "lifeQuote": "Some lights don’t ask to be seen—they simply shine, and others follow.",
@@ -2012,7 +2054,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Mentor (ENFJ-T)",
+      "title": "The Mentor (ENFJ(T))",
       "subtitle": "The Compassionate Flame",
       "quote": "You don’t burn out of pride—you burn out of love. But the world still needs your light.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -2187,37 +2229,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; deep-hearted, mission-driven partners."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Deep-hearted, mission-driven partners."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; emotional resonance and shared drive."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Emotional resonance and shared drive."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; structured empathy and mutual insight."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Structured empathy and mutual insight."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Virtuoso (ISTP)",
-          "description": "Practical • Independent • Hands-on; can feel emotionally distant when you need depth."
+          "type": "Virtuoso",
+          "description": "Practical • Independent • Hands-on",
+	  "why?": "Can feel emotionally distant when you need depth."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; may misunderstand your emotional intensity."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "May misunderstand your emotional intensity."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; may value logic over emotional truth."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "May value logic over emotional truth."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENFJ-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -2278,7 +2326,7 @@
 ------
 
 {
-  "personalityType": "ENTP-A",
+  "personalityType": "ENTP(A)",
   "codeName": "The Trailblazer",
   "label": "The Rebel Mind",
   "lifeQuote": "The world doesn’t change by staying in line. It evolves when someone asks, ‘Why not?’",
@@ -2297,7 +2345,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Trailblazer (ENTP-A)",
+      "title": "The Trailblazer (ENTP(A))",
       "subtitle": "The Rebel Mind",
       "quote": "You don’t break the rules to be reckless—you break them to find something better.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -2472,37 +2520,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; idea explosion meets emotional resonance."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Idea explosion meets emotional resonance."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; their structure sharpens your energy."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Their structure sharpens your energy."
         },
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; mental sparring and shared curiosity."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "Mental sparring and shared curiosity."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; may see your chaos as carelessness."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective"
+	  "why?": "May see your chaos as carelessness."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may find your detachment confusing."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant"
+	  "why?": "May find your detachment confusing."
         },
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; rules-first thinking can clash with your experimentation."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "Rules-first thinking can clash with your experimentation."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENTP-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -2562,7 +2616,7 @@
 -------
 
 {
-  "personalityType": "ENTP-T",
+  "personalityType": "ENTP(T)",
   "codeName": "The Trailblazer",
   "label": "The Curious Spark",
   "lifeQuote": "Some minds are built to wander—yours is built to wonder.",
@@ -2581,7 +2635,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Trailblazer (ENTP-T)",
+      "title": "The Trailblazer (ENTP(T))",
       "subtitle": "The Curious Spark",
       "quote": "You don’t need a map—you draw it as you run.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -2632,7 +2686,7 @@
         "You question, you challenge, you remix.",
         "The moment things make sense, you poke the edges to see what breaks and what transforms. You’re not reckless—you’re exploratory.",
         "Your gift is seeing what could be, not just what is.",
-        "But you also feel your own doubts deeply. You wonder, \"Did I say too much? Did I move too fast?\"",
+        "But you also feel your own doubts deeply. You wonder, "\Did I say too much? Did I move too fast?\"",
         "Still, you don’t stop. Because no matter how much your mind spirals, your spark always returns—brighter, sharper, and more insightful.",
         "You are momentum in human form."
       ]
@@ -2757,37 +2811,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; your energy meets their heart."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "your energy meets their heart."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; your curiosity meets their clarity."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Your curiosity meets their clarity."
         },
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; shared chaos with complementary rhythms."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "Shared chaos with complementary rhythms."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; their stability may feel constricting to your pace."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "Their stability may feel constricting to your pace."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may expect more emotional predictability than you offer."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "May expect more emotional predictability than you offer."
         },
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; their rules may stifle your speed and experimentation."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "Their rules may stifle your speed and experimentation."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENTP-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -2847,7 +2907,7 @@
 ------
 
 {
-  "personalityType": "ENTJ-A",
+  "personalityType": "ENTJ(A)",
   "codeName": "The Strategist",
   "label": "The Commander Core",
   "lifeQuote": "If the path doesn’t exist—build it. If the world isn’t ready—prepare it.",
@@ -2866,7 +2926,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Strategist (ENTJ-A)",
+      "title": "The Strategist (ENTJ(A))",
       "subtitle": "The Commander Core",
       "quote": "You don’t wait for permission—you chart the course and build the map.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -3041,37 +3101,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; equal minds with complementary strengths."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Equal minds with complementary strengths."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; fast-thinking, challenge-loving allies."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "Fast-thinking, challenge-loving allies."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; shared logic and structured synergy."
+          "type": "Supervison",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "Shared logic and structured synergy."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; emotional focus may feel unclear or indirect to you."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Emotional focus may feel unclear or indirect to you."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; may prioritize peace over productivity."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "May prioritize peace over productivity."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may see you as too cold or intense at times."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "May see you as too cold or intense at times."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENTJ-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -3132,7 +3198,7 @@
 -------
 
 {
-  "personalityType": "ENTJ-T",
+  "personalityType": "ENTJ(T)",
   "codeName": "The Strategist",
   "label": "The Challenger Flame",
   "lifeQuote": "Push forward, build better, stay grounded—and let your fire serve a purpose.",
@@ -3151,7 +3217,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Strategist (ENTJ-T)",
+      "title": "The Strategist (ENTJ(T))",
       "subtitle": "The Challenger Flame",
       "quote": "You carry the fire not to burn others—but to light the way forward, even when it’s hard.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -3327,37 +3393,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; shared vision and mental speed."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Shared vision and mental speed."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; brings creativity to your control."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative
+	  "why?": "Brings creativity to your control."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; grounded, action-focused ally."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "Grounded, action-focused ally."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; may resist your intensity and push."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "May resist your intensity and push."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; values flexibility over order."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous
+	  "why?": "Values flexibility over order."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may see you as too sharp or detached."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "May see you as too sharp or detached."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ENTJ-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -3418,7 +3490,7 @@
 -------
 
 {
-  "personalityType": "INTP-A",
+  "personalityType": "INTP(A)",
   "codeName": "The Analyst",
   "label": "The Abstract Architect",
   "lifeQuote": "You don’t have to speak loudly to be heard—just build something worth listening to.",
@@ -3437,7 +3509,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Analyst (INTP-A)",
+      "title": "The Analyst (INTP(A))",
       "subtitle": "The Abstract Architect",
       "quote": "You don’t just solve problems—you reframe the questions until they unlock themselves.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -3612,37 +3684,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; mental focus and structural alignment."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Mental focus and structural alignment."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; thoughtful partner and challenger."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "Thoughtful partner and challenger."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; gently brings emotion into your perception."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Gently brings emotion into your perception."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Entertainer (ESFP)",
-          "description": "Expressive • Fun-loving • Lively; may find your quietness confusing."
+          "type": "Entertainer",
+          "description": "Expressive • Fun-loving • Lively",
+	  "why?": "May find your quietness confusing."
         },
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; may feel emotionally disconnected from your process."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "May feel emotionally disconnected from your process."
         },
         {
-          "type": "Protagonist (ENFJ)",
-          "description": "Charismatic • Caring • Inspiring; may expect emotional availability you don’t naturally offer."
+          "type": "Protagonist",
+          "description": "Charismatic • Caring • Inspiring",
+	  "why?": "May expect emotional availability you don’t naturally offer."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for INTP-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -3702,7 +3780,7 @@
 -----
 
 {
-  "personalityType": "INTP-T",
+  "personalityType": "INTP(T)",
   "codeName": "The Analyst",
   "label": "The Reluctant Visionary",
   "lifeQuote": "Even if no one sees it yet—your ideas have weight. And when you speak, the world listens.",
@@ -3721,7 +3799,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Analyst (INTP-T)",
+      "title": "The Analyst (INTP(T))",
       "subtitle": "The Reluctant Visionary",
       "quote": "You don’t chase the spotlight—you chase understanding. And sometimes, that’s what changes everything.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -3896,37 +3974,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; depth meets structure."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Depth meets structure."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; sharp minds in creative chaos."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "Sharp minds in creative chaos."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; emotional intelligence that softens your overthinking."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Emotional intelligence that softens your overthinking."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may expect emotional presence over logic."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "May expect emotional presence over logic."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; may clash with your flexible, exploratory style."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "May clash with your flexible, exploratory style."
         },
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; may seek more harmony and reassurance than you naturally provide."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "May seek more harmony and reassurance than you naturally provide."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for INTP-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -3986,7 +4070,7 @@
 ---
 
 {
-  "personalityType": "INTJ-T",
+  "personalityType": "INTJ(T)",
   "codeName": "The Architect",
   "label": "The Phantom Strategist",
   "lifeQuote": "Silence isn’t absence. It’s design.",
@@ -4005,7 +4089,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Architect (INTJ-T)",
+      "title": "The Architect (INTJ(T))",
       "subtitle": "The Phantom Strategist",
       "quote": "You shape the future quietly—never seeking the spotlight, always seeking the truth.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -4180,37 +4264,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; shared love for ideas and depth."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "Shared love for ideas and depth."
         },
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious; matches your intensity and ambition."
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "Matches your intensity and ambition."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; sees your inner world with empathy and grace."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Sees your inner world with empathy and grace."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may seek emotional connection you’re not ready to give."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "May seek emotional connection you’re not ready to give."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; their chaos may test your need for control."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Their chaos may test your need for control."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; may feel stifled by your structure and long-term plans."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "May feel stifled by your structure and long-term plans."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for INTJ-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -4270,7 +4360,7 @@
 
 ------
 {
-  "personalityType": "ISFP-A",
+  "personalityType": "ISFP(A)",
   "codeName": "The Creator",
   "label": "The Free Spirit",
   "lifeQuote": "You don’t have to be loud to leave a mark—just honest, and fully alive.",
@@ -4289,7 +4379,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Creator (ISFP-A)",
+      "title": "The Creator (ISFP(A))",
       "subtitle": "The Free Spirit",
       "quote": "You don’t follow the rhythm—you are the rhythm. Quiet, unique, and unforgettable.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -4464,37 +4554,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; deep feelers and quiet creators like you."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Deep feelers and quiet creators like you."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; brings energy while honoring your softness."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Brings energy while honoring your softness."
         },
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; gentle loyalty meets steady care."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "Gentle loyalty meets steady care."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious; may seem controlling or insensitive to your pace."
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "May seem controlling or insensitive to your pace."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; focus on efficiency may overlook your values and timing."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "Focus on efficiency may overlook your values and timing."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; logic-first approach can feel emotionally distant."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Logic-first approach can feel emotionally distant."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ISFP-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -4553,7 +4649,7 @@
 
 -----
 {
-  "personalityType": "ISFP-T",
+  "personalityType": "ISFP(T)",
   "codeName": "The Creator",
   "label": "The Gentle Flame",
   "lifeQuote": "Soft doesn’t mean weak. It means you survive the fire—and still choose to feel.",
@@ -4572,7 +4668,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Creator (ISFP-T)",
+      "title": "The Creator (ISFP(T))",
       "subtitle": "The Gentle Flame",
       "quote": "You burn quietly—not for attention, but because something in you has to shine.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -4747,37 +4843,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; shared gentleness and emotional intuition."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Shared gentleness and emotional intuition."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; brings warmth, lightness, and shared creativity."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Brings warmth, lightness, and shared creativity."
         },
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; offers stability that respects your freedom."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "Offers stability that respects your freedom."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious; may feel too directive or intense for your pace."
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "May feel too directive or intense for your pace."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; efficiency may overpower your values."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "Efficiency may overpower your values."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; their cool logic may leave you feeling unseen."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "Their cool logic may leave you feeling unseen."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ISFP-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -4837,7 +4939,7 @@
 ------
 
 {
-  "personalityType": "ISTP-A",
+  "personalityType": "ISTP(A)",
   "codeName": "The Tactician",
   "label": "The Quiet Crafter",
   "lifeQuote": "Why talk about doing it when you can just get it done?",
@@ -4856,7 +4958,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Tactician (ISTP-A)",
+      "title": "The Tactician (ISTP(A))",
       "subtitle": "The Quiet Crafter",
       "quote": "You don’t talk about fixing things—you just fix them. Quietly. Brilliantly.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -5031,37 +5133,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; shared logic and independence."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "Shared logic and independence."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; action-driven, adaptable partners."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "Action-driven, adaptable partners."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; gentle balance to your precision and pragmatism."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "Gentle balance to your precision and pragmatism."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Protagonist (ENFJ)",
-          "description": "Charismatic • Caring • Inspiring; may seek emotional depth you don’t offer freely."
+          "type": "Protagonist",
+          "description": "Charismatic • Caring • Inspiring",
+	  "why?": "May seek emotional depth you don’t offer freely."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; may misunderstand your calm as cold."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "May misunderstand your calm as cold."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may want more connection than you naturally give."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "May want more connection than you naturally give."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ISTP-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -5121,7 +5229,7 @@
 
 -------
 {
-  "personalityType": "ISTP-T",
+  "personalityType": "ISTP(T)",
   "codeName": "The Tactician",
   "label": "The Lone Fixer",
   "lifeQuote": "I don’t talk the loudest—I just show up when it matters.",
@@ -5140,7 +5248,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Tactician (ISTP-T)",
+      "title": "The Tactician (ISTP(T))",
       "subtitle": "The Lone Fixer",
       "quote": "You don’t make promises—you make repairs. You don’t seek control—you seek results.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -5315,37 +5423,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; gentle warmth that balances your stillness."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "Gentle warmth that balances your stillness."
         },
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; analytical calm and shared logic."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "Analytical calm and shared logic."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; matches your adaptability and realism."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "Matches your adaptability and realism."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Protagonist (ENFJ)",
-          "description": "Charismatic • Caring • Inspiring; emotion-led guidance may overwhelm you."
+          "type": "Protagonist",
+          "description": "Charismatic • Caring • Inspiring",
+	  "why?": "Emotion-led guidance may overwhelm you."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; may seek more connection than you naturally offer."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "May seek more connection than you naturally offer."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; may push for emotional bonding you prefer to avoid."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "May push for emotional bonding you prefer to avoid."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ISTP-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -5405,7 +5519,7 @@
 ------
 
 {
-  "personalityType": "ISFJ-A",
+  "personalityType": "ISFJ(A)",
   "codeName": "The Guardian",
   "label": "The Warm Anchor",
   "lifeQuote": "Loyalty doesn’t shout. It stays.",
@@ -5424,7 +5538,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Guardian (ISFJ-A)",
+      "title": "The Guardian (ISFJ(A))",
       "subtitle": "The Warm Anchor",
       "quote": "You don’t just stand by people—you stand for them. Quietly, steadily, always.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -5600,37 +5714,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; shared values and love for stability and care."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "Shared values and love for stability and care."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; brings softness and creativity to your structured care."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "Brings softness and creativity to your structured care."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; deep emotions paired with organized execution."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Deep emotions paired with organized execution."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; may push change and debate faster than you’re comfortable with."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "May push change and debate faster than you’re comfortable with."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; may overlook emotional needs in the rush to act."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "May overlook emotional needs in the rush to act."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; may seem too cold or dismissive of emotional nuance."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "May seem too cold or dismissive of emotional nuance."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ISFJ-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -5690,7 +5810,7 @@
 
 ------
 {
-  "personalityType": "ISFJ-T",
+  "personalityType": "ISFJ(T)",
   "codeName": "The Guardian",
   "label": "The Hidden Guardian",
   "lifeQuote": "You don’t have to be loud to be strong. You just have to keep showing up—with heart.",
@@ -5709,7 +5829,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Guardian (ISFJ-T)",
+      "title": "The Guardian (ISFJ(T))",
       "subtitle": "The Hidden Guardian",
       "quote": "You don’t ask to be seen. But your presence keeps everything standing.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -5884,37 +6004,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; shares your emotional depth and loyalty."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Shares your emotional depth and loyalty."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; a partner in order, love, and service."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "A partner in order, love, and service."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; gentle harmony and mutual respect."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "gentle harmony and mutual respect."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; may push you into discomfort too fast."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "May push you into discomfort too fast."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; may miss your emotional subtleties."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "May miss your emotional subtleties."
         },
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious; may prioritize outcome over your feelings."
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "May prioritize outcome over your feelings."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ISFJ-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -5974,7 +6100,7 @@
 ------
 
 {
-  "personalityType": "ESFJ-A",
+  "personalityType": "ESFJ(A)",
   "codeName": "The Caregiver",
   "label": "The Guiding Heart",
   "lifeQuote": "Leadership isn’t about being in front—it’s about showing up with heart, every time.",
@@ -5993,7 +6119,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Caregiver (ESFJ-A)",
+      "title": "The Caregiver (ESFJ(A))",
       "subtitle": "The Guiding Heart",
       "quote": "You don’t just care—you guide. And your kindness moves entire rooms.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -6168,37 +6294,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; shared warmth, structure, and values."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "Shared warmth, structure, and values."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; offers depth and reflection to your direction."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Offers depth and reflection to your direction."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; brings playful energy to your grounded kindness."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Brings playful energy to your grounded kindness."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; may not naturally understand your emotional needs."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "May not naturally understand your emotional needs."
         },
         {
-          "type": "Virtuoso (ISTP)",
-          "description": "Practical • Independent • Hands-on; may feel too quiet or distant for your closeness."
+          "type": "Virtuoso",
+          "description": "Practical • Independent • Hands-on",
+	  "why?": "May feel too quiet or distant for your closeness."
         },
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; may dismiss your people-first logic as \"irrational.\""
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": May dismiss your people-first logic as \"irrational.\""
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ESFJ-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -6258,7 +6390,7 @@
 
 -------
 {
-  "personalityType": "ESFJ-T",
+  "personalityType": "ESFJ(T)",
   "codeName": "The Caregiver",
   "label": "The Gentle Steward",
   "lifeQuote": "Care isn’t weakness—it’s the strongest kind of strength.",
@@ -6277,7 +6409,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Caregiver (ESFJ-T)",
+      "title": "The Caregiver (ESFJ(T))",
       "subtitle": "The Gentle Steward",
       "quote": "You don’t just care deeply—you carry carefully. And the world feels safer because of you.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -6452,37 +6584,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; structured, shared values and nurturing love."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "Structured, shared values and nurturing love."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; playful encouragement for your loyal care."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Playful encouragement for your loyal care."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; gentle balance of emotion and depth."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Gentle balance of emotion and depth."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; may dismiss the emotional significance you focus on."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "May dismiss the emotional significance you focus on."
         },
         {
-          "type": "Virtuoso (ISTP)",
-          "description": "Practical • Independent • Hands-on; may seem too distant or detached for your closeness."
+          "type": "Virtuoso",
+          "description": "Practical • Independent • Hands-on",
+	  "why?": "May seem too distant or detached for your closeness."
         },
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; may challenge or overlook your emotional frameworks."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "may challenge or overlook your emotional frameworks."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ESFJ-T",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -6543,7 +6681,7 @@
 ------
 
 {
-  "personalityType": "ESTJ-A",
+  "personalityType": "ESTJ(A)",
   "codeName": "The Executive",
   "label": "The Command Pillar",
   "lifeQuote": "Structure isn’t control—it’s clarity. And you lead with both.",
@@ -6562,7 +6700,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Executive (ESTJ-A)",
+      "title": "The Executive (ESTJ(A))",
       "subtitle": "The Command Pillar",
       "quote": "You don’t just keep things standing—you build systems that last.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -6737,37 +6875,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; steady structure and strong ethics."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "Steady structure and strong ethics."
         },
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious; big-picture execution and shared drive."
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "Big-picture execution and shared drive."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; action-oriented and able to match your pace."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "Action-oriented and able to match your pace."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; emotion-first thinking may feel unclear to you."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Emotion-first thinking may feel unclear to you."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; may resist structure or fixed timelines."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "May resist structure or fixed timelines."
         },
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; may seem too theoretical or slow to commit."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "May seem too theoretical or slow to commit."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ESTJ-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -6828,7 +6972,7 @@
 ---
 
 {
-  "personalityType": "ESTJ-T",
+  "personalityType": "ESTJ(T)",
   "codeName": "The Executive",
   "variantName": "The Watchful Enforcer",
   "lifeQuote": "Standards only matter if you’re brave enough to live by them.",
@@ -6847,7 +6991,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Executive (ESTJ-T)",
+      "title": "The Executive (ESTJ(T))",
       "subtitle": "The Watchful Enforcer",
       "quote": "You don’t just set the rules—you become the reason they’re followed.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -7008,12 +7152,12 @@
     {
       "id": "growthAdvice",
       "type": "checklist",
-      "heading": "Growth Advice for ESTJ-T",
+      "heading": "Growth Advice",
       "items": [
-        "Self-doubt can fuel precision—don’t let it stall action.",
-        "Seek diverse viewpoints before finalizing decisions.",
-        "Build trust through transparency—not just expectations.",
-        "Invite others into your process; shared leadership strengthens teams."
+        "Standards are helpful—until they become prisons.",
+        "Progress isn’t perfection—it’s direction.",
+        "Being tough doesn’t mean going alone.",
+        "Let yourself adjust, not just enforce."
       ]
     },
     {
@@ -7022,31 +7166,52 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; steady duty and shared discipline."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "Steady duty and shared discipline."
         },
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious; focused, direct leadership style."
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "Focused, direct leadership style."
         },
         {
-          "type": "Entrepreneur (ESTP)",
-          "description": "Bold • Action-oriented • Thrill-seeking; complements your efficiency with adaptability."
+          "type": "Entrepreneur",
+          "description": "Bold • Action-oriented • Thrill-seeking",
+	  "why?": "Complements your efficiency with adaptability."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; too emotion-driven for your structured mindset."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Too emotion-driven for your structured mindset."
         },
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; may struggle with your order and high expectations."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "May struggle with your order and high expectations."
         },
         {
-          "type": "Thinker (INTP)",
-          "description": "Analytical • Curious • Abstract; may appear unstructured or slow to commit."
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "May appear unstructured or slow to commit."
         }
+      ]
+    },
+    {
+      "id": "careerGrowth",
+      "type": "card",
+      "heading": "Career Growth Advice",
+      "style": {
+        "background": "#f1edff",
+        "borderRadiusPx": 16
+      },
+      "items": [
+        "Self-doubt can fuel quality—don’t let it block action.",
+        "Seek diverse views before making final calls.",
+        "Build trust through transparency—not just expectations.",
+        "You lead best when you include others in the process."
       ]
     },
     {
@@ -7097,7 +7262,7 @@
 ------
 
 {
-  "personalityType": "ESFP-A",
+  "personalityType": "ESFP(A)",
   "codeName": "The Entertainer",
   "label": "The Joyful Spark",
   "lifeQuote": "The world doesn’t need more perfection—it needs more presence.",
@@ -7116,7 +7281,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Entertainer (ESFP-A)",
+      "title": "The Entertainer (ESFP(A))",
       "subtitle": "The Joyful Spark",
       "quote": "You light up the room—not because you try, but because you are.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -7277,7 +7442,7 @@
     {
       "id": "growthAdvice",
       "type": "checklist",
-      "heading": "Growth Advice for ESFP-A",
+      "heading": "Growth Advice",
       "items": [
         "Channel your energy into impact—not just performance or moments.",
         "Let feedback sharpen your brilliance so it lasts longer than a single scene.",
@@ -7291,37 +7456,43 @@
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; shared spark, freedom, and big feelings."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "why?": "Shared spark, freedom, and big feelings."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; deep, quiet synergy with your spontaneous flow."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "Deep, quiet synergy with your spontaneous flow."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; brings structure to your celebration."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "Brings structure to your celebration."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; may feel rigid or emotionally distant to you."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "May feel rigid or emotionally distant to you."
         },
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; their structure may stifle your spontaneity."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "Their structure may stifle your spontaneity."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; their depth takes time to sync with your fast-moving energy."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?: "Their depth takes time to sync with your fast-moving energy."
         }
       ]
     },
     {
       "id": "careerGrowth",
       "type": "card",
-      "heading": "Career Growth Advice for ESFP-A",
+      "heading": "Career Growth Advice",
       "style": {
         "background": "#f1edff",
         "borderRadiusPx": 16
@@ -7382,7 +7553,7 @@
 -----
 
 {
-  "personalityType": "ESFP-T",
+  "personalityType": "ESFP(T)",
   "codeName": "The Entertainer",
   "label": "The Sensitive Flame",
   "lifeQuote": "Even bright lights need time to recharge.",
@@ -7401,7 +7572,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Entertainer (ESFP-T)",
+      "title": "The Entertainer (ESFP(T))",
       "subtitle": "The Sensitive Flame",
       "quote": "You feel deeply, live brightly, and leave warmth wherever you go.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -7560,47 +7731,68 @@
       ]
     },
     {
+      "id": "growthAdvice",
+      "type": "checklist",
+      "heading": "Growth Advice",
+      "items": [
+        "You are allowed to rest—even when the music stops.",
+        "Feelings are guides—not enemies.",
+        "You don’t need constant applause to be valuable.",
+        "You’re not a performance—you’re a person."
+      ]
+    },
+    {
       "id": "compatibility",
       "type": "compatibility",
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic • Spontaneous • Emotional; emotional playmates who love the moment."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional",
+	  "Why?": "Emotional playmates who love the moment."
         },
         {
-          "type": "Adventurer (ISFP)",
-          "description": "Sensitive • Aesthetic • Spontaneous; quiet, artistic balance to your bold expression."
+          "type": "Adventurer",
+          "description": "Sensitive • Aesthetic • Spontaneous",
+	  "why?": "Quiet, artistic balance to your bold expression."
         },
         {
-          "type": "Provider (ESFJ)",
-          "description": "Sociable • Supportive • Observant; gentle structure that supports your spontaneity."
+          "type": "Provider",
+          "description": "Sociable • Supportive • Observant",
+	  "why?": "Gentle structure that supports your spontaneity."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Architect (INTJ)",
-          "description": "Strategic • Independent • Efficient; may feel emotionally unavailable or distant."
+          "type": "Architect",
+          "description": "Strategic • Independent • Efficient",
+	  "why?": "May feel emotionally unavailable or distant."
         },
         {
-          "type": "Inspector (ISTJ)",
-          "description": "Responsible • Practical • Traditional; their structure may feel too rigid."
+          "type": "Inspector",
+          "description": "Responsible • Practical • Traditional",
+	  "why?": "their structure may feel too rigid."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; deep thinkers who may take time to connect emotionally."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Deep thinkers who may take time to connect emotionally."
         }
       ]
-    },
+    },  
     {
-      "id": "growthAdvice",
-      "type": "checklist",
-      "heading": "Career Growth Advice for ESFP-T",
+      "id": "careerGrowth",
+      "type": "card",
+      "heading": "Career Growth Advice",
+      "style": {
+        "background": "#f1edff",
+        "borderRadiusPx": 16
+      },
       "items": [
         "Take time to feel before reacting.",
+        "Boundaries protect your ability to shine.",
         "Use feedback as a tool—not a threat.",
-        "Boundaries protect your ability to shine without burning out.",
-        "Build quiet confidence—it sustains your louder joy."
+        "Build quiet confidence—it sustains louder joy."
       ]
     },
     {
@@ -7652,7 +7844,7 @@
 ------
 
 {
-  "personalityType": "ESTP-A",
+  "personalityType": "ESTP(A)",
   "codeName": "The Entrepreneur",
   "label": "The Bold Mover",
   "lifeQuote": "If it moves, I’m already running with it.",
@@ -7671,7 +7863,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Entrepreneur (ESTP-A)",
+      "title": "The Entrepreneur (ESTP(A))",
       "subtitle": "The Bold Mover",
       "quote": "You don't wait for permission. You move. And the world adjusts.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -7815,44 +8007,65 @@
       ]
     },
     {
+      "id": "growthAdvice",
+      "type": "checklist",
+      "heading": "Growth Advice",
+      "items": [
+        "Slow isn’t weak—sometimes it’s strategic.",
+        "Not every challenge is a contest.",
+        "Learn to listen—not just respond.",
+        "Confidence is a tool—humility makes it sharp."
+      ]
+    },
+    {
       "id": "compatibility",
       "type": "compatibility",
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; shared strength and pace."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "Shared strength and pace."
         },
         {
-          "type": "Entertainer (ESFP)",
-          "description": "Expressive • Fun • Lively; fun and thrill with emotional spark."
+          "type": "Entertainer",
+          "description": "Expressive • Fun • Lively",
+	  "why?": "Fun and thrill with emotional spark."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; bold ideas meet bold action."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "Bold ideas meet bold action."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; may be too cautious for your speed."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "May be too cautious for your speed."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Vision-driven; quiet depth may be hard to read."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Vision-driven",
+	  "why?": "Quiet depth may be hard to read."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; idealism may feel impractical."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Idealism may feel impractical."
         }
       ]
     },
     {
-      "id": "growthAdvice",
-      "type": "checklist",
-      "heading": "Career Growth Advice for ESTP-A",
+      "id": "careerGrowth",
+      "type": "card",
+      "heading": "Career Growth Advice",
+      "style": {
+        "background": "#f1edff",
+        "borderRadiusPx": 16
+      },
       "items": [
-        "Delegate to avoid burnout—you’re not a one-person army.",
+	"Delegate to avoid burnout—you’re not a one-person army.",
         "Use feedback as a shortcut to mastery.",
         "Prepare for tomorrow—even if you dominate today.",
         "Slow down just enough to enjoy the process."
@@ -7907,7 +8120,7 @@
 -----
 
 {
-  "personalityType": "ESTP-T",
+  "personalityType": "ESTP(T)",
   "codeName": "The Entrepreneur",
   "label": "The Tactical Fire",
   "lifeQuote": "Feel the edge. Then run it like a blade.",
@@ -7926,7 +8139,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Entrepreneur (ESTP-T)",
+      "title": "The Entrepreneur (ESTP(T))",
       "subtitle": "The Tactical Fire",
       "quote": "You move with instinct, lead with grit, and burn through doubt with action.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -8085,42 +8298,63 @@
       ]
     },
     {
+      "id": "growthAdvice",
+      "type": "checklist",
+      "heading": "Growth Advice",
+      "items": [
+        "You don’t have to win every moment to be successful.",
+        "Vulnerability isn’t weakness—it’s real strength.",
+        "Reflect before you jump—it sharpens your edge.",
+        "Let trust in others match your trust in yourself."
+      ]
+    },
+    {
       "id": "compatibility",
       "type": "compatibility",
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Commander (ENTJ)",
-          "description": "Decisive • Organized • Ambitious; action strategy with laser focus."
+          "type": "Commander",
+          "description": "Decisive • Organized • Ambitious",
+	  "why?": "Action strategy with laser focus."
         },
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structured • Assertive • Results-focused; shared execution and discipline."
+          "type": "Supervisor",
+          "description": "Structured • Assertive • Results-focused",
+	  "why?": "Shared execution and discipline."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Innovative • Argumentative • Creative; chaotic genius meets focused fire."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "Chaotic genius meets focused fire."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Mediator (INFP)",
-          "description": "Empathetic • Imaginative • Value-oriented; deep emotions may feel vague or slow to you."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented",
+	  "why?": "Deep emotions may feel vague or slow to you."
         },
         {
-          "type": "Protector (ISFJ)",
-          "description": "Loyal • Caring • Protective; their need for peace may clash with your pace."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "Their need for peace may clash with your pace."
         },
         {
-          "type": "Advocate (INFJ)",
-          "description": "Principled • Insightful • Purpose-driven; depth over directness can create friction."
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Depth over directness can create friction."
         }
       ]
     },
     {
-      "id": "growthAdvice",
-      "type": "checklist",
-      "heading": "Career Growth Advice for ESTP-T",
+      "id": "careerGrowth",
+      "type": "card",
+      "heading": "Career Growth Advice",
+      "style": {
+        "background": "#f1edff",
+        "borderRadiusPx": 16
+      },
       "items": [
         "Use doubt as a spark—not a stop sign.",
         "Treat rest as fuel, not as retreat or weakness.",
@@ -8178,8 +8412,7 @@
 
 
 {
-  "personalityType": "INTJ-A",
-  "codeName": "The Architect",
+  "personalityType": "INTJ(A)
   "label": "The Mastermind Strategist",
   "lifeQuote": "You don’t follow trends—you architect legacies.",
   "theme": {
@@ -8197,7 +8430,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Architect (INTJ-A)",
+      "title": "The Architect (INTJ(A))",
       "subtitle": "The Mastermind Strategist",
       "quote": "You don’t chase moments — you build futures.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -8311,24 +8544,63 @@
       ]
     },
     {
+      "id": "growthAdvice",
+      "type": "checklist",
+      "heading": "Growth Advice",
+      "items": [
+        "Don’t let perfection delay progress.",
+        "Emotional awareness is a skill—not a weakness.",
+        "Ask for help before burnout hits.",
+        "Lead with strategy, but don’t forget empathy."
+      ]
+    },
+    {
       "id": "compatibility",
       "type": "compatibility",
       "heading": "Compatibility Snapshot",
       "mostAligned": [
-        { "type": "Advocate (INFJ)", "description": "Depth and purpose that mirrors your inner world." },
-        { "type": "Debater (ENTP)", "description": "Intellectual sparks and idea-driven chemistry." },
-        { "type": "Thinker (INTP)", "description": "Quiet synergy built on ideas and insight." }
+        {
+          "type": "Advocate",
+          "description": "Principled • Insightful • Purpose-driven",
+	  "why?": "Depth and purpose that mirrors your inner world."
+        },
+        {
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative",
+	  "why?": "Intellectual sparks and idea-driven chemistry."
+        },
+        {
+          "type": "Thinker",
+          "description": "Analytical • Curious • Abstract",
+	  "why?": "Quiet synergy built on ideas and insight."
+        }
       ],
       "mostChallenging": [
-        { "type": "Entertainer (ESFP)", "description": "May feel too chaotic or short-term focused for your pace." },
-        { "type": "Protector (ISFJ)", "description": "Tradition may clash with your love of innovation." },
-        { "type": "Protagonist (ENFJ)", "description": "Emotion-driven choices may feel unstructured to you." }
+        {
+          "type": "Entertainer",
+          "description": "Expressive • Fun-loving • Lively",
+	  "why?": "May feel too chaotic or short-term focused for your pace."
+        },
+        {
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective",
+	  "why?": "Tradition may clash with your love of innovation."
+        },
+        {
+          "type": "Protagonist",
+          "description": "Charismatic • Caring • Inspiring",
+	  "why?": "Emotion-driven choices may feel unstructured to you."
+        }
       ]
     },
     {
-      "id": "growthAdvice",
-      "type": "checklist",
-      "heading": "Career Growth Advice for INTJ-A",
+      "id": "careerGrowth",
+      "type": "card",
+      "heading": "Career Growth Advice",
+      "style": {
+        "background": "#f1edff",
+        "borderRadiusPx": 16
+      },
       "items": [
         "Build systems that make you replaceable—so you can grow.",
         "Mentor others when your work begins to scale.",
@@ -8371,7 +8643,7 @@
 
 
 {
-  "personalityType": "ISTJ-A",
+  "personalityType": "ISTJ(A)",
   "codeName": "The Sentinel",
   "label": "The Rational Sentinel",
   "lifeQuote": "Discipline is freedom when built on a foundation of values.",
@@ -8390,7 +8662,7 @@
       "direction": "top-left-to-bottom-right"
     },
     "leftColumn": {
-      "title": "The Sentinel (ISTJ-A)",
+      "title": "The Sentinel (ISTJ(A))",
       "subtitle": "The Rational Sentinel",
       "quote": "You don’t seek attention — you seek results. Quiet loyalty. Clear logic. Steady action.",
       "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
@@ -8540,42 +8812,63 @@
       ]
     },
     {
+      "id": "growthAdvice",
+      "type": "checklist",
+      "heading": "Growth Advice",
+      "items": [
+        "Flexibility is strength—not disorder.",
+        "You can be right and kind at the same time.",
+        "Sometimes, feelings need to be heard—not fixed.",
+        "Allow yourself rest—being dependable doesn’t mean being perfect."
+      ]
+    },
+    {
       "id": "compatibility",
       "type": "compatibility",
       "heading": "Compatibility Snapshot",
       "mostAligned": [
         {
-          "type": "Supervisor (ESTJ)",
-          "description": "Structure meets leadership; shared respect for order and results."
+          "type": "Supervisor ",
+          "description": "Structured • Assertive • Results-focused"
+	  "why?": "Structure meets leadership; shared respect for order and results."
         },
         {
-          "type": "Virtuoso (ISTP)",
-          "description": "Pragmatic, hands-on synergy with mutual independence."
+          "type": "Virtuoso",
+          "description": "Practical • Independent • Hands-on"
+	  "why?": "Pragmatic, hands-on synergy with mutual independence."
         },
         {
-          "type": "Protector (ISFJ)",
-          "description": "Shared loyalty with added emotional depth and warmth."
+          "type": "Protector",
+          "description": "Loyal • Caring • Protective"
+	  "why?": "Shared loyalty with added emotional depth and warmth."
         }
       ],
       "mostChallenging": [
         {
-          "type": "Campaigner (ENFP)",
-          "description": "Energetic and spontaneous; may feel scattered or impulsive to you."
+          "type": "Campaigner",
+          "description": "Energetic • Spontaneous • Emotional"
+	  "why?": "May feel scattered or impulsive to you."
         },
         {
-          "type": "Mediator (INFP)",
-          "description": "Idealism may clash with your grounded realism."
+          "type": "Mediator",
+          "description": "Empathetic • Imaginative • Value-oriented
+	  "why?": "Idealism may clash with your grounded realism."
         },
         {
-          "type": "Debater (ENTP)",
-          "description": "Spontaneous change and argument may feel disruptive to your structure."
+          "type": "Debater",
+          "description": "Innovative • Argumentative • Creative
+	  "why?": "Spontaneous change and argument may feel disruptive to your structure."
         }
       ]
     },
     {
-      "id": "growthAdvice",
-      "type": "checklist",
-      "heading": "Career Growth Advice for ISTJ-A",
+      "id": "careerGrowth",
+      "type": "card",
+      "heading": "Career Growth Advice",
+      "style": {
+        "background": "#f1edff",
+        "borderRadiusPx": 16
+      },
       "items": [
         "Stick to systems—but stay open to smart, calculated risks.",
         "Choose mentors who value both structure and humanity.",
@@ -8630,79 +8923,228 @@
 
 -------
 
-
 {
-  "personality_type": "ISTJ-T",
-  "name": "The Careful Sentinel",
-  "subtitle": "You don’t just aim to do things right — you aim to not let anyone down.",
-  "hero_quote": "Your steadiness is your superpower. Quiet doesn’t mean weak—it means precise.",
-  "overview": "You are reserved, focused, and incredibly responsible — but you don’t always give yourself credit for it. You prepare thoroughly, work hard, and double-check everything because you care. You want to meet expectations — especially your own.",
-  "story": "You’re the one with a backup plan, a printed list, and a phone on silent because you’re working. You don’t love the spotlight — you love results. Your sense of duty runs deep, and you prefer stability over sudden change.\n\nBehind your careful planning lies a quiet anxiety: the fear of messing up. That pressure pushes you to work harder than most. You second-guess yourself, not because you’re weak — but because you care so much about doing it right.\n\nYou’re not flashy. You’re not loud. You’re the one everyone relies on. And that’s a power many people never learn to carry.",
-  "key_traits": [
-    "Silent Pillar – You hold everything up without drawing attention",
-    "Detailed Organizer – You notice what others miss",
-    "Cautious Planner – You think three steps ahead",
-    "Fair-Minded Worker – You balance rules with logic",
-    "Steady Companion – You support others more than they know"
-  ],
-  "strengths_section": {
-    "labels": ["Thoughtful", "Hardworking", "Observant", "Dependable"],
-    "bullets": [
-      "You build systems that actually work",
-      "You don’t quit — you improve",
-      "You notice small errors before they become big problems",
-      "You’re humble, which makes your success even more powerful"
-    ]
+  "personalityType": "ISTJ(T)",
+  "codeName": "The Sentinel",
+  "label": "The Careful Sentinel",
+  "lifeQuote": "Your steadiness is your superpower. Quiet doesn’t mean weak—it means precise.",
+  "theme": {
+    "gradient": ["#6d64ff", "#e972a8"],
+    "backgroundLight": "#f7f5ff",
+    "backgroundWarning": "#fff7d6",
+    "backgroundCareer": "#f1edff",
+    "textMain": "#333333"
   },
-  "watch_out_for": {
-    "labels": ["Overthinking", "Harsh self-criticism", "Fear of failure"],
-    "bullets": [
-      "You may double-check even when it’s already good",
-      "You may delay action trying to be perfect",
-      "You may dismiss your achievements as 'not enough'"
-    ]
+  "hero": {
+    "layout": "split",
+    "background": {
+      "type": "gradient",
+      "colors": ["#6d64ff", "#e972a8"],
+      "direction": "top-left-to-bottom-right"
+    },
+    "leftColumn": {
+      "title": "The Careful Sentinel (ISTJ(T))",
+      "subtitle": "You don’t just aim to do things right — you aim to not let anyone down.",
+      "quote": "Your steadiness is your superpower. Quiet doesn’t mean weak—it means precise.",
+      "titleStyle": { "tag": "h1", "sizePx": 52, "color": "#ffffff" },
+      "subtitleStyle": { "sizePx": 24, "color": "#f5f5ff" },
+      "quoteStyle": { "sizePx": 18, "color": "#ffffff", "italic": true, "maxWidthPx": 480 },
+      "tags": ["Responsible", "Precise", "Steady", "Organized", "Reliable"]
+    },
+    "rightColumn": {
+      "type": "illustration",
+      "description": "A calm, armored figure standing firmly with a checklist or ledger, symbolizing quiet strength, structure, and calm precision.",
+      "positioning": {
+        "vertical": "center",
+        "rightPaddingPercent": 20
+      }
+    }
   },
-  "moral_compass": {
-    "title": "DUTIFUL",
-    "description": "You believe promises aren’t just words — they’re contracts. You respect rules, systems, and the effort it takes to maintain order. But most of all, you take your responsibilities seriously, even when no one’s watching.",
-    "stress_behavior": "You internalize stress. When overwhelmed, you may become withdrawn or critical of yourself. To cope, you need time, solitude, and tangible progress — even a small win can reset your calm.",
-    "decision_style": "You take time to decide — not because you’re indecisive, but because you want to be right. You rely on facts, routines, and past lessons. When confident, you move with quiet determination."
-  },
-  "friendships_teams": [
-    "You’re the person who shows up on time — every time",
-    "You often take on more than your share to protect others",
-    "You value mutual respect over emotional drama",
-    "You may struggle to ask for help, even when you need it"
-  ],
-  "compatibility": {
-    "most_aligned": [
-      "Protector – Shared loyalty with emotional warmth",
-      "Virtuoso – Practicality and quiet competence",
-      "Supervisor – Organization with direction"
-    ],
-    "most_challenging": [
-      "Campaigner – May feel chaotic or unreliable",
-      "Mediator – Emotions may feel too ambiguous",
-      "Debater – May challenge your routines too often"
-    ]
-  },
-  "career_growth": [
-    "Find mentors who build you up, not just critique",
-    "Keep tracking your growth — it’s real, even if slow",
-    "Learn to celebrate wins — yours and others’",
-    "Speak up when something feels wrong — your voice matters"
-  ],
-  "famous_people": [
-    "George Washington",
-    "Matt Damon",
-    "Dame Judi Dench"
-  ],
-  "life_quote": "Your steadiness is your superpower. Quiet doesn’t mean weak—it means precise.",
-  "ui_theme": {
-    "color_primary": "#6D64FF",
-    "color_secondary": "#E972A8",
-    "background_style": "soft-gradient",
-    "icon_style": "clean-minimal",
-    "illustration_vibe": "quiet strength, structure, calm precision"
-  }
+  "sections": [
+    {
+      "id": "overview",
+      "type": "card",
+      "title": "Reserved. Focused. Responsible.",
+      "body": "You are reserved, focused, and incredibly responsible — but you don’t always give yourself credit for it. You prepare thoroughly, work hard, and double-check everything because you care. You want to meet expectations — especially your own.",
+      "style": {
+        "background": "#ffffff",
+        "borderRadiusPx": 16,
+        "shadow": "subtle",
+        "paddingPx": 32,
+        "widthPercent": 80,
+        "align": "center"
+      }
+    },
+    {
+      "id": "story",
+      "type": "story",
+      "heading": "Your Story",
+      "style": {
+        "background": "#f7f5ff",
+        "layout": "centered-column",
+        "maxWidthPx": 750
+      },
+      "paragraphs": [
+        "You’re the one with a backup plan, a printed list, and a phone on silent because you’re working. You don’t love the spotlight — you love results. Your sense of duty runs deep, and you prefer stability over sudden change.",
+        "Behind your careful planning lies a quiet anxiety: the fear of messing up. That pressure pushes you to work harder than most. You second-guess yourself, not because you’re weak — but because you care so much about doing it right.",
+        "You’re not flashy. You’re not loud. You’re the one everyone relies on. And that’s a power many people never learn to carry."
+      ]
+    },
+    {
+      "id": "keyTraits",
+      "type": "grid",
+      "heading": "Key Traits You Embody",
+      "layout": { "columns": 2, "cardWidthPx": 260 },
+      "cards": [
+        { "title": "Silent Pillar", "subtitle": "You hold everything up without drawing attention." },
+        { "title": "Detailed Organizer", "subtitle": "You notice what others miss." },
+        { "title": "Cautious Planner", "subtitle": "You think three steps ahead." },
+        { "title": "Fair-Minded Worker", "subtitle": "You balance rules with logic." },
+        { "title": "Steady Companion", "subtitle": "You support others more than they know." }
+      ]
+    },
+    {
+      "id": "strengths",
+      "type": "features",
+      "heading": "Your Strengths",
+      "layout": { "orientation": "horizontal", "columns": 4 },
+      "items": [
+        { "title": "Thoughtful", "description": "You build systems that actually work." },
+        { "title": "Hardworking", "description": "You don’t quit — you improve." },
+        { "title": "Observant", "description": "You notice small errors before they become big problems." },
+        { "title": "Dependable", "description": "You’re humble, which makes your success even more powerful." }
+      ]
+    },
+    {
+      "id": "watchOutFor",
+      "type": "warnings",
+      "heading": "Watch Out For...",
+      "style": { "background": "#fff7d6", "cardLayout": "horizontal" },
+      "items": [
+        { "title": "Overthinking", "description": "You may double-check even when it’s already good." },
+        { "title": "Harsh Self-Criticism", "description": "You may delay action trying to be perfect." },
+        { "title": "Fear of Failure", "description": "You may dismiss your achievements as \"not enough\"." }
+      ]
+    },
+    {
+      "id": "moralCompass",
+      "type": "moral_compass",
+      "heading": "Your Moral Compass",
+      "coreValue": "DUTIFUL",
+      "paragraph": "You believe promises aren’t just words — they’re contracts. You respect rules, systems, and the effort it takes to maintain order. But most of all, you take your responsibilities seriously, even when no one’s watching.",
+      "subBox": {
+        "title": "How You React, Decide & Reset",
+        "text": "Stress behavior: You internalize stress. When overwhelmed, you may become withdrawn or critical of yourself. To cope, you need time, solitude, and tangible progress — even a small win can reset your calm.\n\nDecision style: You take time to decide — not because you’re indecisive, but because you want to be right. You rely on facts, routines, and past lessons. When confident, you move with quiet determination."
+      }
+    },
+    {
+      "id": "friendshipsTeams",
+      "type": "list",
+      "heading": "You in Friendships & Teams",
+      "items": [
+        "You’re the person who shows up on time — every time.",
+        "You often take on more than your share to protect others.",
+        "You value mutual respect over emotional drama.",
+        "You may struggle to ask for help, even when you need it."
+      ]
+    },
+    {
+      "id": "growthAdvice",
+      "type": "checklist",
+      "heading": "Growth Advice",
+      "items": [
+        "Track your growth — it’s real, even if slow.",
+        "Celebrate wins — yours and others’.",
+        "Speak up when something feels wrong — your voice matters.",
+        "Choose mentors who build you up, not just critique."
+      ]
+    },
+    {
+      "id": "compatibility",
+      "type": "compatibility",
+      "heading": "Compatibility Snapshot",
+      "mostAligned": [
+        {
+          "type": "Protector",
+          "description": "Loyal • Supportive • Warm",
+          "why": "Shared loyalty, with extra emotional reassurance and care."
+        },
+        {
+          "type": "Virtuoso",
+          "description": "Practical • Competent • Calm",
+          "why": "A grounded, do-the-work dynamic where reliability is the language."
+        },
+        {
+          "type": "Supervisor",
+          "description": "Organized • Decisive • Structured",
+          "why": "Mutual respect for systems, standards, and doing things properly."
+        }
+      ],
+      "mostChallenging": [
+        {
+          "type": "Campaigner",
+          "description": "Spontaneous • Energetic • Emotion-led",
+          "why": "May feel chaotic or unreliable when you’re seeking stability."
+        },
+        {
+          "type": "Mediator",
+          "description": "Idealistic • Emotion-focused • Ambiguous",
+          "why": "Feelings-first communication can feel unclear when you want directness."
+        },
+        {
+          "type": "Debater",
+          "description": "Argumentative • Fast-changing • Challenging",
+          "why": "Frequent disruption of routines can drain your sense of order."
+        }
+      ]
+    },
+    {
+      "id": "careerGrowth",
+      "type": "card",
+      "heading": "Career Growth Advice",
+      "style": {
+        "background": "#f1edff",
+        "borderRadiusPx": 16
+      },
+      "items": [
+        "Find mentors who build you up, not just critique.",
+        "Keep tracking your growth — it’s real, even if slow.",
+        "Learn to celebrate wins — yours and others’.",
+        "Speak up when something feels wrong — your voice matters."
+      ]
+    },
+    {
+      "id": "famousPeople",
+      "type": "people",
+      "heading": "Famous People Like You",
+      "layout": "portraits",
+      "items": [
+        { "name": "George Washington", "description": "Associated with duty, steadiness, and responsibility under pressure." },
+        { "name": "Matt Damon", "description": "Known for consistent craft, grounded presence, and disciplined work." },
+        { "name": "Dame Judi Dench", "description": "A steady, meticulous performer with enduring reliability and precision." }
+      ]
+    },
+    {
+      "id": "quote",
+      "type": "quote",
+      "heading": "Life Quote",
+      "text": "Your steadiness is your superpower. Quiet doesn’t mean weak—it means precise.",
+      "style": {
+        "align": "center",
+        "italic": true,
+        "sizePx": 26,
+        "gradientText": true
+      }
+    },
+    {
+      "id": "footer",
+      "type": "footer",
+      "divider": "gradient-line",
+      "navigation": [
+        { "label": "Retake Test", "action": "retake_test" },
+        { "label": "Explore Majors", "action": "explore_majors" },
+        { "label": "Next Steps", "action": "next_steps" }
+      ]
+    }
+  ]
 }
