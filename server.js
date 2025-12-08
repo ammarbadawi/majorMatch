@@ -446,15 +446,25 @@ async function loadPersonalitiesDisplay(force = false) {
         try {
           const parsed = JSON.parse(chunk);
           if (parsed?.personalityType) {
-            const key = String(parsed.personalityType || "")
+            let key = String(parsed.personalityType || "")
               .trim()
               .toUpperCase();
             if (key) {
               records.push(parsed);
+              // Normalize parentheses format (A) or (T) to hyphen format -A or -T
+              const normalizedKey = key.replace(/\(([AT])\)/g, "-$1");
+              // Store with both original format and normalized format
               map[key] = parsed;
-              const [letters] = key.split("-");
-              if (letters && !map[letters]) {
-                map[letters] = parsed;
+              if (normalizedKey !== key) {
+                map[normalizedKey] = parsed;
+              }
+              // Extract letters for fallback (e.g., "ESTJ" from "ESTJ-A" or "ESTJ(A)")
+              const lettersMatch = key.match(/^([A-Z]{4})/);
+              if (lettersMatch) {
+                const letters = lettersMatch[1];
+                if (!map[letters]) {
+                  map[letters] = parsed;
+                }
               }
             }
           }

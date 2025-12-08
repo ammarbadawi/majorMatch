@@ -917,27 +917,11 @@ const Home: React.FC = () => {
                                         {t('home.aiGuidanceDesc')}
                                     </Typography>
 
-                                    <Typography variant="body2" sx={{
-                                        mb: 3,
-                                        lineHeight: 1.5,
-                                        fontSize: { xs: '0.85rem', sm: '0.9rem' },
-                                        color: 'text.secondary'
-                                    }}>
-                                        {t('home.aiGuidanceDesc2')}
-                                    </Typography>
 
-                                    <Typography variant="body2" sx={{
-                                        mb: 3,
-                                        lineHeight: 1.5,
-                                        fontSize: { xs: '0.85rem', sm: '0.9rem' },
-                                        color: 'text.secondary'
-                                    }}>
-                                        {t('home.aiGuidanceDesc3')}
-                                    </Typography>
 
                                     <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2 }, flexWrap: 'wrap', mb: 3 }}>
                                         {[
-                                            isAr ? 'حقق أهدافك' : 'Achieve your goals',
+                                            isAr ? 'مستشار الذكاء الاصطناعي' : 'AI Counselor',
                                             t('home.careerPlanning'),
                                             t('home.ongoingSupport'),
                                             t('home.industryInsights'),

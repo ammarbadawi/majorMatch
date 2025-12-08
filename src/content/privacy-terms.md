@@ -1,5 +1,3 @@
-MAJOR MATCH
-
 PRIVACY POLICY & TERMS OF USE
 
 This document contains two parts: (1) Privacy Policy and (2) Terms of Use. It is a template draft and should be reviewed by a qualified lawyer before public launch.
@@ -271,4 +269,3 @@ We may update these Terms from time to time. The updated version will be posted 
 Email: majormatch.lb@gmail.com
 
 Address: Hasbaya, Lebanon
-
